@@ -4,6 +4,7 @@ import styled from 'styled-components';
 export default function Home() {
   return (
     <>
+      <div className="underline">it goes Work!!</div>
       <Title>Home</Title>
       <HomeSvg />
     </>
