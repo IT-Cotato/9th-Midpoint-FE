@@ -6,7 +6,9 @@ export default function Home() {
 
   return (
     <>
-      <div className="underline">CI / CD 구축 완료 및 배포! 이제 개발 드가자</div>
+      <div>
+        <h1>CI / CD 구축 완료 및 배포자동화완료!</h1>
+      </div>
       <Title>Home</Title>
       <HomeSvg />
     </>
