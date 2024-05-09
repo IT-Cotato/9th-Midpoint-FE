@@ -7,7 +7,8 @@
 
 ## 👉🏻  [중간 지점 찾기](https://cotato-midpoint.site/)
 #### 👉🏻 [위 링크 접속 불가시](http://cotato-midpoint.s3-website.ap-northeast-2.amazonaws.com)
-
+#### 👉🏻 DNS의 변경사항이 Amazon Route 53로 이전하기 까지 48시간 소요 -> TLL변경완료 + 5월13일부터 1분이내 동기화 가능 
+ 
 # 👋 팀원 소개
 
 ## Front-End
