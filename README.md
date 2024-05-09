@@ -38,7 +38,8 @@
 
 
 ## 클라이언트 구조
-<img width="722" alt="image" src="https://github.com/IT-Cotato/9th-Midpoint-FE/assets/96279437/322ced9b-0551-4240-beca-abd2853acd38">
+<img width="647" alt="image" src="https://github.com/IT-Cotato/9th-Midpoint-FE/assets/96279437/48ed4311-6177-4a87-8e84-771eb1814b35">
+
 
 
 ## 🎯 Commit Convention
