@@ -8,7 +8,7 @@ export default function Home() {
     <>
       <div>
         <h1>CI / CD 구축 완료 및 배포자동화완료!</h1>
-        <p>DNS 테스트 코드</p>
+        <p>DNS 테스트 코드 123</p>
       </div>
       <Title>Home</Title>
       <HomeSvg />
