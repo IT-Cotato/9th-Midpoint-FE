@@ -5,8 +5,8 @@
 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FIT-Cotato%2F9th-Midpoint-FE&count_bg=%231484DB&title_bg=%232F2E2E&icon=googlemaps.svg&icon_color=%23FBFBFB&title=%EC%A4%91%EA%B0%84%EC%A7%80%EC%A0%90%EC%B0%BE%EA%B8%B0&edge_flat=false)](https://hits.seeyoufarm.com)
 
-## 👉🏻  [중간 지점 찾기](https://cotato-midpoint.site/)
-#### 👉🏻 [위 링크 접속 불가시](http://cotato-midpoint.s3-website.ap-northeast-2.amazonaws.com)
+### 👉🏻  서비스 URL : [https://cotato-midpoint.site/](https://cotato-midpoint.site/)
+#### 👉🏻 [위 링크 접속 불가시 클릭](http://cotato-midpoint.s3-website.ap-northeast-2.amazonaws.com)
 #### 👉🏻 DNS의 변경사항이 Amazon Route 53로 이전하기 까지 48시간 소요 -> TLL변경완료 + 5월13일부터 1분이내 동기화 가능 
  
 # 👋 팀원 소개
