@@ -8,6 +8,7 @@ export default function Home() {
     <>
       <div>
         <h1>CI / CD 구축 완료 및 배포자동화완료!</h1>
+        <p>test 1</p>
       </div>
       <Title>Home</Title>
       <HomeSvg />
