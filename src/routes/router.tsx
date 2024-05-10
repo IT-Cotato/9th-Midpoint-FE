@@ -1,4 +1,4 @@
-import Home from '../pages/home.tsx';
+import Home from '@/pages/home';
 import { createBrowserRouter } from 'react-router-dom';
 
 export const router = createBrowserRouter([

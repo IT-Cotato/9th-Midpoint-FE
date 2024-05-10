@@ -8,7 +8,7 @@
     "types": ["vite/client", "vite-plugin-svgr/client"], // svg 이미지 사용을 위해 추가한 부분
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"]
     },
 
     /* Bundler mode */
