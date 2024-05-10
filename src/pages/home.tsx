@@ -1,4 +1,4 @@
-import HomeIcon from '@/assets/imgs/home.svg?react';
+import HomeIcon from '../assets/imgs/home.svg?react';
 import styled from 'styled-components';
 
 export default function Home() {
