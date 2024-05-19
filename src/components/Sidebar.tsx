@@ -1,26 +1,22 @@
 import { Link } from 'react-router-dom';
 
-import HomeIcon from '@/assets/imgs/home.svg?react';
 import styled from 'styled-components';
 
 export default function SideBar() {
   return (
     <>
       <SidebarContainer>
-        <ul className="space-y-2">
-          <NavItem>
-            <Link to="/">
-              <HomeSvg className="inline-block mr-2" />
-              Home
-            </Link>
+        <ul className="flex flex-col gap-2 *:font-semibold">
+          <NavItem className="mt-16 transition">
+            <Link to="/">Home</Link>
           </NavItem>
-          <NavItem>
+          <NavItem className="transition">
             <Link to="/map">map</Link>
           </NavItem>
-          <NavItem>
+          <NavItem className="transition">
             <Link to="/vote">vote</Link>
           </NavItem>
-          <NavItem>
+          <NavItem className="transition">
             <Link to="/time">time</Link>
           </NavItem>
         </ul>
@@ -29,27 +25,22 @@ export default function SideBar() {
   );
 }
 
-const HomeSvg = styled(HomeIcon)`
-  width: 50px;
-  height: 50px;
-`;
-
 const SidebarContainer = styled.div`
   position: sticky;
   top: 0;
   left: 0;
   height: 100vh;
-  width: 10vw;
+  min-width: 120px;
   background-color: #5142ff;
   color: white;
-  display: flex;
-  flex-direction: column;
-  padding-top: 1rem;
 `;
 
 const NavItem = styled.li`
+  text-transform: uppercase;
+  cursor: pointer;
   padding: 1rem;
   &:hover {
-    background-color: #374151;
+    color: ${(props) => props.theme.mainColor};
+    background-color: ${(props) => props.theme.lightPurple};
   }
 `;

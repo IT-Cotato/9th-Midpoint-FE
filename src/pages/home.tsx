@@ -110,18 +110,16 @@ export default function Home() {
   };
 
   return (
-    <Container>
+    <Container className="max-w-[1800px]">
       <SideBar />
       <Content>
-        <div>
-          <Title>모두의 중간</Title>
-          <Textbox>
-            <p>상대방에게 링크를 공유하여 주소를 입력하게 하고 중간 지점을 찾아보세요!</p>
-          </Textbox>
-        </div>
+        <Title className="text-4xl font-medium pt-9">모두의 중간</Title>
+        <Textbox className="rounded-lg">
+          <p>상대방에게 링크를 공유하여 주소를 입력하게 하고 중간 지점을 찾아보세요!</p>
+        </Textbox>
 
-        <div className="flex gap-20">
-          <div className="w-2/5 overflow-auto h-96">
+        <div className="flex w-full gap-20 min-w-[1024px] justify-center mt-20">
+          <div className="w-[45%] min-w-[540px] overflow-auto h-96">
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
               {fields.map((field, index) => (
                 <div key={field.id} className="px-1">
@@ -152,9 +150,9 @@ export default function Home() {
                         </svg>
                       </div>
                     </div>
-                    <div className="relative w-72">
+                    <div className="relative overflow-x-scroll w-72 hide-scrollbar hide-x-scrollbar">
                       <div
-                        className={`flex items-center w-full h-10 px-3 transition bg-indigo-100 border-none rounded-lg cursor-pointer ring-1 focus:ring-2 ring-indigo-100 ${watch(`friendList.${index}.address`) ? 'text-black' : 'text-gray-500'}`}
+                        className={`flex items-center min-w-full h-10 px-3 transition bg-indigo-100 w-max border-none rounded-lg cursor-pointer ring-1 focus:ring-2 ring-indigo-100 ${watch(`friendList.${index}.address`) ? 'text-black' : 'text-gray-500'}`}
                         onClick={() => openAddressSearch(index)}
                       >
                         {watch(`friendList.${index}.address`) || '주소 입력'}
@@ -175,7 +173,7 @@ export default function Home() {
               <Button isLoading={isLoading} text="중간 지점 찾기" />
             </form>
           </div>
-          <div className="w-2/6 rounded-md h-[520px]">
+          <div className="w-[36%] rounded-xl h-[500px] -mt-8 shadow-lg">
             <KakaoMap addresses={addresses} />
           </div>
         </div>
@@ -184,28 +182,30 @@ export default function Home() {
   );
 }
 
-const Title = styled.h1`
-  font-size: 40px;
-  text-align: center;
-`;
-
-const Textbox = styled.div`
-  margin-top: 10px;
-  width: 50vw;
-  background-color: #5142ff;
-  padding: 1rem;
-  border-radius: 8px;
-
-  font-size: 20px;
-  text-align: center;
-`;
-
 const Container = styled.div`
   display: flex;
+  margin: 0 auto;
+  width: 100vw;
 `;
 
 const Content = styled.div`
-  margin-top: 30px;
-  flex: 1;
-  padding: 1rem;
+  width: 80%;
+  min-width: 1024px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+`;
+
+const Title = styled.h1``;
+
+const Textbox = styled.div`
+  width: 55%;
+  min-width: 700px;
+  background: rgba(81, 66, 255, 0.1);
+  color: ${(props) => props.theme.mainColor};
+  padding: 10px 5px;
+  font-size: 18px;
+  text-align: center;
 `;
