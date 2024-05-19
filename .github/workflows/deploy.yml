@@ -22,6 +22,8 @@ jobs:
       - name: Set Environment Variables
         run: |
           echo "VITE_TEST_DATA=${{ secrets.VITE_TEST_DATA }}" >> $GITHUB_ENV
+          echo "VITE_KAKAO_REST_API_KEY=${{ secrets.VITE_KAKAO_REST_API_KEY }}" >> $GITHUB_ENV
+          echo "VITE_KAKAO_JAVASCRIPT_KEY=${{ secrets.VITE_KAKAO_JAVASCRIPT_KEY }}" >> $GITHUB_ENV
           
       - run: npm run build
 
