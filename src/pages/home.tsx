@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Button from '@/components/button';
 import KakaoMap from '@/components/kakao-map';
+import styled from 'styled-components';
+import SideBar from '@/components/Sidebar';
 
 // 운행 수단
 enum Transport {
@@ -108,64 +110,102 @@ export default function Home() {
   };
 
   return (
-    <div className="flex gap-20">
-      <div className="w-2/5 overflow-auto h-96">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-          {fields.map((field, index) => (
-            <div key={field.id} className="px-1">
-              <h2 className="text-lg font-semibold">친구 {index + 1}</h2>
-              <div className="flex items-center justify-between w-full *:rounded-lg gap-3">
-                <input
-                  {...register(`friendList.${index}.username` as const, { required: true })}
-                  placeholder="이름 입력"
-                  className="w-40 transition bg-indigo-100 border-none ring-1 focus:ring-2 ring-indigo-100 focus:outline-none"
-                />
-                <div className="relative w-40">
-                  <select
-                    {...register(`friendList.${index}.transport` as const, { required: true })}
-                    className="w-40 bg-indigo-100 border-none rounded-lg outline-none appearance-none ring-0 focus:ring-0"
-                  >
-                    {Object.values(Transport).map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute inset-y-0 flex items-center px-2 pointer-events-none right-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
-                      <path
-                        d="M6.96356 10.1563C7.76315 11.1158 9.23685 11.1158 10.0364 10.1563L15.7664 3.28036C16.8519 1.97771 15.9256 -9.53674e-07 14.2299 -9.53674e-07H2.77008C1.07441 -9.53674e-07 0.148095 1.97771 1.23364 3.28037L6.96356 10.1563Z"
-                        fill="#5142FF"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <div className="relative w-72">
-                  <div
-                    className={`flex items-center w-full h-10 px-3 transition bg-indigo-100 border-none rounded-lg cursor-pointer ring-1 focus:ring-2 ring-indigo-100 ${watch(`friendList.${index}.address`) ? 'text-black' : 'text-gray-500'}`}
-                    onClick={() => openAddressSearch(index)}
-                  >
-                    {watch(`friendList.${index}.address`) || '주소 입력'}
-                  </div>
-                  <input type="hidden" {...register(`friendList.${index}.address` as const, { required: true })} />
-                </div>
-              </div>
-            </div>
-          ))}
+    <Container>
+      <SideBar />
+      <Content>
+        <div>
+          <Title>모두의 중간</Title>
+          <Textbox>
+            <p>상대방에게 링크를 공유하여 주소를 입력하게 하고 중간 지점을 찾아보세요!</p>
+          </Textbox>
+        </div>
 
-          <button
-            type="button"
-            onClick={() => append(default_format)}
-            className="w-full h-10 font-semibold text-indigo-600 bg-indigo-100 rounded-lg"
-          >
-            +
-          </button>
-          <Button isLoading={isLoading} text="중간 지점 찾기" />
-        </form>
-      </div>
-      <div className="w-2/6 rounded-md h-[520px]">
-        <KakaoMap addresses={addresses} />
-      </div>
-    </div>
+        <div className="flex gap-20">
+          <div className="w-2/5 overflow-auto h-96">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+              {fields.map((field, index) => (
+                <div key={field.id} className="px-1">
+                  <h2 className="text-lg font-semibold">친구 {index + 1}</h2>
+                  <div className="flex items-center justify-between w-full *:rounded-lg gap-3">
+                    <input
+                      {...register(`friendList.${index}.username` as const, { required: true })}
+                      placeholder="이름 입력"
+                      className="w-40 transition bg-indigo-100 border-none ring-1 focus:ring-2 ring-indigo-100 focus:outline-none"
+                    />
+                    <div className="relative w-40">
+                      <select
+                        {...register(`friendList.${index}.transport` as const, { required: true })}
+                        className="w-40 bg-indigo-100 border-none rounded-lg outline-none appearance-none ring-0 focus:ring-0"
+                      >
+                        {Object.values(Transport).map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute inset-y-0 flex items-center px-2 pointer-events-none right-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
+                          <path
+                            d="M6.96356 10.1563C7.76315 11.1158 9.23685 11.1158 10.0364 10.1563L15.7664 3.28036C16.8519 1.97771 15.9256 -9.53674e-07 14.2299 -9.53674e-07H2.77008C1.07441 -9.53674e-07 0.148095 1.97771 1.23364 3.28037L6.96356 10.1563Z"
+                            fill="#5142FF"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="relative w-72">
+                      <div
+                        className={`flex items-center w-full h-10 px-3 transition bg-indigo-100 border-none rounded-lg cursor-pointer ring-1 focus:ring-2 ring-indigo-100 ${watch(`friendList.${index}.address`) ? 'text-black' : 'text-gray-500'}`}
+                        onClick={() => openAddressSearch(index)}
+                      >
+                        {watch(`friendList.${index}.address`) || '주소 입력'}
+                      </div>
+                      <input type="hidden" {...register(`friendList.${index}.address` as const, { required: true })} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={() => append(default_format)}
+                className="w-full h-10 font-semibold text-indigo-600 bg-indigo-100 rounded-lg"
+              >
+                +
+              </button>
+              <Button isLoading={isLoading} text="중간 지점 찾기" />
+            </form>
+          </div>
+          <div className="w-2/6 rounded-md h-[520px]">
+            <KakaoMap addresses={addresses} />
+          </div>
+        </div>
+      </Content>
+    </Container>
   );
 }
+
+const Title = styled.h1`
+  font-size: 40px;
+  text-align: center;
+`;
+
+const Textbox = styled.div`
+  margin-top: 10px;
+  width: 50vw;
+  background-color: #5142ff;
+  padding: 1rem;
+  border-radius: 8px;
+
+  font-size: 20px;
+  text-align: center;
+`;
+
+const Container = styled.div`
+  display: flex;
+`;
+
+const Content = styled.div`
+  margin-top: 30px;
+  flex: 1;
+  padding: 1rem;
+`;
