@@ -26,9 +26,8 @@ const Title = styled.h1`
 
 const Textbox = styled.div`
   margin-top: 10px;
-  width: 50vw
-
-  background-color: #5142FF;
+  width: 50vw;
+  background-color: #5142ff;
   padding: 1rem;
   border-radius: 8px;
 
