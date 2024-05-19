@@ -1,5 +1,6 @@
 [![CI/CD](https://github.com/IT-Cotato/9th-Midpoint-FE/actions/workflows/deploy.yml/badge.svg)](https://github.com/IT-Cotato/9th-Midpoint-FE/actions/workflows/deploy.yml)
 
+
 <div><img src="https://capsule-render.vercel.app/api?type=waving&color=4B89DC&height=300&section=header&text=중간지점찾기&fontSize=90&fontColor=ffffff" /></div>
 
 
