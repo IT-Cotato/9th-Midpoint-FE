@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import HomeIcon from '@/assets/imgs/home.svg?react';
 import styled from 'styled-components';
 
-export default function sidebar() {
+export default function SideBar() {
   return (
     <>
       <SidebarContainer>
@@ -40,7 +40,7 @@ const SidebarContainer = styled.div`
   left: 0;
   height: 100vh;
   width: 10vw;
-  background-color: #5142FF;
+  background-color: #5142ff;
   color: white;
   display: flex;
   flex-direction: column;
