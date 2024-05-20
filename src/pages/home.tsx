@@ -119,8 +119,8 @@ export default function Home() {
         </Textbox>
 
         <div className="flex w-full gap-20 min-w-[1024px] justify-center mt-20">
-          <div className="w-[45%] min-w-[540px] overflow-auto h-96">
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+          <div className="w-[45%] min-w-[540px] h-96 flex flex-col gap-3">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 py-1 overflow-auto">
               {fields.map((field, index) => (
                 <div key={field.id} className="px-1">
                   <h2 className="text-lg font-semibold">친구 {index + 1}</h2>
@@ -162,16 +162,15 @@ export default function Home() {
                   </div>
                 </div>
               ))}
-
-              <button
-                type="button"
-                onClick={() => append(default_format)}
-                className="w-full h-10 font-semibold text-indigo-600 bg-indigo-100 rounded-lg"
-              >
-                +
-              </button>
-              <Button isLoading={isLoading} text="중간 지점 찾기" />
             </form>
+            <button
+              type="button"
+              onClick={() => append(default_format)}
+              className="w-full font-semibold text-indigo-600 bg-indigo-100 rounded-lg min-h-10"
+            >
+              +
+            </button>
+            <Button isLoading={isLoading} text="중간 지점 찾기" />
           </div>
           <div className="w-[36%] rounded-xl h-[500px] -mt-8 shadow-lg">
             <KakaoMap addresses={addresses} />
