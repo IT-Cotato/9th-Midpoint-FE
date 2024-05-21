@@ -25,7 +25,7 @@ interface IForm {
   readonly friendList: IFriendList[];
 }
 
-// 입력란의 기본 형태
+// 입력란의 기본 형태 템플릿
 const default_format: IFriendList = { username: '', transport: Transport.Subway, address: '' };
 
 export default function Home() {
