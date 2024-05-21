@@ -6,7 +6,7 @@
 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FIT-Cotato%2F9th-Midpoint-FE&count_bg=%231484DB&title_bg=%232F2E2E&icon=googlemaps.svg&icon_color=%23FBFBFB&title=%EC%A4%91%EA%B0%84%EC%A7%80%EC%A0%90%EC%B0%BE%EA%B8%B0&edge_flat=false)](https://hits.seeyoufarm.com)
 
- 
+### 서비스 URL : [https://cotato-midpoint.site](https://cotato-midpoint.site)
 # 👋 팀원 소개
 
 ## Front-End
