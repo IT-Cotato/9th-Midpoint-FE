@@ -29,7 +29,7 @@ interface IForm {
 const default_format: IFriendList = { username: '', transport: Transport.Subway, address: '' };
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // form제출 상태
   const [addresses, setAddresses] = useState<string[]>([]); // 사용자들의 주소 목록
   const { control, register, handleSubmit, setValue, watch } = useForm<IForm>({
     defaultValues: {
@@ -56,7 +56,7 @@ export default function Home() {
     }).open();
   };
 
-  // API 요청을 위한 mutation 정의
+  // 중간지점찾기 API 요청
   const { mutate: searchMiddlePoint } = useMutation({
     mutationFn: (data: Omit<IFriendList, 'username'>[]) => {
       // + 추후에 요청 url의 앞부분에 백엔드의 url을 붙여주어야 한다. (백엔드의 url은 .env파일에 넣고 관리할 것)
@@ -76,7 +76,7 @@ export default function Home() {
     },
   });
 
-  // 중간 지점 찾기 클릭시 수행되는 함수
+  // 중간지점찾기 버튼 클릭시 수행되는 함수
   const onSubmit = (data: IForm) => {
     // form 보내는 상태를 true로 설정해준다
     setIsLoading(true);
@@ -170,7 +170,7 @@ export default function Home() {
             >
               +
             </button>
-            <Button isLoading={isLoading} text="중간 지점 찾기" />
+            <Button isLoading={isLoading} text="중간 지점 찾기" onClick={handleSubmit(onSubmit)} />
           </div>
           <div className="w-[36%] rounded-xl h-[500px] -mt-8 shadow-lg">
             <KakaoMap addresses={addresses} />
