@@ -9,15 +9,19 @@ import SideBar from '@/components/Sidebar';
 
 // 운행 수단
 enum Transport {
-  Subway = '지하철',
-  Bus = '버스',
+  public = '지하철',
+  car = '자동차',
 }
 
 // 입력란의 형식
 interface IFriendList {
   readonly username: string;
   readonly transport: Transport;
-  readonly address: string;
+  readonly siDo: string;
+  readonly siGunGu: string;
+  readonly roadNameAddress: string;
+  readonly addressLat: number;
+  readonly addressLong: number;
 }
 
 // 입력 폼으로 부터 받은 값의 형식
@@ -26,11 +30,19 @@ interface IForm {
 }
 
 // 입력란의 기본 형태 템플릿
-const default_format: IFriendList = { username: '', transport: Transport.Subway, address: '' };
+const default_format: IFriendList = {
+  username: '',
+  transport: Transport.public,
+  siDo: '',
+  siGunGu: '',
+  roadNameAddress: '',
+  addressLat: 0,
+  addressLong: 0,
+};
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false); // form제출 상태
-  const [addresses, setAddresses] = useState<string[]>([]); // 사용자들의 주소 목록
+  const [addresses, setAddresses] = useState<string[]>([]); // 사용자들의 도로명 주소 목록
   const { control, register, handleSubmit, setValue, watch } = useForm<IForm>({
     defaultValues: {
       friendList: [default_format],
@@ -46,11 +58,30 @@ export default function Home() {
     new window.daum.Postcode({
       oncomplete: function (data: any) {
         const fullAddress = data.roadAddress;
-        setValue(`friendList.${index}.address`, fullAddress);
-        setAddresses((prev) => {
-          const newAddresses = [...prev];
-          newAddresses[index] = fullAddress;
-          return newAddresses;
+        const siDo = data.sido;
+        const siGunGu = data.sigungu;
+        const roadNameAddress = data.roadAddress;
+
+        // Kakao 지도 API를 사용하여 위도와 경도 가져오기
+        const geocoder = new window.kakao.maps.services.Geocoder();
+        geocoder.addressSearch(fullAddress, function (result: any, status: any) {
+          if (status === window.kakao.maps.services.Status.OK) {
+            const addressLat = parseFloat(result[0].y);
+            const addressLong = parseFloat(result[0].x);
+
+            // 주소와 좌표 설정
+            setValue(`friendList.${index}.siDo`, siDo);
+            setValue(`friendList.${index}.siGunGu`, siGunGu);
+            setValue(`friendList.${index}.roadNameAddress`, roadNameAddress);
+            setValue(`friendList.${index}.addressLat`, addressLat);
+            setValue(`friendList.${index}.addressLong`, addressLong);
+
+            setAddresses((prev) => {
+              const newAddresses = [...prev];
+              newAddresses[index] = fullAddress;
+              return newAddresses;
+            });
+          }
         });
       },
     }).open();
@@ -58,19 +89,15 @@ export default function Home() {
 
   // 중간지점찾기 API 요청
   const { mutate: searchMiddlePoint } = useMutation({
-    mutationFn: (data: Omit<IFriendList, 'username'>[]) => {
-      // + 추후에 요청 url의 앞부분에 백엔드의 url을 붙여주어야 한다. (백엔드의 url은 .env파일에 넣고 관리할 것)
+    mutationFn: (data: any) => {
       return axios.post('/api/middle-points', data);
     },
     onSuccess: (data, variable) => {
-      // 요청 성공시 응답으로 부터 얻은 중간 지점 장소 리스트를 중간 지점 화면에 navigate의 state로 보내준다.
-      // navigate('중간 지점 화면을 보여줄 주소', {state: data});
       console.log('API 요청 성공');
       console.log('중간지점찾기 API 요청시 보낸 데이터', variable);
       console.log('중간지점찾기 API 요청 이후 받은 응답 데이터', data);
     },
     onError: (error) => {
-      // 에러 발생시 alert로 에러를 보여준다. (서버 에러)
       console.error(`중간 지점 결과 조회 API 요청 실패, 에러명 : ${error}`);
       setIsLoading(false);
     },
@@ -78,32 +105,36 @@ export default function Home() {
 
   // 중간지점찾기 버튼 클릭시 수행되는 함수
   const onSubmit = (data: IForm) => {
-    // form 보내는 상태를 true로 설정해준다
     setIsLoading(true);
+    const allFieldsFilled = data.friendList.every(
+      (friend) =>
+        friend.username &&
+        friend.transport &&
+        friend.roadNameAddress &&
+        friend.siDo &&
+        friend.siGunGu &&
+        friend.addressLat &&
+        friend.addressLong,
+    );
 
-    // friendList에 있는 모든 사람에 대해 이름, 운송수단, 주소(위치)가 모두 입력되었는지 확인하는 과정
-    const allFieldsFilled = data.friendList.every((friend) => friend.username && friend.transport && friend.address);
-
-    // 모두 입력되지 않은 경우에는 '모두 입력해주세요' 라는 에러메세지 보여주고 종료한다.
     if (!allFieldsFilled) {
       setIsLoading(false);
-      alert('모둗 입력해주세요!');
+      alert('모두 입력해주세요!');
       return;
     }
 
-    // username을 제외한 데이터 추출
-    const submissionData = data.friendList.map(({ username, ...rest }) => rest);
+    const submissionData = data.friendList.map(({ username, transport, ...rest }) => ({
+      ...rest,
+      transport: transport === Transport.public ? 'public' : 'car',
+    }));
 
     console.log('중간지점 찾기 요청시 서버로 보내는 값', submissionData);
-
-    // API 요청 보내기
     searchMiddlePoint(submissionData, {
       onSuccess: () => {
         console.log('2번째로 불림- API 요청 성공');
       },
       onError: (error) => {
-        // 에러 발생시 에러를 보여준다. (서버 에러)
-        console.error(`2번째로 불림중간 지점 결과 조회 API 요청 실패, 에러명 : ${error}`);
+        console.error(`2번째로 불림 중간 지점 결과 조회 API 요청 실패, 에러명 : ${error}`);
         setIsLoading(false);
       },
     });
@@ -152,12 +183,15 @@ export default function Home() {
                     </div>
                     <div className="relative overflow-x-scroll w-72 hide-scrollbar hide-x-scrollbar">
                       <div
-                        className={`flex items-center min-w-full h-10 px-3 transition bg-indigo-100 w-max border-none rounded-lg cursor-pointer ring-1 focus:ring-2 ring-indigo-100 ${watch(`friendList.${index}.address`) ? 'text-black' : 'text-gray-500'}`}
+                        className={`flex items-center min-w-full h-10 px-3 transition bg-indigo-100 w-max border-none rounded-lg cursor-pointer ring-1 focus:ring-2 ring-indigo-100 ${watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'}`}
                         onClick={() => openAddressSearch(index)}
                       >
-                        {watch(`friendList.${index}.address`) || '주소 입력'}
+                        {watch(`friendList.${index}.roadNameAddress`) || '주소 입력'}
                       </div>
-                      <input type="hidden" {...register(`friendList.${index}.address` as const, { required: true })} />
+                      <input
+                        type="hidden"
+                        {...register(`friendList.${index}.roadNameAddress` as const, { required: true })}
+                      />
                     </div>
                   </div>
                 </div>
