@@ -1,41 +1,47 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import HomeLogo from '@/assets/imgs/Icons/home-logo.svg?react';
+import HomeLogoActive from '@/assets/imgs/Icons/home-logo-active.svg?react';
 import PinLogo from '@/assets/imgs/Icons/pin-logo.svg?react';
 import VoteLogo from '@/assets/imgs/Icons/vote-logo.svg?react';
 import ClockLogo from '@/assets/imgs/Icons/clock-logo.svg?react';
 
 import styled from 'styled-components';
 
+interface LogoProps {
+  active: boolean;
+}
+
 export default function SideBar() {
+  const location = useLocation();
   return (
     <>
       <SidebarContainer>
         <ul className="flex flex-col gap-2 *:font-semibold">
           <NavItem className="mt-16 transition">
             <Link to="/">
-              <Logo>
-                <HomeLogo />
+              <Logo active={location.pathname === '/'}>
+                {/* {location.pathname === '/' ? <HomeLogoActive /> : <HomeLogo />} */}
               </Logo>
             </Link>
           </NavItem>
           <NavItem className="transition">
-            <Link to="/map">
-              <Logo>
+            <Link to="/midpoint">
+              <Logo active={location.pathname === '/midpoint'}>
                 <PinLogo />
               </Logo>
             </Link>
           </NavItem>
           <NavItem className="transition">
             <Link to="/vote">
-              <Logo>
+              <Logo active={location.pathname === '/vote'}>
                 <VoteLogo />
               </Logo>
             </Link>
           </NavItem>
           <NavItem className="transition">
             <Link to="/time">
-              <Logo>
+              <Logo active={location.pathname === '/time'}>
                 <ClockLogo />
               </Logo>
             </Link>
@@ -62,8 +68,11 @@ const NavItem = styled.li`
   padding: 1rem;
 `;
 
-const Logo = styled.span`
+const Logo = styled.span<LogoProps>`
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 100%;
+  display: block;
+  margin: 0 auto;
+  background-color: ${({ active }) => (active ? 'white' : 'transparent')};
 `;
