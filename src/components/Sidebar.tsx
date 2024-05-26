@@ -1,10 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 
-import HomeLogo from '@/assets/imgs/Icons/home-logo.svg?react';
-import HomeLogoActive from '@/assets/imgs/Icons/home-logo-active.svg?react';
-import PinLogo from '@/assets/imgs/Icons/pin-logo.svg?react';
-import VoteLogo from '@/assets/imgs/Icons/vote-logo.svg?react';
-import ClockLogo from '@/assets/imgs/Icons/clock-logo.svg?react';
+import HomeLogo from '@/assets/imgs/Navbar/home-logo.svg?react';
+// import HomeLogoActive from '@/assets/imgs/Navbar/home-logo-active.svg?react';
+import PinLogo from '@/assets/imgs/Navbar/pin-logo.svg?react';
+import VoteLogo from '@/assets/imgs/Navbar/vote-logo.svg?react';
+import ClockLogo from '@/assets/imgs/Navbar/clock-logo.svg?react';
 
 import styled from 'styled-components';
 
@@ -22,6 +22,7 @@ export default function SideBar() {
             <Link to="/">
               <Logo active={location.pathname === '/'}>
                 {/* {location.pathname === '/' ? <HomeLogoActive /> : <HomeLogo />} */}
+                <HomeLogo />
               </Logo>
             </Link>
           </NavItem>
