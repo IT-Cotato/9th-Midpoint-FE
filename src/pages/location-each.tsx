@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { useAtomValue } from 'jotai';
 import { loginAtom } from '@/stores/login-state';
-import NotFound from './not-found';
-import Loading from './loading';
 import KakaoMap from '@/components/kakao-map';
 import Button from '@/components/button';
-import { fetchRoomUsersInfo, fetchSavePlace } from '@/apis/enter-location';
+import { fetchSavePlace } from '@/apis/enter-location';
 import Login from '@/components/login';
 
 // 운행 수단
