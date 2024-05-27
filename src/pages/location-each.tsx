@@ -124,7 +124,6 @@ export default function LocationEach() {
 
     const payload = {
       placeRoomId: roomId,
-      username: data.username,
       siDo: data.siDo,
       siGunGu: data.siGunGu,
       roadNameAddress: data.roadNameAddress,

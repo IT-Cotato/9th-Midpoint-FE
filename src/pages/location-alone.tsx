@@ -121,7 +121,7 @@ export default function LocationAlone() {
       return;
     }
 
-    const submissionData = data.friendList.map(({ transport, ...rest }) => ({
+    const submissionData = data.friendList.map(({ username, transport, ...rest }) => ({
       ...rest,
       transport: transport === Transport.public ? 'public' : 'car',
     }));

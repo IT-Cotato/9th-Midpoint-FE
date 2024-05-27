@@ -2,7 +2,7 @@ import axios from 'axios';
 import axiosInstance from '.';
 
 export const fetchIsValidRoomId = async (roomId: string) => {
-  const { data } = await axios.get(`/api?roomId=${roomId}`);
+  const { data } = await axios.get(`/api/rooms/${roomId}/duplicate`);
   return data;
 };
 
