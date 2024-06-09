@@ -127,6 +127,7 @@ export default function LocationAlone() {
     }));
 
     console.log('중간지점 찾기 요청시 서버로 보내는 값', submissionData);
+
     searchMiddlePoint(submissionData, {
       onSuccess: () => {
         console.log('2번째로 불림- API 요청 성공');
@@ -196,7 +197,7 @@ export default function LocationAlone() {
         </button>
         <Button isLoading={isLoading} text="중간 지점 찾기" onClick={handleSubmit(onSubmit)} />
       </div>
-      <div className="w-[36%] rounded-xl h-[500px] -mt-8 shadow-lg">
+      <div className="w-[38%] rounded-xl h-[500px] -mt-8 shadow-lg">
         <KakaoMap addresses={addresses} />
       </div>
     </div>
