@@ -2,9 +2,18 @@
 
 import axios from 'axios';
 
-const REFRESH_URL = ''; // Refresh Token을 사용해 새로운 Access Token을 받을때 요청하는 URL
+const REFRESH_URL = '';
 
-// access token 재발급하는 함수
+export const axiosInstance = axios.create({
+  baseURL: '',
+});
+
+// 로그 아웃 함수
+const logout = () => {
+  localStorage.removeItem('accessToken');
+};
+
+// accessToken, refreshToken 재발급하는 함수
 const getNewToken = async () => {
   try {
     const accessToken = '';
@@ -16,15 +25,6 @@ const getNewToken = async () => {
     logout();
   }
 };
-
-// 로그 아웃 함수
-const logout = () => {
-  localStorage.removeItem('accessToken');
-};
-
-const axiosInstance = axios.create({
-  baseURL: '',
-});
 
 // 요청 인터셉터
 axiosInstance.interceptors.request.use(
@@ -60,8 +60,6 @@ axiosInstance.interceptors.response.use(
       localStorage.setItem('refreshToken', newToken.refreshToken);
       config.headers.Authorization = `Bearer ${newToken.accessToken}`;
     }
-    return axios(config); // 재요청
+    return axiosInstance(config); // 재요청
   },
 );
-
-export default axiosInstance;
