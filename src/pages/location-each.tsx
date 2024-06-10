@@ -9,6 +9,8 @@ export default function LocationEach() {
   // const { roomId } = useParams<{ roomId: string }>();
   const isLogin = useAtomValue(loginAtom); // 로그인 여부 확인을 위한 변수
 
+  // 유효하지 않은 방번호에 대한 접근인 경우 <NotFound/>컴포넌트를 return한다.
+
   // 장소 입력 방에 저장된 사람들의 정보 가져오기
   // const { data: usersData, isLoading: usersLoading } = useQuery({
   //   queryKey: ['placeRoomUsers', roomId],
@@ -44,13 +46,11 @@ export default function LocationEach() {
   //   return <Loading />;
   // }
 
-  // 유효하지 않은 방번호에 대한 접근인 경우 <NotFound/>컴포넌트를 return한다.
-
   return (
     <>
       <div className="flex w-full gap-20 min-w-[1024px] justify-center mt-20">
         <div className="w-[45%] min-w-[540px] h-96 flex flex-col gap-3">
-          {!isLogin ? <LocationEachForm /> : <Login />}
+          {isLogin ? <LocationEachForm /> : <Login />}
         </div>
         <div className="w-[38%] rounded-xl h-[500px] -mt-8 shadow-lg">
           <KakaoMap addresses={addressList} />
