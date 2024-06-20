@@ -2,7 +2,6 @@
   "name": "mid-point-fe",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "test": "jest",
