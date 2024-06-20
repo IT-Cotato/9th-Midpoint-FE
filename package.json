@@ -2,6 +2,7 @@
   "name": "mid-point-fe",
   "private": true,
   "version": "0.0.0",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "test": "jest",
