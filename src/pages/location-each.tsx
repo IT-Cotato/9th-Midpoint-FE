@@ -24,23 +24,26 @@ export default function LocationEach() {
       siDo: '서울특별시',
       siGunGu: '마포구',
       roadNameAddress: '서울 서대문구 봉원사2길 10-2',
-      addressLat: 127.2023132,
-      addressLong: 36.1994323,
+      addressLat: 37.556328,
+      addressLong: 126.923634,
       transport: 'public',
     },
     {
-      memberId: 1,
+      memberId: 2,
       username: '신예진',
       siDo: '서울특별시',
       siGunGu: '강남구',
       roadNameAddress: '서울 서대문구 봉원사2길 10-4',
-      addressLat: 127.2023132,
-      addressLong: 36.1994323,
+      addressLat: 37.499006,
+      addressLong: 127.027629,
       transport: 'public',
     },
   ];
 
-  const addressList = usersData.map((user: any) => user.roadNameAddress);
+  const coordinatesList = usersData.map((user) => ({
+    lat: user.addressLat,
+    lng: user.addressLong,
+  }));
 
   // if (usersLoading) {
   //   return <Loading />;
@@ -50,10 +53,10 @@ export default function LocationEach() {
     <>
       <div className="flex w-full gap-20 min-w-[1024px] justify-center mt-20">
         <div className="w-[45%] min-w-[540px] h-96 flex flex-col gap-3">
-          {isLogin ? <LocationEachForm /> : <Login />}
+          {!isLogin ? <LocationEachForm /> : <Login />}
         </div>
         <div className="w-[38%] rounded-xl h-[500px] -mt-8 shadow-lg">
-          <KakaoMap addresses={addressList} />
+          <KakaoMap coordinates={coordinatesList} />
         </div>
       </div>
     </>

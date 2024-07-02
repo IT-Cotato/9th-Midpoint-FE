@@ -86,13 +86,12 @@ export default function LocationEachForm() {
     setFormLoading(true);
 
     const payload = {
-      placeRoomId: roomId,
       siDo: data.siDo,
       siGunGu: data.siGunGu,
       roadNameAddress: data.roadNameAddress,
       addressLat: data.addressLat,
       addressLong: data.addressLong,
-      transport: data.transport === Transport.public ? 'public' : 'car',
+      transport: data.transport === Transport.public ? 'PUBLIC' : 'CAR',
     };
 
     console.log('입력 완료 요청시 서버로 보내는 값', payload);

@@ -40,7 +40,7 @@ const default_format: IFriendList = {
 
 export default function LocationAlone() {
   const [isLoading, setIsLoading] = useState(false); // form제출 상태
-  const [addresses, setAddresses] = useState<string[]>([]); // 사용자들의 도로명 주소 목록
+  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }[]>([]); // 사용자들의 좌표 목록
   const { control, register, handleSubmit, setValue, watch } = useForm<IForm>({
     defaultValues: {
       friendList: [default_format],
@@ -74,10 +74,10 @@ export default function LocationAlone() {
             setValue(`friendList.${index}.addressLat`, addressLat);
             setValue(`friendList.${index}.addressLong`, addressLong);
 
-            setAddresses((prev) => {
-              const newAddresses = [...prev];
-              newAddresses[index] = fullAddress;
-              return newAddresses;
+            setCoordinates((prev) => {
+              const newCoordinates = [...prev];
+              newCoordinates[index] = { lat: addressLat, lng: addressLong };
+              return newCoordinates;
             });
           }
         });
@@ -123,7 +123,7 @@ export default function LocationAlone() {
 
     const submissionData = data.friendList.map(({ username, transport, ...rest }) => ({
       ...rest,
-      transport: transport === Transport.public ? 'public' : 'car',
+      transport: transport === Transport.public ? 'PUBLIC' : 'CAR',
     }));
 
     console.log('중간지점 찾기 요청시 서버로 보내는 값', submissionData);
@@ -198,7 +198,7 @@ export default function LocationAlone() {
         <Button isLoading={isLoading} text="중간 지점 찾기" onClick={handleSubmit(onSubmit)} />
       </div>
       <div className="w-[38%] rounded-xl h-[500px] -mt-8 shadow-lg">
-        <KakaoMap addresses={addresses} />
+        <KakaoMap coordinates={coordinates} />
       </div>
     </div>
   );
