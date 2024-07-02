@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { fetchLogin } from '@/apis/login';
 
 interface IForm {
-  id: string;
+  name: string;
   pw: string;
 }
 
@@ -23,8 +23,8 @@ export default function Login() {
   const { mutate: userLogin } = useMutation({
     mutationFn: fetchLogin,
     onSuccess: (data: any) => {
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
+      localStorage.setItem('accessToken', data.data.data.accessToken);
+      localStorage.setItem('refreshToken', data.data.data.refreshToken);
       setLoginState(true);
       navigate(`/enter-location/${roomId}`);
     },
@@ -36,7 +36,7 @@ export default function Login() {
   const onSubmit = (data: IForm) => {
     setFormLoading(true);
 
-    const { id, pw } = data;
+    const { name, pw } = data;
     if (roomId === undefined) {
       alert('login.tsx roomId오류!');
       setFormLoading(false);
@@ -45,7 +45,7 @@ export default function Login() {
 
     const payload = {
       roomId,
-      id,
+      name,
       pw,
     };
 
@@ -62,7 +62,7 @@ export default function Login() {
           <div className="flex flex-col items-start justify-between w-full *:rounded-lg gap-3">
             <span className="text-xl font-semibold">아이디</span>
             <input
-              {...register('id')}
+              {...register('name')}
               type="text"
               placeholder="아이디를 입력하세요"
               className="w-full transition bg-indigo-100 border-none ring-1 focus:ring-2 ring-indigo-100 focus:outline-none"
