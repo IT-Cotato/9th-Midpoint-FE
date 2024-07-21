@@ -1,6 +1,6 @@
 import { DefaultTheme } from 'styled-components';
 
 export const theme: DefaultTheme = {
-  lightPurple: '#F6F7FB',
-  mainColor: '#5142FF',
+  bgColor: '#EFF3FF',
+  mainColor: '#5786FF',
 };

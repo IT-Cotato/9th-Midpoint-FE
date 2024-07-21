@@ -1,12 +1,12 @@
-import EnterLocation from '@/pages/enter-location';
 import Home from '@/pages/home';
 import LocationAlone from '@/pages/location-alone';
-import LocationEach from '@/pages/location-each';
 import NotFound from '@/pages/not-found';
 import Midpoint from '@/pages/midpoint';
 import Vote from '@/pages/vote';
 import Time from '@/pages/time';
 import { createBrowserRouter } from 'react-router-dom';
+import LocationEach from '@/pages/location-each';
+import Layout from '@/pages/Layout';
 
 export const router = createBrowserRouter([
   {
@@ -14,15 +14,15 @@ export const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: '/enter-location',
-    element: <EnterLocation />,
+    path: '/page',
+    element: <Layout />,
     children: [
       {
-        path: '',
+        path: 'alone/:roomId',
         element: <LocationAlone />,
       },
       {
-        path: ':roomId',
+        path: 'each/:roomId',
         element: <LocationEach />,
       },
     ],

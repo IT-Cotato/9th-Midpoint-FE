@@ -2,15 +2,16 @@
 
 import axios from 'axios';
 
-const REFRESH_URL = '';
-
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URI;
 export const axiosInstance = axios.create({
   baseURL: '',
 });
+const REFRESH_URL = '';
 
 // 로그 아웃 함수
 const logout = () => {
   localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
 };
 
 // accessToken, refreshToken 재발급하는 함수

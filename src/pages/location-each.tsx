@@ -51,12 +51,18 @@ export default function LocationEach() {
 
   return (
     <>
-      <div className="flex w-full gap-20 min-w-[1024px] justify-center mt-20">
-        <div className="w-[45%] min-w-[540px] h-96 flex flex-col gap-3">
-          {!isLogin ? <LocationEachForm /> : <Login />}
-        </div>
-        <div className="w-[38%] rounded-xl h-[500px] -mt-8 shadow-lg">
-          <KakaoMap coordinates={coordinatesList} />
+      <div className="flex justify-center w-full">
+        <div className="flex flex-col w-full gap-3">
+          {isLogin ? (
+            <>
+              <LocationEachForm />
+              <div className="w-[38%] rounded-xl h-[500px] -mt-8 shadow-lg">
+                <KakaoMap coordinates={coordinatesList} />
+              </div>
+            </>
+          ) : (
+            <Login />
+          )}
         </div>
       </div>
     </>
