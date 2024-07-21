@@ -1,7 +1,10 @@
 import Button from '@/components/button';
 import KakaoMap from '@/components/kakao-map';
+import Login from '@/components/login';
+import { loginAtom } from '@/stores/login-state';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 
@@ -39,7 +42,8 @@ const default_format: IFriendList = {
 };
 
 export default function LocationAlone() {
-  const [isLoading, setIsLoading] = useState(false); // form제출 상태
+  const isLogin = useAtomValue(loginAtom); // 로그인 여부 확인을 위한 변수
+  const [isLoading, setIsLoading] = useState(false); // login form제출 상태
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }[]>([]); // 사용자들의 좌표 목록
   const { control, register, handleSubmit, setValue, watch } = useForm<IForm>({
     defaultValues: {
@@ -140,66 +144,70 @@ export default function LocationAlone() {
   };
 
   return (
-    <div className="flex w-full gap-20 min-w-[1024px] justify-center mt-20">
-      <div className="w-[45%] min-w-[540px] h-96 flex flex-col gap-3">
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 py-1 overflow-auto">
-          {fields.map((field, index) => (
-            <div key={field.id} className="px-1">
-              <h2 className="text-lg font-semibold">친구 {index + 1}</h2>
-              <div className="flex items-center justify-between w-full *:rounded-lg gap-3">
-                <input
-                  {...register(`friendList.${index}.username` as const, { required: true })}
-                  placeholder="이름 입력"
-                  className="w-40 transition bg-indigo-100 border-none ring-1 focus:ring-2 ring-indigo-100 focus:outline-none"
-                />
-                <div className="relative w-40">
-                  <select
-                    {...register(`friendList.${index}.transport` as const, { required: true })}
-                    className="w-40 bg-indigo-100 border-none rounded-lg outline-none appearance-none ring-0 focus:ring-0"
-                  >
-                    {Object.values(Transport).map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute inset-y-0 flex items-center px-2 pointer-events-none right-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
-                      <path
-                        d="M6.96356 10.1563C7.76315 11.1158 9.23685 11.1158 10.0364 10.1563L15.7664 3.28036C16.8519 1.97771 15.9256 -9.53674e-07 14.2299 -9.53674e-07H2.77008C1.07441 -9.53674e-07 0.148095 1.97771 1.23364 3.28037L6.96356 10.1563Z"
-                        fill="#5142FF"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <div className="relative overflow-x-scroll w-72 hide-scrollbar hide-x-scrollbar">
-                  <div
-                    className={`flex items-center min-w-full h-10 px-3 transition bg-indigo-100 w-max border-none rounded-lg cursor-pointer ring-1 focus:ring-2 ring-indigo-100 ${watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'}`}
-                    onClick={() => openAddressSearch(index)}
-                  >
-                    {watch(`friendList.${index}.roadNameAddress`) || '주소 입력'}
-                  </div>
+    <div className="flex w-full gap-3 border-2 border-green-800">
+      {!isLogin ? (
+        <Login />
+      ) : (
+        <>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 py-1 overflow-auto">
+            {fields.map((field, index) => (
+              <div key={field.id} className="px-1">
+                <h2 className="text-lg font-semibold">친구 {index + 1}</h2>
+                <div className="flex items-center justify-between w-full *:rounded-lg gap-3">
                   <input
-                    type="hidden"
-                    {...register(`friendList.${index}.roadNameAddress` as const, { required: true })}
+                    {...register(`friendList.${index}.username` as const, { required: true })}
+                    placeholder="이름 입력"
+                    className="w-40 transition bg-indigo-100 border-none ring-1 focus:ring-2 ring-indigo-100 focus:outline-none"
                   />
+                  <div className="relative w-40">
+                    <select
+                      {...register(`friendList.${index}.transport` as const, { required: true })}
+                      className="w-40 bg-indigo-100 border-none rounded-lg outline-none appearance-none ring-0 focus:ring-0"
+                    >
+                      {Object.values(Transport).map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute inset-y-0 flex items-center px-2 pointer-events-none right-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
+                        <path
+                          d="M6.96356 10.1563C7.76315 11.1158 9.23685 11.1158 10.0364 10.1563L15.7664 3.28036C16.8519 1.97771 15.9256 -9.53674e-07 14.2299 -9.53674e-07H2.77008C1.07441 -9.53674e-07 0.148095 1.97771 1.23364 3.28037L6.96356 10.1563Z"
+                          fill="#5142FF"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="relative overflow-x-scroll w-72 hide-scrollbar hide-x-scrollbar">
+                    <div
+                      className={`flex items-center min-w-full h-10 px-3 transition bg-indigo-100 w-max border-none rounded-lg cursor-pointer ring-1 focus:ring-2 ring-indigo-100 ${watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'}`}
+                      onClick={() => openAddressSearch(index)}
+                    >
+                      {watch(`friendList.${index}.roadNameAddress`) || '주소 입력'}
+                    </div>
+                    <input
+                      type="hidden"
+                      {...register(`friendList.${index}.roadNameAddress` as const, { required: true })}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </form>
-        <button
-          type="button"
-          onClick={() => append(default_format)}
-          className="w-full font-semibold text-indigo-600 bg-indigo-100 rounded-lg min-h-10"
-        >
-          +
-        </button>
-        <Button isLoading={isLoading} text="중간 지점 찾기" onClick={handleSubmit(onSubmit)} />
-      </div>
-      <div className="w-[38%] rounded-xl h-[500px] -mt-8 shadow-lg">
-        <KakaoMap coordinates={coordinates} />
-      </div>
+            ))}
+          </form>
+          <button
+            type="button"
+            onClick={() => append(default_format)}
+            className="w-full font-semibold text-indigo-600 bg-indigo-100 rounded-lg min-h-10"
+          >
+            +
+          </button>
+          <Button isLoading={isLoading} text="중간 지점 찾기" onClick={handleSubmit(onSubmit)} />
+          <div className="w-[38%] rounded-xl h-[500px] -mt-8 shadow-lg">
+            <KakaoMap coordinates={coordinates} />
+          </div>
+        </>
+      )}
     </div>
   );
 }

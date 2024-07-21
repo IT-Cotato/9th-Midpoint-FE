@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URI;
+import { BACKEND_URL } from '.';
 
 interface ILoginPayload {
   readonly roomId: string;

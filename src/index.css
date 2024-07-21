@@ -17,6 +17,6 @@
 
 @layer components {
   .primary-btn {
-    @apply w-full bg-[#5142FF] text-white font-medium rounded-lg text-center hover:bg-indigo-500 transition-colors;
+    @apply w-full bg-[#5786FF] text-white font-medium rounded-lg text-center hover:bg-blue-400 transition-colors;
   }
 }
