@@ -15,7 +15,7 @@ export default function Navbar() {
             <span className="text-4xl font-semibold">ASAP</span>
           </Link>
         </ul>
-        {isLogin && (
+        {!isLogin && (
           <ul className="flex items-center gap-6 *:cursor-pointer">
             <li>중간지점찾기</li>
             <li>투표만들기</li>

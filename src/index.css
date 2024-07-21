@@ -3,15 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  .hide-scrollbar {
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-  .hide-x-scrollbar {
-    overflow-y: hidden; /* Hide y-axis scrollbar */
+  body {
+    overflow-x: hidden;
   }
 }
 
