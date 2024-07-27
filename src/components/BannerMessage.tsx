@@ -5,7 +5,7 @@ import CopyLogo from '@/assets/imgs/Navbar/copyLogo.svg?react';
 
 export default function BannerMessage() {
   const [copied, setCopied] = useState(false);
-
+  // url에 따라 안에 배너 메세지 수정하는 로직 추가 필요
   const handleCopy = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url).then(() => {
@@ -15,9 +15,9 @@ export default function BannerMessage() {
   };
 
   return (
-    <Textbox className="flex items-center justify-center gap-2 p-2 py-5 rounded-lg">
-      <CopyWrapper>
-        <CopyLogo className="cursor-pointer" onClick={handleCopy} />
+    <Textbox className="flex items-center justify-center gap-2 p-2 py-5 rounded-lg *:text-lg">
+      <CopyLogo />
+      <div className="relative">
         <AnimatePresence>
           {copied && (
             <CopiedMessage
@@ -30,11 +30,12 @@ export default function BannerMessage() {
             </CopiedMessage>
           )}
         </AnimatePresence>
-      </CopyWrapper>
-      <span className="text-lg">
-        상대방에게 <span className="text-[#2F5FDD] font-semibold">ASAP 링크를 공유해 위치를 입력</span>
-        하고 중간 지점을 찾아보세요!
-      </span>
+        상대방에게{' '}
+        <span className="text-[#2F5FDD] font-semibold underline cursor-pointer" onClick={handleCopy}>
+          싱크스팟 링크
+        </span>
+        를 공유해보세요!
+      </div>
     </Textbox>
   );
 }
@@ -44,14 +45,10 @@ const Textbox = styled.div`
   background: ${(props) => props.theme.bgColor};
 `;
 
-const CopyWrapper = styled.div`
-  position: relative;
-`;
-
 const CopiedMessage = styled(motion.div)`
   position: absolute;
   bottom: 150%;
-  left: 50%;
+  left: 20%;
   transform: translateX(-50%);
   background-color: ${(props) => props.theme.mainColor};
   color: white;

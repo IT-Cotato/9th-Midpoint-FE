@@ -5,11 +5,10 @@ import { loginAtom } from '@/stores/login-state';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAtomValue } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import Parasol from '@/assets/imgs/Location/parasol.svg?react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
-import { toast, ToastContainer } from 'react-toastify';
 
 // 입력란의 형식
 interface IFriendList {
@@ -35,9 +34,26 @@ const default_format: IFriendList = {
 };
 
 export default function LocationAlone() {
+  //const { roomId } = useParams<{ roomId: string }>();
+
+  //roomId 유효성 확인 후 유효하지 않다면 notFound출력하는 과정
+  // const {
+  //   data: exists,
+  //   isLoading: isPending,
+  //   isError,
+  // } = useQuery({
+  //   queryKey: ['existence', roomId],
+  //   queryFn: () => fetchExistence(roomId!),
+  //   enabled: !!roomId, // roomId가 있을 때만 쿼리 실행
+  // });
+
+  // if (isPending) return <Loading />;
+  // if (isError || !exists?.existence || !Boolean(roomId)) return <NotFound />;
+
   const isLogin = useAtomValue(loginAtom); // 로그인 여부 확인을 위한 변수
   const [isLoading, setIsLoading] = useState(false); // login form제출 상태
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }[]>([]); // 사용자들의 좌표 목록
+  const [isAllFieldsFilled, setIsAllFieldsFilled] = useState(false);
   const { control, register, handleSubmit, setValue, watch } = useForm<IForm>({
     defaultValues: {
       friendList: [default_format],
@@ -98,6 +114,19 @@ export default function LocationAlone() {
     },
   });
 
+  // 모든 필드가 채워졌는지 확인하는 함수
+  useEffect(() => {
+    const subscription = watch((value) => {
+      const friendList = value.friendList || [];
+      const allFieldsFilled = friendList.every(
+        (friend) =>
+          friend && friend.roadNameAddress && friend.siDo && friend.siGunGu && friend.addressLat && friend.addressLong,
+      );
+      setIsAllFieldsFilled(allFieldsFilled);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
   // 중간지점찾기 버튼 클릭시 수행되는 함수
   const onSubmit = (data: IForm) => {
     setIsLoading(true);
@@ -108,7 +137,7 @@ export default function LocationAlone() {
 
     if (!allFieldsFilled) {
       setIsLoading(false);
-      toast.error('장소를 모두 포함해주세요!');
+      alert('장소를 모두 포함해주세요!');
       return;
     }
 
@@ -133,16 +162,14 @@ export default function LocationAlone() {
     });
   };
 
+  // 친구 삭제 시 좌표 정보도 제거하는 함수
+  const handleRemove = (index: number) => {
+    remove(index);
+    setCoordinates((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnHover
-        draggable
-      />
       {isLogin ? (
         <Login />
       ) : (
@@ -157,7 +184,9 @@ export default function LocationAlone() {
                 <div key={field.id}>
                   <h2 className="flex items-center justify-between text-lg font-semibold">
                     <span>친구 {index + 1} </span>
-                    {fields.length > 1 && <XMarkIcon className="cursor-pointer size-4" onClick={() => remove(index)} />}
+                    {fields.length > 1 && (
+                      <XMarkIcon className="cursor-pointer size-4" onClick={() => handleRemove(index)} />
+                    )}
                   </h2>
                   <div className="relative w-full overflow-x-auto">
                     <div
@@ -168,7 +197,10 @@ export default function LocationAlone() {
                     >
                       {watch(`friendList.${index}.roadNameAddress`) || '출발 장소'}
                     </div>
-                    <input type="hidden" {...register(`friendList.${index}.roadNameAddress` as const)} />
+                    <input
+                      type="hidden"
+                      {...(register(`friendList.${index}.roadNameAddress` as const), { required: true })}
+                    />
                   </div>
                 </div>
               ))}
@@ -181,7 +213,13 @@ export default function LocationAlone() {
               >
                 친구 추가하기
               </button>
-              <Button isLoading={isLoading} text="중간 지점 찾기" onClick={handleSubmit(onSubmit)} />
+              <Button
+                isLoading={isLoading}
+                isMore={!isAllFieldsFilled}
+                isMoreMessage="중간 지점 찾기"
+                text="중간 지점 찾기"
+                onClick={handleSubmit(onSubmit)}
+              />
             </div>
           </div>
           <div className="h-[500px] shadow-lg rounded-2xl row-span-2">
