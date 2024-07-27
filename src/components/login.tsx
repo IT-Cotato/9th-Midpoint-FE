@@ -83,12 +83,15 @@ export default function Login() {
   return (
     <div className="w-[60%] mx-auto flex flex-col items-center gap-5 mt-14">
       <LoginLogo />
-      <h1 className="text-2xl font-semibold text-[#1A3C95]">ASAP 로그인</h1>
+      <h1 className="text-2xl font-semibold text-[#1A3C95]">싱크스팟 로그인</h1>
       <p className="flex flex-col items-center w-full">
         <span>번거롭기만 한 회원 가입은 이제 그만!</span>
         <span> 일회용 비밀번호를 사용해 편하게 로그인할 수 있어요!</span>
       </p>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-4/5 gap-6 py-5 mx-auto  *:rounded-lg">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col w-4/5 gap-6 py-5 mx-auto *:rounded-lg *:w-[90%] *:mx-auto"
+      >
         <input
           {...register('name')}
           type="text"

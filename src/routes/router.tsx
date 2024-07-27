@@ -1,12 +1,12 @@
 import Home from '@/pages/home';
 import LocationAlone from '@/pages/location-alone';
 import NotFound from '@/pages/not-found';
-import Midpoint from '@/pages/midpoint';
 import Vote from '@/pages/vote';
 import Time from '@/pages/time';
 import { createBrowserRouter } from 'react-router-dom';
 import LocationEach from '@/pages/location-each';
 import Layout from '@/pages/Layout';
+import MidpointResult from '@/components/MidpointResult';
 
 export const router = createBrowserRouter([
   {
@@ -25,11 +25,15 @@ export const router = createBrowserRouter([
         path: 'each/:roomId',
         element: <LocationEach />,
       },
+      {
+        path: 'a/results/:roomId',
+        element: <MidpointResult />,
+      },
+      {
+        path: 'e/results/:roomId',
+        element: <MidpointResult />,
+      },
     ],
-  },
-  {
-    path: '/midpoint',
-    element: <Midpoint />,
   },
   {
     path: '/vote',

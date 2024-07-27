@@ -1,18 +1,20 @@
 interface IButton {
   text: string;
   isLoading: boolean;
+  isMoreMessage?: string;
+  isMore?: boolean;
   onClick?: () => void;
 }
 
-export default function Button({ text, isLoading, onClick }: IButton) {
+export default function Button({ text, isLoading, isMoreMessage, isMore, onClick }: IButton) {
   return (
     <button
       type="submit"
       className="min-h-10 primary-btn disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
-      disabled={isLoading}
+      disabled={isLoading || isMore}
       onClick={onClick}
     >
-      {isLoading ? '잠시만 기다려 주세요...' : text}
+      {isMore ? isMoreMessage : isLoading ? '잠시만 기다려주세요...' : text}
     </button>
   );
 }
