@@ -36,21 +36,17 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
     if (selectedOption === 'friend') {
       setCurrentView('shareLink');
       const { data } = await axios.post(BACKEND_URL + '/api/rooms');
-      setRoomId(data.data.id);
+      await setRoomId(data.data.id);
     } else {
-      const { data } = await axios.post(BACKEND_URL + '/api/rooms');
-      setRoomId(data.data.id);
       try {
-        const { data, status } = await axios.get(BACKEND_URL + '/api/midpoints');
-
-        console.log('백에서 준 data', data);
-        console.log('백에서준 상태', status);
-        // 선택한 것에 따라 결과화면으로 이동되도록 요청하는 url필요
+        const { data } = await axios.post(BACKEND_URL + '/api/rooms');
+        const newRoomId = data.data.id;
+        navigate(`/page/alone/${newRoomId}`);
       } catch (error: any) {
         if (error.response && error.response.status === 401) {
-          // 내가 개인 또는 개개인을 선택했는지에 따라 다른 url로 요청한다.
-          if (selectedOption === 'alone') {
-            navigate('/page/alone/123'); // 위에서 방을 생성하고 얻은 방 id값을 넣는다. (이거 로그인 url을 따로 만들어서 로그인 페이지로 가도록 수정 필요/page/login)
+          if (roomId) {
+            console.log('here!');
+            navigate(`/page/alone/${roomId}`);
           }
         } else if (error.response && error.response.status === 403) {
         } else {
