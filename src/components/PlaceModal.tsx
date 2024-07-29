@@ -32,6 +32,7 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
     setCurrentView('options');
   }
 
+  // 로직 변경 필요
   async function handleNextBtn() {
     if (selectedOption === 'friend') {
       setCurrentView('shareLink');
