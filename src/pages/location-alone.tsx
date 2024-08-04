@@ -1,56 +1,14 @@
 import Button from '@/components/button';
 import KakaoMap from '@/components/kakao-map';
-import Login from '@/components/login';
-import { loginAtom } from '@/stores/login-state';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import Parasol from '@/assets/imgs/Location/parasol.svg?react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
-
-// 입력란의 형식
-interface IFriendList {
-  readonly siDo: string;
-  readonly siGunGu: string;
-  readonly roadNameAddress: string;
-  readonly addressLat: number;
-  readonly addressLong: number;
-}
-
-// 입력 폼으로 부터 받은 값의 형식
-interface IForm {
-  readonly friendList: IFriendList[];
-}
-
-// 입력란의 기본 형태 템플릿
-const default_format: IFriendList = {
-  siDo: '',
-  siGunGu: '',
-  roadNameAddress: '',
-  addressLat: 0,
-  addressLong: 0,
-};
+import { default_format, IForm } from '@/types/Location/alone';
 
 export default function LocationAlone() {
-  //const { roomId } = useParams<{ roomId: string }>();
-
-  //roomId 유효성 확인 후 유효하지 않다면 notFound출력하는 과정
-  // const {
-  //   data: exists,
-  //   isLoading: isPending,
-  //   isError,
-  // } = useQuery({
-  //   queryKey: ['existence', roomId],
-  //   queryFn: () => fetchExistence(roomId!),
-  //   enabled: !!roomId, // roomId가 있을 때만 쿼리 실행
-  // });
-
-  // if (isPending) return <Loading />;
-  // if (isError || !exists?.existence || !Boolean(roomId)) return <NotFound />;
-
-  const isLogin = useAtomValue(loginAtom); // 로그인 여부 확인을 위한 변수
   const [isLoading, setIsLoading] = useState(false); // login form제출 상태
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }[]>([]); // 사용자들의 좌표 목록
   const [isAllFieldsFilled, setIsAllFieldsFilled] = useState(false);
@@ -170,63 +128,59 @@ export default function LocationAlone() {
 
   return (
     <>
-      {isLogin ? (
-        <Login />
-      ) : (
-        <div className="grid w-4/5 gap-3 grid-cols-2 grid-rows-[auto_1fr]">
-          <div className="bg-[#F8F8FB] rounded-2xl shadow-lg max-h-[500px] flex flex-col justify-between gap-2 px-1 pt-10 row-span-2">
-            <div className="flex flex-col items-center gap-2">
-              <Parasol />
-              <h1 className="text-2xl font-semibold text-[#1A3C95]">모임정보 입력</h1>
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow gap-6 py-1 overflow-y-auto">
-              {fields.map((field, index) => (
-                <div key={field.id}>
-                  <h2 className="flex items-center justify-between text-lg font-semibold">
-                    <span>친구 {index + 1} </span>
-                    {fields.length > 1 && (
-                      <XMarkIcon className="cursor-pointer size-4" onClick={() => handleRemove(index)} />
-                    )}
-                  </h2>
-                  <div className="relative w-full overflow-x-auto">
-                    <div
-                      className={`flex items-center min-w-full min-h-10 px-3 bg-white w-max border-none rounded-lg cursor-pointer ${
-                        watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'
-                      }`}
-                      onClick={() => openAddressSearch(index)}
-                    >
-                      {watch(`friendList.${index}.roadNameAddress`) || '출발 장소'}
-                    </div>
-                    <input
-                      type="hidden"
-                      {...(register(`friendList.${index}.roadNameAddress` as const), { required: true })}
-                    />
-                  </div>
-                </div>
-              ))}
-            </form>
-            <div className="flex flex-col gap-2">
-              <button
-                type="button"
-                onClick={() => append(default_format)}
-                className="w-full rounded-lg primary-btn min-h-10"
-              >
-                친구 추가하기
-              </button>
-              <Button
-                isLoading={isLoading}
-                isMore={!isAllFieldsFilled}
-                isMoreMessage="중간 지점 찾기"
-                text="중간 지점 찾기"
-                onClick={handleSubmit(onSubmit)}
-              />
-            </div>
+      <div className="grid w-4/5 gap-3 grid-cols-2 grid-rows-[auto_1fr]">
+        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-2 pt-10 row-span-2 py-2">
+          <div className="flex flex-col items-center gap-2">
+            <Parasol />
+            <h1 className="text-2xl font-semibold text-[#1A3C95]">모임정보 입력</h1>
           </div>
-          <div className="h-[500px] shadow-lg rounded-2xl row-span-2">
-            <KakaoMap coordinates={coordinates} />
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow gap-6 py-1 overflow-y-auto">
+            {fields.map((field, index) => (
+              <div key={field.id}>
+                <h2 className="flex items-center justify-between text-lg font-semibold">
+                  <span>친구 {index + 1} </span>
+                  {fields.length > 1 && (
+                    <XMarkIcon className="cursor-pointer size-4" onClick={() => handleRemove(index)} />
+                  )}
+                </h2>
+                <div className="relative w-full overflow-x-auto">
+                  <div
+                    className={`flex items-center min-w-full min-h-10 px-3 bg-white w-max border-none rounded-lg cursor-pointer ${
+                      watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'
+                    }`}
+                    onClick={() => openAddressSearch(index)}
+                  >
+                    {watch(`friendList.${index}.roadNameAddress`) || '출발 장소'}
+                  </div>
+                  <input
+                    type="hidden"
+                    {...(register(`friendList.${index}.roadNameAddress` as const), { required: true })}
+                  />
+                </div>
+              </div>
+            ))}
+          </form>
+          <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => append(default_format)}
+              className="w-full rounded-lg primary-btn min-h-10"
+            >
+              친구 추가하기
+            </button>
+            <Button
+              isLoading={isLoading}
+              isMore={!isAllFieldsFilled}
+              isMoreMessage="중간 지점 찾기"
+              text="중간 지점 찾기"
+              onClick={handleSubmit(onSubmit)}
+            />
           </div>
         </div>
-      )}
+        <div className="h-[500px] shadow-lg rounded-2xl row-span-2">
+          <KakaoMap coordinates={coordinates} />
+        </div>
+      </div>
     </>
   );
 }

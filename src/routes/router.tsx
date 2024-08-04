@@ -5,8 +5,10 @@ import Vote from '@/pages/vote';
 import Time from '@/pages/time';
 import { createBrowserRouter } from 'react-router-dom';
 import LocationEach from '@/pages/location-each';
-import Layout from '@/pages/Layout';
 import MidpointResult from '@/components/MidpointResult';
+import Login from '@/components/login';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import Layout from '@/components/Layout';
 
 export const router = createBrowserRouter([
   {
@@ -15,8 +17,16 @@ export const router = createBrowserRouter([
   },
   {
     path: '/page',
-    element: <Layout />,
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
     children: [
+      {
+        path: 'login/:roomId',
+        element: <Login />,
+      },
       {
         path: 'alone/:roomId',
         element: <LocationAlone />,
@@ -45,6 +55,6 @@ export const router = createBrowserRouter([
   },
   {
     path: '*', // 모든 경로에 부합하지 않는 경우
-    element: <NotFound />, // NotFound 컴포넌트 렌더링
+    element: <NotFound />,
   },
 ]);
