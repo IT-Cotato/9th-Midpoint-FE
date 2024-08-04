@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import Button from '@/components/button';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchSavePlace } from '@/apis/enter-location';
+import { fetchEachSavePlace } from '@/apis/enter-location';
 import { default_format, IForm } from '@/types/Location/each';
 import Parasol from '@/assets/imgs/Location/parasol.svg?react';
 
@@ -45,7 +45,7 @@ export default function LocationEachForm() {
 
   // 입력 완료 버튼 클릭시 API 요청
   const { mutate: submitLocation } = useMutation({
-    mutationFn: fetchSavePlace,
+    mutationFn: fetchEachSavePlace,
     onSuccess: (data, variable) => {
       // 장소 입력 방에 저장된 사람들의 정보 다시 불러오기
       queryClient.invalidateQueries({ queryKey: ['placeRoomUsers', roomId] });
