@@ -17,7 +17,8 @@ interface ModalProps {
 export default function PlaceModal({ isOpen, onClose }: ModalProps) {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [currentView, setCurrentView] = useState<string>('options');
+  const [currentView, setCurrentView] = useState<string>('alone');
+  const [copyClicked, setCopyClicked] = useState<boolean>(false);
   const [roomId, setRoomId] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -29,7 +30,14 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
   function handleCloseModal() {
     onClose();
     setSelectedOption(null);
-    setCurrentView('options');
+    setCurrentView('alone');
+  }
+
+  function handleCopyClicked() {
+    navigator.clipboard.writeText(`https://cotato-midpoint.site/page/e/results/${roomId}`).then(() => {
+      setCopyClicked(true);
+      setTimeout(() => setCopyClicked(false), 1000);
+    });
   }
 
   // 로직 변경 필요
@@ -37,7 +45,7 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
     if (selectedOption === 'friend') {
       setCurrentView('shareLink');
       const { data } = await axios.post(BACKEND_URL + '/api/rooms');
-      await setRoomId(data.data.id);
+      setRoomId(data.data.id);
     } else {
       try {
         const { data } = await axios.post(BACKEND_URL + '/api/rooms');
@@ -61,7 +69,7 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <motion.div
-        className="relative p-8 bg-white rounded-lg shadow-lg w-[490px] h-[500px] flex flex-col items-center gap-2 border-2 border-black"
+        className="relative p-8 bg-white rounded-lg shadow-lg w-[490px] h-[500px] flex flex-col items-center gap-2"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1, transition: { type: 'tween' } }}
         exit={{ opacity: 0, scale: 0.8 }}
@@ -70,11 +78,11 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
           <XMarkIcon className="size-7" />
         </button>
         <AnimatePresence initial={false}>
-          {currentView === 'options' && (
+          {currentView === 'alone' && (
             <motion.div className="flex flex-col items-center w-full gap-2">
               <VoteLogo className="size-9" />
-              <h2 className="mb-4 text-xl font-semibold text-[#1A3C95]">어떤 방법으로 장소를 결정할까요?</h2>
-              <h2 className="mb-4 text-gray-500">편한 방식으로 모임 장소를 결정할 수 있어요!</h2>
+              <h2 className="mb-4 text-2xl font-semibold text-[#1A3C95]">어떤 방법으로 장소를 결정할까요?</h2>
+              <h2 className="mb-4 text-lg text-gray-500">편한 방식으로 모임 장소를 결정할 수 있어요!</h2>
               <div className="flex w-full gap-2 mt-4">
                 <motion.div
                   className={`flex flex-col items-center  p-2 border rounded-lg cursor-pointer w-1/2 ${
@@ -102,7 +110,7 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
                 </motion.div>
               </div>
               <button
-                className={`absolute bottom-5 w-[90%] py-2 rounded-lg text-white ${
+                className={`absolute bottom-5 w-[90%] py-2 rounded-lg text-white transition-colors ${
                   selectedOption ? 'bg-blue-500 cursor-pointer' : 'bg-gray-300 cursor-not-allowed'
                 }`}
                 onClick={handleNextBtn}
@@ -115,8 +123,8 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
           {currentView === 'shareLink' && (
             <motion.div className="flex flex-col items-center w-full gap-2">
               <SharePin className="mb-4 size-12" />
-              <h2 className="mb-4 text-xl font-semibold text-[#1A3C95]">친구들에게 링크 공유하기</h2>
-              <p className="flex flex-col gap-1 mb-4 text-gray-500">
+              <h2 className="mb-4 text-2xl font-semibold text-[#1A3C95]">친구들에게 링크 공유하기</h2>
+              <p className="flex flex-col gap-1 mb-6 text-lg text-gray-500">
                 <span>링크를 공유하면 각자 위치를 입력한 후</span>
                 <span>투표를 통해 중간 지점을 결정할 수 있어요!</span>
               </p>
@@ -124,19 +132,19 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
                 type="text"
                 readOnly
                 value={`https://cotato-midpoint.site/page/e/results/${roomId}`}
-                className="w-full px-4 py-2 mb-16 text-center bg-gray-300 border rounded-lg cursor-not-allowed"
+                className="w-full px-4 py-4 mb-16 text-center bg-white border-none rounded-lg shadow-lg cursor-not-allowed focus:ring-2 focus:ring-blue-500"
               />
               <button
-                className="w-full py-2 mb-1 text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-400 min-h-10"
-                onClick={() => navigate(`/page/e/results/${roomId}`)}
+                className="w-full py-2 font-semibold text-white transition-all bg-gray-400 rounded-lg min-h-10"
+                onClick={handleCopyClicked}
               >
-                링크 이동하기
+                {copyClicked ? '링크 복사 완료!' : '링크 복사하기'}
               </button>
               <button
-                className="w-full py-2 text-gray-500 transition-colors bg-gray-300 rounded-lg min-h-10 hover:bg-gray-400"
-                onClick={handleCloseModal}
+                className="w-full py-2 mb-1 font-semibold text-white transition-colors bg-blue-500 rounded-lg hover:bg-blue-400 min-h-10"
+                onClick={() => navigate(`/page/e/results/${roomId}`)}
               >
-                닫기
+                장소 입력하러 이동
               </button>
             </motion.div>
           )}

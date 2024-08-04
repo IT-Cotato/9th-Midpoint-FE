@@ -15,21 +15,7 @@ interface IForm {
 }
 
 export default function Login() {
-  const { roomId } = useParams<{ roomId: string }>();
-
-  //roomId 유효성 확인 후 유효하지 않다면 notFound출력하는 과정
-  // const {
-  //   data: exists,
-  //   isLoading: isPending,
-  //   isError,
-  // } = useQuery({
-  //   queryKey: ['existence', roomId],
-  //   queryFn: () => fetchExistence(roomId!),
-  //   enabled: !!roomId, // roomId가 있을 때만 쿼리 실행
-  // });
-
-  // if (isPending) return <Loading />;
-  // if (isError || !exists?.existence || !Boolean(roomId)) return <NotFound />;
+  const { roomId } = useParams();
 
   const [formLoading, setFormLoading] = useState(false);
   const navigate = useNavigate();
@@ -49,6 +35,7 @@ export default function Login() {
     onSuccess: (data: any) => {
       localStorage.setItem('accessToken', data.data.data.accessToken);
       localStorage.setItem('refreshToken', data.data.data.refreshToken);
+      localStorage.setItem('roomId', roomId!);
       setLoginState(true);
       navigate(`/place/alone/${roomId}`);
     },
@@ -98,7 +85,7 @@ export default function Login() {
           placeholder="이름"
           className="w-full py-2 transition bg-gray-100 border-none outline-none focus:ring-2 ring-indigo-100 focus:outline-none"
         />
-        {errors.name && <span className="text-red-500 ">{errors.name.message}</span>}
+        {errors.name && <span className="font-semibold text-red-500">{errors.name.message}</span>}
 
         <input
           {...register('pw')}
@@ -106,7 +93,7 @@ export default function Login() {
           placeholder="비밀번호"
           className="w-full py-2 transition bg-gray-100 border-none focus:ring-2 ring-indigo-100 focus:outline-none"
         />
-        {errors.pw && <span className="text-red-500">{errors.pw.message}</span>}
+        {errors.pw && <span className="font-semibold text-red-500">{errors.pw.message}</span>}
 
         <button
           type="submit"

@@ -12,6 +12,7 @@ export const axiosInstance = axios.create({
 const logout = () => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('refreshToken');
+  localStorage.removeItem('roomId');
 };
 
 // accessToken, refreshToken 재발급하는 함수
@@ -41,9 +42,16 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // 헤더에 엑세스 토큰 담기
     const accessToken: string | null = localStorage.getItem('accessToken');
+    const roomId: string | null = localStorage.getItem('roomId');
+
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
+
+    if (roomId) {
+      config.headers.RoomId = roomId;
+    }
+
     return config;
   },
   (error) => {
