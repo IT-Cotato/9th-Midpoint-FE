@@ -40,29 +40,15 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
     });
   }
 
-  // 로직 변경 필요
   async function handleNextBtn() {
     if (selectedOption === 'friend') {
       setCurrentView('shareLink');
       const { data } = await axios.post(BACKEND_URL + '/api/rooms');
       setRoomId(data.data.id);
     } else {
-      try {
-        const { data } = await axios.post(BACKEND_URL + '/api/rooms');
-        const newRoomId = data.data.id;
-        navigate(`/page/alone/${newRoomId}`);
-      } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-          if (roomId) {
-            console.log('here!');
-            navigate(`/page/alone/${roomId}`);
-          }
-        } else if (error.response && error.response.status === 403) {
-        } else {
-          console.log('에러아님 무튼 아님');
-          console.error('Error fetching data:', error);
-        }
-      }
+      const { data } = await axios.post(BACKEND_URL + '/api/rooms');
+      const newRoomId = data.data.id;
+      navigate(`/page/a/results/${newRoomId}`);
     }
   }
 

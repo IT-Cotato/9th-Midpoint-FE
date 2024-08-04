@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useSetAtom } from 'jotai';
 import { loginAtom } from '@/stores/login-state';
@@ -8,6 +8,7 @@ import { fetchLogin } from '@/apis/login';
 import LoginLogo from '@/assets/imgs/loginLogo.svg?react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from '@/types/Login';
+import { FROM_ALONE_RESULT, FROM_EACH_RESULT, FROM_ENTER_ALONE, FROM_ENTER_EACH } from '@/constants';
 
 interface IForm {
   name: string;
@@ -15,6 +16,9 @@ interface IForm {
 }
 
 export default function Login() {
+  const location = useLocation();
+  const from = location.state.from;
+
   const { roomId } = useParams();
 
   const [formLoading, setFormLoading] = useState(false);
@@ -37,7 +41,23 @@ export default function Login() {
       localStorage.setItem('refreshToken', data.data.data.refreshToken);
       localStorage.setItem('roomId', roomId!);
       setLoginState(true);
-      navigate(`/place/alone/${roomId}`);
+      switch (from) {
+        case FROM_ALONE_RESULT:
+          navigate(`/page/a/results/${roomId}`);
+          break;
+        case FROM_EACH_RESULT:
+          navigate(`/page/e/results/${roomId}`);
+          break;
+        case FROM_ENTER_ALONE:
+          navigate(`/page/alone/${roomId}`);
+          break;
+        case FROM_ENTER_EACH:
+          navigate(`/page/each/${roomId}`);
+          break;
+        default:
+          navigate('/');
+          break;
+      }
     },
     onError: (error) => {
       console.log('로그인 과정 에러', error);

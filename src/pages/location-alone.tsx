@@ -1,26 +1,65 @@
 import Button from '@/components/button';
 import KakaoMap from '@/components/kakao-map';
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import Parasol from '@/assets/imgs/Location/parasol.svg?react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { default_format, IForm } from '@/types/Location/alone';
+import { fetchAloneSavePlace } from '@/apis/enter-location';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import { BACKEND_URL } from '@/apis';
+import { FROM_ENTER_ALONE } from '@/constants';
 
 export default function LocationAlone() {
+  const { roomId } = useParams();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false); // login form제출 상태
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }[]>([]); // 사용자들의 좌표 목록
   const [isAllFieldsFilled, setIsAllFieldsFilled] = useState(false);
+  const queryClient = useQueryClient();
   const { control, register, handleSubmit, setValue, watch } = useForm<IForm>({
     defaultValues: {
       friendList: [default_format],
     },
   });
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: 'friendList',
   });
+
+  useEffect(() => {
+    async function handleEnterAlone() {
+      try {
+        const { data } = await axios.get(`${BACKEND_URL}/api/place-rooms`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            RoomId: localStorage.getItem('roomId'),
+          },
+        });
+        if (data.isSuccess && data.data.existence) {
+          const places = data.data.places;
+          if (places && places.length > 0) {
+            const initialValues = places.map((item: any) => ({
+              siDo: item.siDo,
+              siGunGu: item.siGunGu,
+              roadNameAddress: item.roadNameAddress,
+              addressLat: item.addressLat,
+              addressLong: item.addressLong,
+            }));
+            replace(initialValues);
+            setCoordinates(places.map((item: any) => ({ lat: item.addressLat, lng: item.addressLong })));
+          }
+        }
+      } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+          navigate(`/page/login/${roomId}`, { state: { from: FROM_ENTER_ALONE } });
+        }
+      }
+    }
+    handleEnterAlone();
+  }, [replace, roomId, navigate]);
 
   // 주소 검색하는 함수
   const openAddressSearch = (index: number) => {
@@ -58,32 +97,20 @@ export default function LocationAlone() {
 
   // 중간지점찾기 API 요청
   const { mutate: searchMiddlePoint } = useMutation({
-    mutationFn: (data: any) => {
-      return axios.post('https://www.api.cotato-midpoint.site/api/middle-points', data);
-    },
+    mutationFn: fetchAloneSavePlace,
     onSuccess: (data, variable) => {
       console.log('API 요청 성공');
       console.log('중간지점찾기 API 요청시 보낸 데이터', variable);
       console.log('중간지점찾기 API 요청 이후 받은 응답 데이터', data);
+      // 다른사람들의 맵도 invalidate필요
+      queryClient.invalidateQueries({ queryKey: ['midpointResults', roomId] });
+      navigate(`/page/a/results/${roomId}`);
     },
     onError: (error) => {
       console.error(`중간 지점 결과 조회 API 요청 실패, 에러명 : ${error}`);
       setIsLoading(false);
     },
   });
-
-  // 모든 필드가 채워졌는지 확인하는 함수
-  useEffect(() => {
-    const subscription = watch((value) => {
-      const friendList = value.friendList || [];
-      const allFieldsFilled = friendList.every(
-        (friend) =>
-          friend && friend.roadNameAddress && friend.siDo && friend.siGunGu && friend.addressLat && friend.addressLong,
-      );
-      setIsAllFieldsFilled(allFieldsFilled);
-    });
-    return () => subscription.unsubscribe();
-  }, [watch]);
 
   // 중간지점찾기 버튼 클릭시 수행되는 함수
   const onSubmit = (data: IForm) => {
@@ -109,15 +136,7 @@ export default function LocationAlone() {
 
     console.log('중간지점 찾기 요청시 서버로 보내는 값', submissionData);
 
-    searchMiddlePoint(submissionData, {
-      onSuccess: () => {
-        console.log('2번째로 불림- API 요청 성공');
-      },
-      onError: (error) => {
-        console.error(`2번째로 불림 중간 지점 결과 조회 API 요청 실패, 에러명 : ${error}`);
-        setIsLoading(false);
-      },
-    });
+    searchMiddlePoint(submissionData);
   };
 
   // 친구 삭제 시 좌표 정보도 제거하는 함수
@@ -125,6 +144,19 @@ export default function LocationAlone() {
     remove(index);
     setCoordinates((prev) => prev.filter((_, i) => i !== index));
   };
+
+  // 모든 필드가 채워졌는지 확인하는 함수
+  useEffect(() => {
+    const subscription = watch((value) => {
+      const friendList = value.friendList || [];
+      const allFieldsFilled = friendList.every(
+        (friend) =>
+          friend && friend.roadNameAddress && friend.siDo && friend.siGunGu && friend.addressLat && friend.addressLong,
+      );
+      setIsAllFieldsFilled(allFieldsFilled);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   return (
     <>
@@ -140,7 +172,7 @@ export default function LocationAlone() {
                 <h2 className="flex items-center justify-between text-lg font-semibold">
                   <span>친구 {index + 1} </span>
                   {fields.length > 1 && (
-                    <XMarkIcon className="cursor-pointer size-4" onClick={() => handleRemove(index)} />
+                    <XMarkIcon className="w-4 h-4 cursor-pointer" onClick={() => handleRemove(index)} />
                   )}
                 </h2>
                 <div className="relative w-full overflow-x-auto">
@@ -154,7 +186,7 @@ export default function LocationAlone() {
                   </div>
                   <input
                     type="hidden"
-                    {...(register(`friendList.${index}.roadNameAddress` as const), { required: true })}
+                    {...register(`friendList.${index}.roadNameAddress` as const, { required: true })}
                   />
                 </div>
               </div>
