@@ -20,7 +20,7 @@ const Time = () => {
           {selectedDates.length > 0 ? (
             <VoteCalendar selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
           ) : (
-            <Calendar selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
+            <Calendar setSelectedDates={setSelectedDates} />
           )}
         </GridBox>
       </Content>

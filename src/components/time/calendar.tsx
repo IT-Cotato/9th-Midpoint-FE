@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import CalItemIcon from '@/assets/imgs/time-calItem-icon1.svg?react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { CalendarProps } from '@/pages/time';
+// import { CalendarProps } from '@/pages/time';
 // import { createVoteRoom } from '@/apis/time-vote.api';
 // import { useParams } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { CalendarProps } from '@/pages/time';
 // type ValuePiece = Date | null;
 // type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-const FristCalendar: React.FC<CalendarProps> = ({ selectedDates, setSelectedDates }) => {
+const FristCalendar = ({ setSelectedDates }:any) => {
   // const navigate = useNavigate();
   const [selectedLocalDates, setSelectedLocalDates] = useState<Date[]>([]);
 
@@ -84,7 +84,7 @@ const FristCalendar: React.FC<CalendarProps> = ({ selectedDates, setSelectedDate
             value={selectedLocalDates.length > 0 ? selectedLocalDates : undefined}
             onChange={handleDateChange}
             locale="ko-KR"
-            formatDay={(locale, date) => date.getDate().toString()} //일 제거
+            formatDay={(_locale, date) => date.getDate().toString()} //일 제거
             calendarType="gregory" //일요일
             showNeighboringMonth={false} // 전달, 다음달 날짜 숨기기
             next2Label={null} // +1년 & +10년 이동 버튼 숨기기
