@@ -2,8 +2,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 
-import Header from '@/components/header';
-import Title from '@/components/time/time-title';
 import Calendar from '@/components/time/calendar';
 import VoteCalendar from '@/components/time/vote-calendar';
 
@@ -16,10 +14,8 @@ const Time = () => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
 
   return (
-    <Container className="max-w-[1800px]">
+    <Container>
       <Content>
-        <Header />
-        <Title />
         <GridBox>
           {selectedDates.length > 0 ? (
             <VoteCalendar selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
@@ -35,7 +31,8 @@ const Time = () => {
 const Container = styled.div`
   display: flex;
   margin: 0 auto;
-  width: 100%;
+  width: 80%;
+  border: 1px solid red;
 `;
 
 const Content = styled.div`
