@@ -43,15 +43,15 @@ export const router = createBrowserRouter([
         path: 'e/results/:roomId',
         element: <MidpointResult />,
       },
+      {
+        path: ':roomId/time',
+        element: <Time />,
+      },
     ],
   },
   {
     path: '/vote',
     element: <Vote />,
-  },
-  {
-    path: '/time',
-    element: <Time />,
   },
   {
     path: '*', // 모든 경로에 부합하지 않는 경우
