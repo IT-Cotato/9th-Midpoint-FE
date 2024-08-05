@@ -35,7 +35,7 @@ export default function LocationAlone() {
         const { data } = await axios.get(`${BACKEND_URL}/api/place-rooms`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            RoomId: localStorage.getItem('roomId'),
+            RoomId: roomId,
           },
         });
         if (data.isSuccess && data.data.existence) {
