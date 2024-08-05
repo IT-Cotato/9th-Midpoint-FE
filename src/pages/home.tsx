@@ -1,244 +1,314 @@
-import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { useState } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
-import Button from '@/components/button';
-import KakaoMap from '@/components/kakao-map';
-import styled from 'styled-components';
-import SideBar from '@/components/Sidebar';
+import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import MiniHome from '@/assets/imgs/Home/home.svg?react';
+import MiniPin from '@/assets/imgs/Home/pin.svg?react';
+import MiniVote from '@/assets/imgs/Home/smallvote.svg?react';
+import MiniClock from '@/assets/imgs/Home/clock.svg?react';
+import MainLogo from '@/assets/imgs/Navbar/mainLogo.svg?react';
+import WAvatar from '@/assets/imgs/Home/w_avatar.png';
+import MidpointLogo from '@/assets/imgs/Home/midpointLogo.png';
+import VoteLogo from '@/assets/imgs/Home/voteLogo.png';
+import TimeLogo from '@/assets/imgs/Home/timeLogo.png';
+import PlaceModal from '@/components/PlaceModal';
 
-// 운행 수단
-enum Transport {
-  public = '지하철',
-  car = '자동차',
+interface DotProps {
+  num: number;
+  currentPage: number;
+  onClick: (page: number) => void;
+  isFirstSection: boolean;
 }
 
-// 입력란의 형식
-interface IFriendList {
-  readonly username: string;
-  readonly transport: Transport;
-  readonly siDo: string;
-  readonly siGunGu: string;
-  readonly roadNameAddress: string;
-  readonly addressLat: number;
-  readonly addressLong: number;
+interface DotsProps {
+  currentPage: number;
+  onDotClick: (page: number) => void;
 }
 
-// 입력 폼으로 부터 받은 값의 형식
-interface IForm {
-  readonly friendList: IFriendList[];
-}
-
-// 입력란의 기본 형태 템플릿
-const default_format: IFriendList = {
-  username: '',
-  transport: Transport.public,
-  siDo: '',
-  siGunGu: '',
-  roadNameAddress: '',
-  addressLat: 0,
-  addressLong: 0,
-};
-
-export default function Home() {
-  const [isLoading, setIsLoading] = useState(false); // form제출 상태
-  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }[]>([]); // 사용자들의 좌표 목록
-  const { control, register, handleSubmit, setValue, watch } = useForm<IForm>({
-    defaultValues: {
-      friendList: [default_format],
-    },
-  });
-  const { fields, append } = useFieldArray({
-    control,
-    name: 'friendList',
-  });
-
-  // 주소 검색하는 함수
-  const openAddressSearch = (index: number) => {
-    new window.daum.Postcode({
-      oncomplete: function (data: any) {
-        const fullAddress = data.roadAddress;
-        const siDo = data.sido;
-        const siGunGu = data.sigungu;
-        const roadNameAddress = data.roadAddress;
-
-        // Kakao 지도 API를 사용하여 위도와 경도 가져오기
-        const geocoder = new window.kakao.maps.services.Geocoder();
-        geocoder.addressSearch(fullAddress, function (result: any, status: any) {
-          if (status === window.kakao.maps.services.Status.OK) {
-            const addressLat = parseFloat(result[0].y);
-            const addressLong = parseFloat(result[0].x);
-
-            // 주소와 좌표 설정
-            setValue(`friendList.${index}.siDo`, siDo);
-            setValue(`friendList.${index}.siGunGu`, siGunGu);
-            setValue(`friendList.${index}.roadNameAddress`, roadNameAddress);
-            setValue(`friendList.${index}.addressLat`, addressLat);
-            setValue(`friendList.${index}.addressLong`, addressLong);
-
-            setCoordinates((prev) => {
-              const newCoordinates = [...prev];
-              newCoordinates[index] = { lat: addressLat, lng: addressLong };
-              return newCoordinates;
-            });
-          }
-        });
-      },
-    }).open();
-  };
-
-  // 중간지점찾기 API 요청
-  const { mutate: searchMiddlePoint } = useMutation({
-    mutationFn: (data: any) => {
-      return axios.post('/api/middle-points', data);
-    },
-    onSuccess: (data, variable) => {
-      console.log('API 요청 성공');
-      console.log('중간지점찾기 API 요청시 보낸 데이터', variable);
-      console.log('중간지점찾기 API 요청 이후 받은 응답 데이터', data);
-    },
-    onError: (error) => {
-      console.error(`중간 지점 결과 조회 API 요청 실패, 에러명 : ${error}`);
-      setIsLoading(false);
-    },
-  });
-
-  // 중간지점찾기 버튼 클릭시 수행되는 함수
-  const onSubmit = (data: IForm) => {
-    setIsLoading(true);
-    const allFieldsFilled = data.friendList.every(
-      (friend) =>
-        friend.username &&
-        friend.transport &&
-        friend.roadNameAddress &&
-        friend.siDo &&
-        friend.siGunGu &&
-        friend.addressLat &&
-        friend.addressLong,
-    );
-
-    if (!allFieldsFilled) {
-      setIsLoading(false);
-      alert('모두 입력해주세요!');
-      return;
-    }
-
-    const submissionData = data.friendList.map(({ username, transport, ...rest }) => ({
-      ...rest,
-      transport: transport === Transport.public ? 'public' : 'car',
-    }));
-
-    console.log('중간지점 찾기 요청시 서버로 보내는 값', submissionData);
-    searchMiddlePoint(submissionData, {
-      onSuccess: () => {
-        console.log('2번째로 불림- API 요청 성공');
-      },
-      onError: (error) => {
-        console.error(`2번째로 불림 중간 지점 결과 조회 API 요청 실패, 에러명 : ${error}`);
-        setIsLoading(false);
-      },
-    });
-  };
+function Dot({ num, currentPage, onClick, isFirstSection }: DotProps) {
+  const isActive = currentPage === num;
+  const activeColor = isFirstSection ? '#5786FF' : '#FFFFFF';
+  const inactiveBorderColor = isFirstSection ? '#5786FF' : '#FFFFFF';
 
   return (
-    <Container className="max-w-[1800px]">
-      <SideBar />
-      <Content>
-        <Title className="text-4xl font-medium pt-9">모두의 중간</Title>
-        <Textbox className="rounded-lg">
-          <p>상대방에게 링크를 공유하여 주소를 입력하게 하고 중간 지점을 찾아보세요!</p>
-        </Textbox>
-
-        <div className="flex w-full gap-20 min-w-[1024px] justify-center mt-20">
-          <div className="w-[45%] min-w-[540px] h-96 flex flex-col gap-3">
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 py-1 overflow-auto">
-              {fields.map((field, index) => (
-                <div key={field.id} className="px-1">
-                  <h2 className="text-lg font-semibold">친구 {index + 1}</h2>
-                  <div className="flex items-center justify-between w-full *:rounded-lg gap-3">
-                    <input
-                      {...register(`friendList.${index}.username` as const, { required: true })}
-                      placeholder="이름 입력"
-                      className="w-40 transition bg-indigo-100 border-none ring-1 focus:ring-2 ring-indigo-100 focus:outline-none"
-                    />
-                    <div className="relative w-40">
-                      <select
-                        {...register(`friendList.${index}.transport` as const, { required: true })}
-                        className="w-40 bg-indigo-100 border-none rounded-lg outline-none appearance-none ring-0 focus:ring-0"
-                      >
-                        {Object.values(Transport).map((option) => (
-                          <option key={option} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="absolute inset-y-0 flex items-center px-2 pointer-events-none right-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
-                          <path
-                            d="M6.96356 10.1563C7.76315 11.1158 9.23685 11.1158 10.0364 10.1563L15.7664 3.28036C16.8519 1.97771 15.9256 -9.53674e-07 14.2299 -9.53674e-07H2.77008C1.07441 -9.53674e-07 0.148095 1.97771 1.23364 3.28037L6.96356 10.1563Z"
-                            fill="#5142FF"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="relative overflow-x-scroll w-72 hide-scrollbar hide-x-scrollbar">
-                      <div
-                        className={`flex items-center min-w-full h-10 px-3 transition bg-indigo-100 w-max border-none rounded-lg cursor-pointer ring-1 focus:ring-2 ring-indigo-100 ${watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'}`}
-                        onClick={() => openAddressSearch(index)}
-                      >
-                        {watch(`friendList.${index}.roadNameAddress`) || '주소 입력'}
-                      </div>
-                      <input
-                        type="hidden"
-                        {...register(`friendList.${index}.roadNameAddress` as const, { required: true })}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </form>
-            <button
-              type="button"
-              onClick={() => append(default_format)}
-              className="w-full font-semibold text-indigo-600 bg-indigo-100 rounded-lg min-h-10"
-            >
-              +
-            </button>
-            <Button isLoading={isLoading} text="중간 지점 찾기" onClick={handleSubmit(onSubmit)} />
-          </div>
-          <div className="w-[36%] rounded-xl h-[500px] -mt-8 shadow-lg">
-            <KakaoMap coordinates={coordinates} />
-          </div>
-        </div>
-      </Content>
-    </Container>
+    <div
+      onClick={() => onClick(num)}
+      className={`w-4 h-4 border-2 rounded-full cursor-pointer transition-all duration-500 ${
+        isActive ? `bg-[${activeColor}] border-[${activeColor}]` : `border-[${inactiveBorderColor}]`
+      }`}
+      style={{
+        backgroundColor: isActive ? activeColor : 'transparent',
+        borderColor: inactiveBorderColor,
+      }}
+    ></div>
   );
 }
 
-const Container = styled.div`
-  display: flex;
-  margin: 0 auto;
-  width: 100vw;
-`;
+function Dots({ currentPage, onDotClick }: DotsProps) {
+  const isFirstSection = currentPage === 1;
+  return (
+    <div className="fixed z-50 flex flex-col items-center justify-between space-y-4 transform -translate-y-1/2 top-1/2 right-24">
+      <Dot num={1} currentPage={currentPage} onClick={onDotClick} isFirstSection={isFirstSection} />
+      <Dot num={2} currentPage={currentPage} onClick={onDotClick} isFirstSection={isFirstSection} />
+      <Dot num={3} currentPage={currentPage} onClick={onDotClick} isFirstSection={isFirstSection} />
+    </div>
+  );
+}
 
-const Content = styled.div`
-  width: 80%;
-  min-width: 1024px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-`;
+export default function Home() {
+  const outerDivRef = useRef<HTMLDivElement>(null);
+  const thirdSectionRef = useRef<HTMLDivElement>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-const Title = styled.h1``;
+  useEffect(() => {
+    function handleScroll(e: WheelEvent) {
+      if (isScrolling) return;
 
-const Textbox = styled.div`
-  width: 55%;
-  min-width: 700px;
-  background: rgba(81, 66, 255, 0.1);
-  color: ${(props) => props.theme.mainColor};
-  padding: 10px 5px;
-  font-size: 18px;
-  text-align: center;
-`;
+      setIsScrolling(true);
+
+      e.preventDefault();
+      const { deltaY } = e;
+
+      if (deltaY > 0) {
+        if (currentPage < 3) {
+          setCurrentPage((prev) => Math.min(prev + 1, 3));
+        }
+      } else {
+        if (currentPage > 1) {
+          setCurrentPage((prev) => Math.max(prev - 1, 1));
+        }
+      }
+
+      setTimeout(() => {
+        setIsScrolling(false);
+      }, 1000);
+    }
+
+    const outerDivRefCurrent = outerDivRef.current;
+    outerDivRefCurrent?.addEventListener('wheel', handleScroll);
+
+    return () => {
+      outerDivRefCurrent?.removeEventListener('wheel', handleScroll);
+    };
+  }, [isScrolling, currentPage]);
+
+  useEffect(() => {
+    if (outerDivRef.current) {
+      outerDivRef.current.scrollTo({
+        top: (currentPage - 1) * window.innerHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [currentPage]);
+
+  const handleDotClick = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleIconClick = () => {
+    setCurrentPage(3);
+    thirdSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
+  const avatars = [
+    { name: '이솔', role: 'PM', description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당' },
+    { name: '김기림', role: 'PM', description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당' },
+    { name: '조연수', role: 'DE', description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당' },
+    {
+      name: '김태윤',
+      role: 'FE-LEAD',
+      description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당',
+    },
+    { name: '채다희', role: 'FE', description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당' },
+    {
+      name: '윤찬호',
+      role: 'BE-LEAD',
+      description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당',
+    },
+    { name: '신예진', role: 'BE', description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당' },
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.4,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+  };
+
+  const sectionItemVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { duration: 2 } },
+    exit: { opacity: 0 },
+  };
+
+  return (
+    <div ref={outerDivRef} className="outer h-screen overflow-y-auto bg-[#5786FF] overflow-x-hidden">
+      <Dots currentPage={currentPage} onDotClick={handleDotClick} />
+      <section className="flex flex-col items-center h-[calc(100vh-80px)] m-10 bg-white rounded-xl min-w-[1024px] relative">
+        <div className="flex items-center gap-3 py-8">
+          <MainLogo />
+          <h1 className="text-5xl font-semibold text-[#253E7F]">syncspot</h1>
+        </div>
+        <div className="relative flex items-center justify-around w-2/5 p-4 bg-[#5786FF] rounded-full">
+          <div className="relative">
+            <MiniHome className="cursor-pointer size-11" onClick={handleIconClick} />
+          </div>
+          <div className="relative">
+            <MiniPin className="cursor-pointer size-11" onClick={handleIconClick} />
+          </div>
+          <div className="relative">
+            <MiniVote className="cursor-pointer size-11" onClick={handleIconClick} />
+          </div>
+          <div className="relative">
+            <MiniClock className="cursor-pointer size-11" onClick={handleIconClick} />
+          </div>
+        </div>
+        <p className="absolute flex flex-col gap-3 text-2xl font-semibold bottom-8 left-8">
+          <span>모두가 편안한 만남을 위해</span>
+          <span>중간 지점을 찾아주는 '모두의 중간'</span>
+        </p>
+      </section>
+      <section className="h-screen min-w-[1024px]">
+        <AnimatePresence>
+          {currentPage === 2 && (
+            <motion.div
+              className="relative flex flex-col items-center justify-center w-full h-full px-32"
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+            >
+              <motion.div
+                className="absolute left-24 top-12"
+                initial={{ opacity: 0, x: -1500 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 1500 }}
+                transition={{ duration: 2, type: 'spring' }}
+              >
+                <h2 className="mb-8 text-4xl font-bold text-white">ABOUT US</h2>
+                <p className="flex flex-col gap-2 text-xl text-white">
+                  <span>IT 연합동아리 코테이토를 아시나요?</span>
+                  <span>
+                    팀 'ASAP'은 코테이토에서 만난 9명이 모여 모두가 편안한 만남을 가질 수 있는 서비스를 위해 결성된
+                    팀이에요!
+                  </span>
+                </p>
+              </motion.div>
+              <div className="*:text-black mt-40 bg-white rounded-xl p-10 py-14  min-w-[1024px] mx-auto shadow-xl">
+                <div className="grid grid-cols-3 gap-8">
+                  {avatars.slice(0, 3).map((avatar, index) => (
+                    <motion.div key={index} className="flex flex-col items-center" variants={itemVariants}>
+                      <img src={WAvatar} alt="Avatar" className="w-24 h-24 mb-4" />
+                      <h3 className="text-xl font-semibol">
+                        {avatar.name} / {avatar.role}
+                      </h3>
+                      <p className="text-center">{avatar.description}</p>
+                    </motion.div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-4 gap-8 mt-8">
+                  {avatars.slice(3).map((avatar, index) => (
+                    <motion.div key={index} className="flex flex-col items-center" variants={itemVariants}>
+                      <img src={WAvatar} alt="Avatar" className="w-24 h-24 mb-4" />
+                      <h3 className="text-xl font-semibold ">
+                        {avatar.name} / {avatar.role}
+                      </h3>
+                      <p className="text-center ">{avatar.description}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+      <section ref={thirdSectionRef} className="flex min-w-[1024px] h-screen">
+        <AnimatePresence>
+          {currentPage === 3 && (
+            <motion.div
+              className="relative flex flex-col justify-center w-full h-full px-32"
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+            >
+              <motion.div
+                className="absolute left-24 top-12"
+                initial={{ opacity: 0, x: -1500 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 1500 }}
+                transition={{ duration: 2, type: 'spring' }}
+              >
+                <h2 className="mb-8 text-4xl font-semibold text-white">ABOUT SERVICE</h2>
+                <p className="flex flex-col gap-2 text-xl text-white">
+                  <span>‘모두의 중간'은 모두가 편안한 만남을 위해</span>
+                  <span>
+                    친구들의 위치와 나의 위치의 중간 지점을 찾아 만날 장소와 시간을 투표할 수 있는 서비스입니다!
+                  </span>
+                </p>
+              </motion.div>
+              <div className="mt-20 min-w-[1024px] mx-auto">
+                <motion.div
+                  className="grid grid-cols-3 gap-8 *:text-white mt-24 p-8"
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                  variants={sectionItemVariants}
+                >
+                  <motion.div className="flex flex-col items-center" variants={itemVariants}>
+                    <img src={MidpointLogo} alt="MidpointLogo" className="mb-4 rounded-full shadow-lg size-64" />
+                    <h3 className="text-xl font-semibold">중간지점찾기</h3>
+                    <p className="flex flex-col items-center mt-4">
+                      <span>친구들과 나의 위치를 입력하면 </span>
+                      <span>우리가 만날 수 있는 중간 지점을 찾아줘요!</span>
+                    </p>
+                  </motion.div>
+                  <motion.div className="flex flex-col items-center" variants={itemVariants}>
+                    <img src={VoteLogo} alt="VoteLogo" className="mb-4 rounded-full shadow-lg size-64" />
+                    <h3 className="text-xl font-semibold">장소투표하기</h3>
+                    <p className="flex flex-col items-center mt-4">
+                      <span>나온 장소 후보들 중에서 </span>
+                      <span>친구들과 만날 장소를 투표로 한 번에 정할 수 있어요!</span>
+                    </p>
+                  </motion.div>
+                  <motion.div className="flex flex-col items-center" variants={itemVariants}>
+                    <img src={TimeLogo} alt="TimeLogo" className="mb-4 rounded-full shadow-lg size-64" />
+                    <h3 className="text-xl font-semibold">시간투표하기</h3>
+                    <p className="flex flex-col items-center mt-4">
+                      <span>중간 지점을 찾고 만날 장소까지 정했다면 </span>
+                      <span>만날 시간까지 투표로 정할 수 있어요!</span>
+                    </p>
+                  </motion.div>
+                </motion.div>
+              </div>
+              <div className="min-w-[1024px] mx-auto flex justify-center p-7">
+                <motion.button
+                  className="w-[30%] rounded-xl shadow-xl bg-white text-blue-500 mx-auto text-xl font-semibold h-12 transition-colors hover:text-white hover:bg-[#5786FF] hover:border-2 hover:border-white"
+                  whileHover={{ scale: 1.2, transition: { type: 'spring', duration: 0.5 } }}
+                  whileTap={{ scale: 0.8 }}
+                  onClick={toggleModal}
+                >
+                  중간지점찾기 바로가기
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+
+      <PlaceModal isOpen={isModalOpen} onClose={toggleModal} />
+    </div>
+  );
+}

@@ -1,28 +1,39 @@
-// login이 완료된 사람의 요청의 경우 axiosInstance를 사용하여 요청한다
-
 import axios from 'axios';
 
-const REFRESH_URL = '';
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URI;
+export const REFRESH_URL = BACKEND_URL + '/api/auth/refresh';
 
+// login이 완료된 사람의 요청의 경우 axiosInstance를 사용하여 요청
 export const axiosInstance = axios.create({
-  baseURL: '',
+  baseURL: BACKEND_URL,
 });
 
 // 로그 아웃 함수
 const logout = () => {
   localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('roomId');
 };
 
 // accessToken, refreshToken 재발급하는 함수
 const getNewToken = async () => {
   try {
-    const accessToken = '';
-    const refreshToken = '';
-    return { accessToken, refreshToken };
-    // Refresh Token을 사용하여 REFRESH_URL로 요청을 하여 새로운 Access Token, Refresh Token을 받아와 2값을 리턴하도록 구현
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (!refreshToken) {
+      throw new Error('No refresh token available');
+    }
+
+    const response = await axios.get(REFRESH_URL, {
+      headers: {
+        'Authorization-refresh': refreshToken,
+      },
+    });
+    const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+    return { accessToken, refreshToken: newRefreshToken };
   } catch (e) {
-    // Refresh Token에 문제가 있는 상황이며 이는 올바르지 않은 유저 로그인 과정이므로, 로그아웃 처리
     logout();
+    return null;
   }
 };
 
@@ -31,9 +42,16 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // 헤더에 엑세스 토큰 담기
     const accessToken: string | null = localStorage.getItem('accessToken');
+    const roomId: string | null = localStorage.getItem('roomId');
+
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
+
+    if (roomId) {
+      config.headers.RoomId = roomId;
+    }
+
     return config;
   },
   (error) => {
@@ -52,14 +70,18 @@ axiosInstance.interceptors.response.use(
     if (response.status !== 401 || config.sent || config.url === REFRESH_URL) {
       return Promise.reject(error);
     }
+
     // 아닌 경우 토큰 갱신
     config.sent = true; // 무한 재요청 방지
     const newToken = await getNewToken();
+
     if (newToken) {
       localStorage.setItem('accessToken', newToken.accessToken);
       localStorage.setItem('refreshToken', newToken.refreshToken);
       config.headers.Authorization = `Bearer ${newToken.accessToken}`;
+      return axiosInstance(config); // 재요청
     }
-    return axiosInstance(config); // 재요청
+
+    return Promise.reject(error);
   },
 );

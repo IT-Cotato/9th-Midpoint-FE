@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URI;
+import { BACKEND_URL } from '.';
 
 interface ILoginPayload {
   readonly roomId: string;
@@ -10,7 +9,7 @@ interface ILoginPayload {
 
 // 유저 로그인을 위한 함수
 export const fetchLogin = async (loginPayload: ILoginPayload) => {
-  return axios.post(`${BACKEND_URL}/api/auth/login`, loginPayload, {
+  return axios.post(`${BACKEND_URL}/api/members/login`, loginPayload, {
     withCredentials: true,
   });
 };

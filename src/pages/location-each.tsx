@@ -1,16 +1,7 @@
-//import { useParams } from 'react-router-dom';
-import { useAtomValue } from 'jotai';
-import { loginAtom } from '@/stores/login-state';
 import KakaoMap from '@/components/kakao-map';
-import Login from '@/components/login';
 import LocationEachForm from '@/components/location-each-form';
 
 export default function LocationEach() {
-  // const { roomId } = useParams<{ roomId: string }>();
-  const isLogin = useAtomValue(loginAtom); // 로그인 여부 확인을 위한 변수
-
-  // 유효하지 않은 방번호에 대한 접근인 경우 <NotFound/>컴포넌트를 return한다.
-
   // 장소 입력 방에 저장된 사람들의 정보 가져오기
   // const { data: usersData, isLoading: usersLoading } = useQuery({
   //   queryKey: ['placeRoomUsers', roomId],
@@ -51,11 +42,11 @@ export default function LocationEach() {
 
   return (
     <>
-      <div className="flex w-full gap-20 min-w-[1024px] justify-center mt-20">
-        <div className="w-[45%] min-w-[540px] h-96 flex flex-col gap-3">
-          {!isLogin ? <LocationEachForm /> : <Login />}
+      <div className="grid w-4/5 grid-cols-2 gap-3 grid-rows-[auto_1fr]">
+        <div className="rounded-2xl bg-[#F8F8FB] row-span-1 px-2 py-2">
+          <LocationEachForm />
         </div>
-        <div className="w-[38%] rounded-xl h-[500px] -mt-8 shadow-lg">
+        <div className="rounded-2xl h-[500px] shadow-lg row-span-5">
           <KakaoMap coordinates={coordinatesList} />
         </div>
       </div>
