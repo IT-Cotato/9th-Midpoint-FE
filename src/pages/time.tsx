@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 
-import Calendar from '@/components/time/calendar';
+// import Calendar from '@/components/time/calendar';
 import VoteCalendar from '@/components/time/vote-calendar';
 
 export interface CalendarProps {
@@ -17,11 +17,13 @@ const Time = () => {
     <Container>
       <Content>
         <GridBox>
-          {selectedDates.length > 0 ? (
+
+          {/* {selectedDates.length > 0 ? (} */}
             <VoteCalendar selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
-          ) : (
-            <Calendar setSelectedDates={setSelectedDates} />
-          )}
+
+          {/* // ) : (
+          //   <Calendar setSelectedDates={setSelectedDates} />
+          // )} */}
         </GridBox>
       </Content>
     </Container>
