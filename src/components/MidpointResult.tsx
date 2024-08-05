@@ -14,7 +14,7 @@ export default function MidpointResult() {
       const { data } = await axios.get(BACKEND_URL + '/api/mid-points', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-          RoomId: localStorage.getItem('roomId'),
+          RoomId: roomId,
         },
       });
       setMidPoints(data.data);
