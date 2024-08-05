@@ -14,17 +14,18 @@ interface Props {
 // type ValuePiece = Date | null;
 // type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates, setSelectedDates }) => {
+const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates }) => {
   // const [calendarValue, setCalendarValue] = useState<Value>(new Date());
   const [clickedDate, setClickedDate] = useState<Date | null>(null);
   // const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
 
   const handleDateClick = (date: Date) => {
-    if (selectedDates.some((selectedDate) => selectedDate.toDateString() === date.toDateString())) {
+    if (selectedDates!.some((selectedDate) => selectedDate.toDateString() === date.toDateString())) {
       setClickedDate(date);
       console.log(date); // 클릭한 날짜를 콘솔에 출력
     }
   };
+
 
   return (
     <>
@@ -32,10 +33,10 @@ const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates, setSelectedDates
         <ContainerItem>
           <CalIcon />
           <StyledCalendar
-            value={selectedDates.length > 0 ? selectedDates : undefined}
+            value={selectedDates!.length > 0 ? selectedDates : undefined}
             locale="ko-KR"
             selectRange={false}
-            formatDay={(locale, date) => date.getDate().toString()} //일 제거
+            formatDay={(_locale, date) => date.getDate().toString()} //일 제거
             calendarType="gregory" //일요일
             showNeighboringMonth={false} // 전달, 다음달 날짜 숨기기
             next2Label={null} // +1년 & +10년 이동 버튼 숨기기
@@ -43,14 +44,14 @@ const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates, setSelectedDates
             minDetail="year" // 10년단위 년도 숨기기
             tileClassName={
               ({ date }) =>
-                selectedDates.some((selectedDate) => selectedDate.toDateString() === date.toDateString())
+                selectedDates!.some((selectedDate) => selectedDate.toDateString() === date.toDateString())
                   ? 'selected'
                   : clickedDate && clickedDate.toDateString() === date.toDateString()
                     ? 'selected'
                     : '' // 클릭한 날짜에 대한 클래스 추가
             }
             tileDisabled={
-              ({ date }) => !selectedDates.some((selectedDate) => selectedDate.toDateString() === date.toDateString()) // 선택된 날짜가 아닐 경우 클릭 비활성화
+              ({ date }) => !selectedDates!.some((selectedDate) => selectedDate.toDateString() === date.toDateString()) // 선택된 날짜가 아닐 경우 클릭 비활성화
             }
             onClickDay={(date) => handleDateClick(date)} // 날짜 클릭 시 함수 호출
           />
@@ -68,7 +69,7 @@ const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates, setSelectedDates
       <ContainerItem>
         <ClockIcon />
         <p className="my-2">참석 일시 투표</p>
-        {selectedDates.map((date) => (
+        {selectedDates!.map((date) => (
           <DateOption key={date.toISOString()} date={date} />
         ))}
       </ContainerItem>
