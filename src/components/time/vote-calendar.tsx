@@ -33,7 +33,7 @@ const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates }) => {
         <ContainerItem>
           <CalIcon />
           <StyledCalendar
-            value={selectedDates!.length > 0 ? selectedDates : undefined}
+            // value={selectedDates!.length > 0 ? selectedDates : undefined}
             locale="ko-KR"
             selectRange={false}
             formatDay={(_locale, date) => date.getDate().toString()} //일 제거
