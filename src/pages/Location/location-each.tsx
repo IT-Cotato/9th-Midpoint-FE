@@ -2,7 +2,7 @@ import KakaoMap from '@/components/common/shared/kakao-map';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { fetchEachSavePlace } from '@/apis/enter-location';
 import { default_format, IForm } from '@/types/Location/each';
@@ -10,14 +10,13 @@ import Parasol from '@/assets/imgs/Location/parasol.svg?react';
 import Button from '@/components/common/Button/button';
 import { BACKEND_URL } from '@/apis';
 import { FROM_ENTER_EACH, ROOM_TYPE_EACH } from '@/constants';
-import NotFound from '../NotFound/not-found';
 
 export default function LocationEach() {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [coordinatesList, setCoordinatesList] = useState<{ lat: number; lng: number }[]>([]);
+  const [userCoordinates, setUserCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const { register, handleSubmit, setValue, watch } = useForm<IForm>({
     defaultValues: default_format,
   });
@@ -43,7 +42,21 @@ export default function LocationEach() {
             setValue('addressLat', addressLat);
             setValue('addressLong', addressLong);
 
-            setCoordinatesList([...coordinatesList, { lat: addressLat, lng: addressLong }]);
+            const newCoords = { lat: addressLat, lng: addressLong };
+
+            if (userCoordinates) {
+              setCoordinatesList((prev) => {
+                const filteredPrev = prev.filter(
+                  (coord) => coord.lat !== userCoordinates.lat || coord.lng !== userCoordinates.lng,
+                );
+                return [newCoords, ...filteredPrev];
+              });
+            } else {
+              setCoordinatesList((prev) => {
+                return [...prev, newCoords];
+              });
+            }
+            setUserCoordinates(newCoords);
           }
         });
       },
@@ -55,7 +68,6 @@ export default function LocationEach() {
     mutationFn: (data: IForm) => fetchEachSavePlace(data, roomId!),
     onSuccess: (data) => {
       console.log('입력 완료 API 요청 성공:', data);
-      queryClient.invalidateQueries({ queryKey: ['eachOthers', roomId] }); // 장소입력에 대한 revalidate
       navigate(`/page/e/results/${roomId}`);
     },
     onError: (error) => {
@@ -79,7 +91,6 @@ export default function LocationEach() {
     setIsLoading(false);
   };
 
-  // react-query로 바꾸고 개개인에 대해 post요청시 revalidate하도록 수정
   useEffect(() => {
     async function handleEnterEach() {
       try {
@@ -93,32 +104,38 @@ export default function LocationEach() {
 
         if (data.isSuccess) {
           const { myPlace, myPlaceExistence, otherPlaces } = data.data;
+          const combinedCoords = [];
 
-          // 사용자의 장소가 존재하는 경우 폼에 데이터를 채움
+          // 사용자의 장소가 존재하는 경우
           if (myPlaceExistence) {
             setValue('siDo', myPlace.siDo);
             setValue('siGunGu', myPlace.siGunGu);
             setValue('roadNameAddress', myPlace.roadNameAddress);
             setValue('addressLat', myPlace.addressLat);
             setValue('addressLong', myPlace.addressLong);
+
+            const userCoords = { lat: myPlace.addressLat, lng: myPlace.addressLong };
+            setUserCoordinates(userCoords);
+            combinedCoords.push(userCoords); // 사용자의 위치를 추가
           }
 
-          // 다른 사람의 장소들을 coordinatesList에 저장
+          // 다른 사람의 장소들을 coordinatesList에 추가
           if (otherPlaces) {
-            console.log('다른사람들의 장소 location-each.tsx', otherPlaces);
-            const coordinates = otherPlaces.map((place: any) => ({
+            const otherCoords = otherPlaces.map((place: any) => ({
               lat: place.addressLat,
               lng: place.addressLong,
             }));
-            setCoordinatesList(coordinates);
+            combinedCoords.push(...otherCoords);
           }
+
+          setCoordinatesList(combinedCoords); // 모든 좌표를 한 번에 설정
         }
       } catch (error: any) {
         if (error.response && error.response.status === 401) {
           navigate(`/page/login/${roomId}`, { state: { from: FROM_ENTER_EACH } });
         }
         if (error.response && error.response.status === 422) {
-          return <NotFound />;
+          navigate('/not-found');
         }
       }
     }
@@ -126,29 +143,19 @@ export default function LocationEach() {
     handleEnterEach();
   }, [roomId, setValue]);
 
-  // 폼이 변경될 때 지도에 반영되도록 함
-  useEffect(() => {
-    const subscription = watch((value) => {
-      if (value.addressLat && value.addressLong) {
-        setCoordinatesList([{ lat: value.addressLat, lng: value.addressLong }]);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [watch]);
-
   return (
     <>
       <div className="grid w-4/5 grid-cols-2 gap-3 grid-rows-[auto_1fr]">
         <div className="rounded-2xl bg-[#F8F8FB] row-span-1 px-2 py-2">
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 py-1 mb-6">
-            <div className="flex flex-col w-full *:rounded-lg gap-3">
+            <div className="flex flex-col w-full gap-3">
               <div className="flex flex-col items-center gap-2 my-4">
                 <Parasol />
                 <span className="text-2xl font-semibold text-[#1A3C95]">내 정보 입력</span>
               </div>
               <div className="relative w-full">
                 <div
-                  className={`flex items-center min-w-full min-h-10 px-3  bg-white w-max border-none rounded-lg cursor-pointer  ${
+                  className={`flex items-center min-w-full min-h-10 px-3 bg-white w-max border-none rounded-lg cursor-pointer ${
                     watch('roadNameAddress') ? 'text-black' : 'text-gray-500'
                   }`}
                   onClick={openAddressSearch}
@@ -168,7 +175,7 @@ export default function LocationEach() {
           />
         </div>
         <div className="rounded-2xl h-[500px] shadow-lg row-span-5">
-          <KakaoMap coordinates={coordinatesList} />
+          <KakaoMap coordinates={coordinatesList.length === 0 ? [] : coordinatesList} />
         </div>
       </div>
     </>

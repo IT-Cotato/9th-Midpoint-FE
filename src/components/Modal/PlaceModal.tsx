@@ -42,6 +42,9 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
   }
 
   async function handleNextBtn() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('roomId');
     if (selectedOption === 'friend') {
       const { data } = await axios.post(BACKEND_URL + '/api/rooms', { roomType: ROOM_TYPE_EACH });
       setRoomId(data.data.id);

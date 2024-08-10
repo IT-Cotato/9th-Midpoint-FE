@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useEffect, useRef } from 'react';
 
 declare global {
@@ -14,6 +15,7 @@ interface IKakaoMap {
 
 export default function KakaoMap({ coordinates }: IKakaoMap) {
   const mapRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const markersRef = useRef<any[]>([]);
 
   const placeMarker = (lat: number, lng: number, map: any) => {
@@ -77,19 +79,30 @@ export default function KakaoMap({ coordinates }: IKakaoMap) {
   };
 
   const initMap = () => {
-    const container = document.getElementById('map');
+    if (!containerRef.current) return;
+
     const options = {
-      center: new window.kakao.maps.LatLng(37.556328, 126.923634), // 지도의 중심좌표로 (위도, 경도) 순으로 입력 (기본으로 홍대 입구역으로 하였음)
+      center: new window.kakao.maps.LatLng(37.556328, 126.923634), // 지도의 중심좌표로 (위도, 경도) 순으로 입력
       level: 2, // 지도의 확대 축소 정도
     };
 
-    const map = new window.kakao.maps.Map(container as HTMLElement, options);
+    const map = new window.kakao.maps.Map(containerRef.current, options);
     mapRef.current = map;
     updateMap();
   };
 
   useEffect(() => {
-    window.kakao.maps.load(() => initMap());
+    const checkContainer = () => {
+      if (containerRef.current && containerRef.current.offsetHeight > 0) {
+        initMap();
+      } else {
+        setTimeout(checkContainer, 100); // 컨테이너가 렌더링될 때까지 100ms마다 재시도
+      }
+    };
+
+    if (window.kakao && window.kakao.maps) {
+      window.kakao.maps.load(() => checkContainer());
+    }
   }, []);
 
   useEffect(() => {
@@ -98,5 +111,5 @@ export default function KakaoMap({ coordinates }: IKakaoMap) {
 
   // 기본적으로 width: 100% , height:100%로 지도가 보이도록 만들어 놨습니다.
   // 따라서 해당 컴포넌트를 사용하는 상위컴포넌트에서 width, height를 지정해주면 됩니다.
-  return <div id="map" className="w-full h-full"></div>;
+  return <div id="map" ref={containerRef} className="w-full h-full"></div>;
 }

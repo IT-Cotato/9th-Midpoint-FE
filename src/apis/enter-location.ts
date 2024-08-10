@@ -29,8 +29,9 @@ export const fetchEachSavePlace = async (data: any, roomId: string) => {
 export const fetchGetEachPlaceInfo = async (roomId: string) => {
   const { data } = await axios.get(BACKEND_URL + '/api/place-rooms', {
     headers: {
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
       RoomId: roomId,
-      RoomType: ROOM_TYPE_ALONE,
+      RoomType: ROOM_TYPE_EACH,
     },
   });
   return data.data;
