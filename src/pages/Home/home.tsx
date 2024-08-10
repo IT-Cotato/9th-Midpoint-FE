@@ -9,7 +9,7 @@ import WAvatar from '@/assets/imgs/Home/w_avatar.png';
 import MidpointLogo from '@/assets/imgs/Home/midpointLogo.png';
 import VoteLogo from '@/assets/imgs/Home/voteLogo.png';
 import TimeLogo from '@/assets/imgs/Home/timeLogo.png';
-import PlaceModal from '@/components/PlaceModal';
+import PlaceModal from '@/components/Modal/PlaceModal';
 
 interface DotProps {
   num: number;
@@ -191,7 +191,7 @@ export default function Home() {
               exit="hidden"
             >
               <motion.div
-                className="absolute left-24 top-12"
+                className="absolute left-24 top-7"
                 initial={{ opacity: 0, x: -1500 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 1500 }}
@@ -245,7 +245,7 @@ export default function Home() {
               exit="hidden"
             >
               <motion.div
-                className="absolute left-24 top-12"
+                className="absolute left-24 top-7"
                 initial={{ opacity: 0, x: -1500 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 1500 }}
@@ -279,8 +279,8 @@ export default function Home() {
                     <img src={VoteLogo} alt="VoteLogo" className="mb-4 rounded-full shadow-lg size-64" />
                     <h3 className="text-xl font-semibold">장소투표하기</h3>
                     <p className="flex flex-col items-center mt-4">
-                      <span>나온 장소 후보들 중에서 </span>
-                      <span>친구들과 만날 장소를 투표로 한 번에 정할 수 있어요!</span>
+                      <span>나온 장소 후보들 중에서 친구들과 만날 장소를</span>
+                      <span>투표로 한 번에 정할 수 있어요!</span>
                     </p>
                   </motion.div>
                   <motion.div className="flex flex-col items-center" variants={itemVariants}>

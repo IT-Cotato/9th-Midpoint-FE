@@ -1,14 +1,14 @@
-import Home from '@/pages/home';
-import LocationAlone from '@/pages/location-alone';
-import NotFound from '@/pages/not-found';
-import Vote from '@/pages/vote';
+import LocationAlone from '@/pages/Location/location-alone';
+import NotFound from '@/pages/NotFound/not-found';
 import Time from '@/pages/time';
 import { createBrowserRouter } from 'react-router-dom';
-import LocationEach from '@/pages/location-each';
-import MidpointResult from '@/components/MidpointResult';
-import Login from '@/components/login';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import Layout from '@/components/Layout';
+import LocationEach from '@/pages/Location/location-each';
+import Home from '@/pages/Home/home';
+import Login from '@/pages/Login/login';
+import MidpointAloneResult from '@/pages/MidpointResult/MidpointAloneResult';
+import MidpointEachResult from '@/pages/MidpointResult/MidpointEachResult';
+import ProtectedRoute from '@/components/Layout/ProtectedRoute';
+import Layout from '@/components/Layout/Layout';
 
 export const router = createBrowserRouter([
   {
@@ -37,21 +37,17 @@ export const router = createBrowserRouter([
       },
       {
         path: 'a/results/:roomId',
-        element: <MidpointResult />,
+        element: <MidpointAloneResult />,
       },
       {
         path: 'e/results/:roomId',
-        element: <MidpointResult />,
+        element: <MidpointEachResult />,
       },
       {
         path: ':roomId/time',
         element: <Time />,
       },
     ],
-  },
-  {
-    path: '/vote',
-    element: <Vote />,
   },
   {
     path: '*', // 모든 경로에 부합하지 않는 경우

@@ -1,24 +1,24 @@
-import Button from '@/components/button';
-import KakaoMap from '@/components/kakao-map';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import Parasol from '@/assets/imgs/Location/parasol.svg?react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
-import { default_format, IForm } from '@/types/Location/alone';
+import { default_format, IForm, SubmissionData } from '@/types/Location/alone';
 import { fetchAloneSavePlace } from '@/apis/enter-location';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '@/apis';
-import { FROM_ENTER_ALONE } from '@/constants';
+import { FROM_ENTER_ALONE, ROOM_TYPE_ALONE } from '@/constants';
+import Button from '@/components/common/Button/button';
+import KakaoMap from '@/components/common/shared/kakao-map';
+import NotFound from '../NotFound/not-found';
 
 export default function LocationAlone() {
   const { roomId } = useParams();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false); // login form제출 상태
+  const [isLoading, setIsLoading] = useState(false); // 중간지점찾기 로딩상태
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number }[]>([]); // 사용자들의 좌표 목록
   const [isAllFieldsFilled, setIsAllFieldsFilled] = useState(false);
-  const queryClient = useQueryClient();
   const { control, register, handleSubmit, setValue, watch } = useForm<IForm>({
     defaultValues: {
       friendList: [default_format],
@@ -28,38 +28,6 @@ export default function LocationAlone() {
     control,
     name: 'friendList',
   });
-
-  useEffect(() => {
-    async function handleEnterAlone() {
-      try {
-        const { data } = await axios.get(`${BACKEND_URL}/api/place-rooms`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            RoomId: roomId,
-          },
-        });
-        if (data.isSuccess && data.data.existence) {
-          const places = data.data.places;
-          if (places && places.length > 0) {
-            const initialValues = places.map((item: any) => ({
-              siDo: item.siDo,
-              siGunGu: item.siGunGu,
-              roadNameAddress: item.roadNameAddress,
-              addressLat: item.addressLat,
-              addressLong: item.addressLong,
-            }));
-            replace(initialValues);
-            setCoordinates(places.map((item: any) => ({ lat: item.addressLat, lng: item.addressLong })));
-          }
-        }
-      } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-          navigate(`/page/login/${roomId}`, { state: { from: FROM_ENTER_ALONE } });
-        }
-      }
-    }
-    handleEnterAlone();
-  }, [replace, roomId, navigate]);
 
   // 주소 검색하는 함수
   const openAddressSearch = (index: number) => {
@@ -97,13 +65,11 @@ export default function LocationAlone() {
 
   // 중간지점찾기 API 요청
   const { mutate: searchMiddlePoint } = useMutation({
-    mutationFn: fetchAloneSavePlace,
+    mutationFn: (data: SubmissionData[]) => fetchAloneSavePlace(data, roomId!),
     onSuccess: (data, variable) => {
       console.log('API 요청 성공');
       console.log('중간지점찾기 API 요청시 보낸 데이터', variable);
       console.log('중간지점찾기 API 요청 이후 받은 응답 데이터', data);
-      // 다른사람들의 맵도 invalidate필요
-      queryClient.invalidateQueries({ queryKey: ['midpointResults', roomId] });
       navigate(`/page/a/results/${roomId}`);
     },
     onError: (error) => {
@@ -126,13 +92,15 @@ export default function LocationAlone() {
       return;
     }
 
-    const submissionData = data.friendList.map(({ siDo, siGunGu, roadNameAddress, addressLat, addressLong }) => ({
-      siDo,
-      siGunGu,
-      roadNameAddress,
-      addressLat,
-      addressLong,
-    }));
+    const submissionData: SubmissionData[] = data.friendList.map(
+      ({ siDo, siGunGu, roadNameAddress, addressLat, addressLong }) => ({
+        siDo,
+        siGunGu,
+        roadNameAddress,
+        addressLat,
+        addressLong,
+      }),
+    );
 
     console.log('중간지점 찾기 요청시 서버로 보내는 값', submissionData);
 
@@ -144,6 +112,42 @@ export default function LocationAlone() {
     remove(index);
     setCoordinates((prev) => prev.filter((_, i) => i !== index));
   };
+
+  useEffect(() => {
+    async function handleEnterAlone() {
+      try {
+        const { data } = await axios.get(`${BACKEND_URL}/api/place-rooms/self`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            RoomId: roomId,
+            RoomType: ROOM_TYPE_ALONE,
+          },
+        });
+        if (data.isSuccess && data.data.existence) {
+          const places = data.data.places;
+          if (places && places.length > 0) {
+            const initialValues = places.map((item: any) => ({
+              siDo: item.siDo,
+              siGunGu: item.siGunGu,
+              roadNameAddress: item.roadNameAddress,
+              addressLat: item.addressLat,
+              addressLong: item.addressLong,
+            }));
+            replace(initialValues);
+            setCoordinates(places.map((item: any) => ({ lat: item.addressLat, lng: item.addressLong })));
+          }
+        }
+      } catch (error: any) {
+        if (error.response && error.response.status === 401) {
+          navigate(`/page/login/${roomId}`, { state: { from: FROM_ENTER_ALONE } });
+        }
+        if (error.response && error.response.status === 422) {
+          return <NotFound />;
+        }
+      }
+    }
+    handleEnterAlone();
+  }, [replace, roomId, navigate]);
 
   // 모든 필드가 채워졌는지 확인하는 함수
   useEffect(() => {
@@ -161,12 +165,12 @@ export default function LocationAlone() {
   return (
     <>
       <div className="grid w-4/5 gap-3 grid-cols-2 grid-rows-[auto_1fr]">
-        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-2 pt-10 row-span-2 py-2">
+        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-2 pt-10 row-span-2 py-2 h-[500px]">
           <div className="flex flex-col items-center gap-2">
             <Parasol />
             <h1 className="text-2xl font-semibold text-[#1A3C95]">모임정보 입력</h1>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow gap-6 py-1 overflow-y-auto">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow gap-6 py-1 overflow-y-auto ">
             {fields.map((field, index) => (
               <div key={field.id}>
                 <h2 className="flex items-center justify-between text-lg font-semibold">

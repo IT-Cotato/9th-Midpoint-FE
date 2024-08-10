@@ -20,3 +20,11 @@ export const default_format: IFriendList = {
   addressLat: 0,
   addressLong: 0,
 };
+
+export interface SubmissionData {
+  siDo: string;
+  siGunGu: string;
+  roadNameAddress: string;
+  addressLat: number;
+  addressLong: number;
+}

@@ -8,6 +8,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
 import { BACKEND_URL } from '@/apis';
 import { useNavigate } from 'react-router-dom';
+import { ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from '@/constants';
 
 interface ModalProps {
   isOpen: boolean;
@@ -41,12 +42,15 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
   }
 
   async function handleNextBtn() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('roomId');
     if (selectedOption === 'friend') {
-      setCurrentView('shareLink');
-      const { data } = await axios.post(BACKEND_URL + '/api/rooms');
+      const { data } = await axios.post(BACKEND_URL + '/api/rooms', { roomType: ROOM_TYPE_EACH });
       setRoomId(data.data.id);
+      setCurrentView('shareLink');
     } else {
-      const { data } = await axios.post(BACKEND_URL + '/api/rooms');
+      const { data } = await axios.post(BACKEND_URL + '/api/rooms', { roomType: ROOM_TYPE_ALONE });
       const newRoomId = data.data.id;
       navigate(`/page/a/results/${newRoomId}`);
     }
@@ -60,9 +64,7 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
         animate={{ opacity: 1, scale: 1, transition: { type: 'tween' } }}
         exit={{ opacity: 0, scale: 0.8 }}
       >
-        <button className="absolute text-gray-500 top-2 right-2" onClick={handleCloseModal}>
-          <XMarkIcon className="size-7" />
-        </button>
+        <XMarkIcon className="absolute text-gray-500 cursor-pointer size-7 top-2 right-2" onClick={handleCloseModal} />
         <AnimatePresence initial={false}>
           {currentView === 'alone' && (
             <motion.div className="flex flex-col items-center w-full gap-2">
