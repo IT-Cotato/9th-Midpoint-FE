@@ -1,14 +1,13 @@
-import Home from '@/pages/home';
-import LocationAlone from '@/pages/location-alone';
-import NotFound from '@/pages/not-found';
-import Vote from '@/pages/vote';
+import LocationAlone from '@/pages/Location/location-alone';
+import NotFound from '@/pages/NotFound/not-found';
 import Time from '@/pages/time';
 import { createBrowserRouter } from 'react-router-dom';
-import LocationEach from '@/pages/location-each';
-import MidpointResult from '@/components/MidpointResult';
-import Login from '@/components/login';
+import LocationEach from '@/pages/Location/location-each';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import Layout from '@/components/Layout';
+import Home from '@/pages/Home/home';
+import Layout from '@/components/common/shared/Layout';
+import Login from '@/pages/Login/login';
+import MidpointResult from '@/pages/MidpointResult/MidpointResult';
 
 export const router = createBrowserRouter([
   {
@@ -48,10 +47,6 @@ export const router = createBrowserRouter([
         element: <Time />,
       },
     ],
-  },
-  {
-    path: '/vote',
-    element: <Vote />,
   },
   {
     path: '*', // 모든 경로에 부합하지 않는 경우

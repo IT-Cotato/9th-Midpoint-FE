@@ -1,6 +1,6 @@
 import { fetchExistence } from '@/apis/existence';
-import Loading from '@/pages/loading';
-import NotFound from '@/pages/not-found';
+import Loading from '@/pages/Loading/loading';
+import NotFound from '@/pages/NotFound/not-found';
 import { useQuery } from '@tanstack/react-query';
 import { useMatch, useParams } from 'react-router-dom';
 

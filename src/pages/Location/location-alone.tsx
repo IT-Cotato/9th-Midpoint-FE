@@ -1,5 +1,3 @@
-import Button from '@/components/button';
-import KakaoMap from '@/components/kakao-map';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -11,6 +9,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { BACKEND_URL } from '@/apis';
 import { FROM_ENTER_ALONE } from '@/constants';
+import Button from '@/components/common/Button/button';
+import KakaoMap from '@/components/common/shared/kakao-map';
 
 export default function LocationAlone() {
   const { roomId } = useParams();

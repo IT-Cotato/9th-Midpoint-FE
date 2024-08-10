@@ -1,4 +1,4 @@
-import KakaoMap from '@/components/kakao-map';
+import KakaoMap from '@/components/common/shared/kakao-map';
 import LocationEachForm from '@/components/location-each-form';
 
 export default function LocationEach() {

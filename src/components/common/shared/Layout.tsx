@@ -1,7 +1,7 @@
-import Navbar from '@/components/Navbar';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-import BannerMessage from '@/components/BannerMessage';
+import BannerMessage from './BannerMessage';
+import Navbar from '@/components/Navbar/Navbar';
 
 export default function Layout() {
   return (

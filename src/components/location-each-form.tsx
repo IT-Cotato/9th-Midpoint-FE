@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Button from '@/components/button';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchEachSavePlace } from '@/apis/enter-location';
 import { default_format, IForm } from '@/types/Location/each';
 import Parasol from '@/assets/imgs/Location/parasol.svg?react';
+import Button from './common/Button/button';
 
 export default function LocationEachForm() {
   const { roomId } = useParams<{ roomId: string }>();
