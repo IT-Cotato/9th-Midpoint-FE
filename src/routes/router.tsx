@@ -3,11 +3,12 @@ import NotFound from '@/pages/NotFound/not-found';
 import Time from '@/pages/time';
 import { createBrowserRouter } from 'react-router-dom';
 import LocationEach from '@/pages/Location/location-each';
-import ProtectedRoute from '@/components/ProtectedRoute';
 import Home from '@/pages/Home/home';
-import Layout from '@/components/common/shared/Layout';
 import Login from '@/pages/Login/login';
-import MidpointResult from '@/pages/MidpointResult/MidpointResult';
+import MidpointAloneResult from '@/pages/MidpointResult/MidpointAloneResult';
+import MidpointEachResult from '@/pages/MidpointResult/MidpointEachResult';
+import ProtectedRoute from '@/components/Layout/ProtectedRoute';
+import Layout from '@/components/Layout/Layout';
 
 export const router = createBrowserRouter([
   {
@@ -36,11 +37,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'a/results/:roomId',
-        element: <MidpointResult />,
+        element: <MidpointAloneResult />,
       },
       {
         path: 'e/results/:roomId',
-        element: <MidpointResult />,
+        element: <MidpointEachResult />,
       },
       {
         path: ':roomId/time',

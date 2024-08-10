@@ -9,7 +9,7 @@ import WAvatar from '@/assets/imgs/Home/w_avatar.png';
 import MidpointLogo from '@/assets/imgs/Home/midpointLogo.png';
 import VoteLogo from '@/assets/imgs/Home/voteLogo.png';
 import TimeLogo from '@/assets/imgs/Home/timeLogo.png';
-import PlaceModal from '@/components/PlaceModal';
+import PlaceModal from '@/components/Modal/PlaceModal';
 
 interface DotProps {
   num: number;

@@ -42,14 +42,9 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // 헤더에 엑세스 토큰 담기
     const accessToken: string | null = localStorage.getItem('accessToken');
-    const roomId: string | null = localStorage.getItem('roomId');
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-
-    if (roomId) {
-      config.headers.RoomId = roomId;
     }
 
     return config;
