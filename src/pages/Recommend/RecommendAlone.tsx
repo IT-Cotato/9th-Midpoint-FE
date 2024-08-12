@@ -1,6 +1,5 @@
-import { BACKEND_URL } from '@/apis';
+import { axiosInstance, BACKEND_URL } from '@/apis';
 import { FROM_ALONE_RESULT, PLACE_ALL, PLACE_CAFE, PLACE_RESTAURANT, PLACE_STUDY, ROOM_TYPE_ALONE } from '@/constants';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Loading from '../Loading/loading';
@@ -56,9 +55,8 @@ export default function RecommendAlone() {
 
     async function fetchRecommendations(page: number) {
       try {
-        const { data } = await axios.get(`${BACKEND_URL}/api/recommend-places`, {
+        const { data } = await axiosInstance.get(`${BACKEND_URL}/api/recommend-places`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             RoomId: roomId!,
             RoomType: ROOM_TYPE_ALONE,
           },
