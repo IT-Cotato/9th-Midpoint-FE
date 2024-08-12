@@ -1,6 +1,6 @@
 import LocationAlone from '@/pages/Location/location-alone';
 import NotFound from '@/pages/NotFound/not-found';
-import Time from '@/pages/time';
+import Time from '@/pages/Time/time';
 import { createBrowserRouter } from 'react-router-dom';
 import LocationEach from '@/pages/Location/location-each';
 import Home from '@/pages/Home/home';
@@ -9,6 +9,7 @@ import MidpointAloneResult from '@/pages/MidpointResult/MidpointAloneResult';
 import MidpointEachResult from '@/pages/MidpointResult/MidpointEachResult';
 import ProtectedRoute from '@/components/Layout/ProtectedRoute';
 import Layout from '@/components/Layout/Layout';
+import TimeVote from '@/pages/Time/time-vote';
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
       {
         path: ':roomId/time',
         element: <Time />,
+      },
+      {
+        path: ':roomId/time/vote',
+        element: <TimeVote />,
       },
     ],
   },

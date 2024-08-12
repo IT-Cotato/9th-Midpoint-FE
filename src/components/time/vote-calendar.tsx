@@ -5,17 +5,9 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import CalIcon from '@/assets/imgs/time-calItem-icon1.svg?react';
 import ClockIcon from '@/assets/imgs/time-clock-icon.svg?react';
-import { CalendarProps } from '@/pages/time';
 
-interface Props {
-  date: Date;
-}
 
-// type ValuePiece = Date | null;
-// type Value = ValuePiece | [ValuePiece, ValuePiece];
-
-const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates }) => {
-  // const [calendarValue, setCalendarValue] = useState<Value>(new Date());
+const VoteCalendar: React.FC = ({ selectedDates }) => {
   const [clickedDate, setClickedDate] = useState<Date | null>(null);
   // const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
 
@@ -25,7 +17,6 @@ const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates }) => {
       console.log(date); // 클릭한 날짜를 콘솔에 출력
     }
   };
-
 
   return (
     <>
@@ -42,13 +33,12 @@ const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates }) => {
             next2Label={null} // +1년 & +10년 이동 버튼 숨기기
             prev2Label={null} // -1년 & -10년 이동 버튼 숨기기
             minDetail="year" // 10년단위 년도 숨기기
-            tileClassName={
-              ({ date }) =>
-                selectedDates!.some((selectedDate) => selectedDate.toDateString() === date.toDateString())
-                  ? 'selected'
-                  : clickedDate && clickedDate.toDateString() === date.toDateString()
-                    ? 'selected'
-                    : '' // 클릭한 날짜에 대한 클래스 추가
+            tileClassName={({ date }) =>
+              selectedDates.some(
+                (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+              )
+                ? 'selected'
+                : ''
             }
             tileDisabled={
               ({ date }) => !selectedDates!.some((selectedDate) => selectedDate.toDateString() === date.toDateString()) // 선택된 날짜가 아닐 경우 클릭 비활성화
