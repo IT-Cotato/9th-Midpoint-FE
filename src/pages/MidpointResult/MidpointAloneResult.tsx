@@ -3,7 +3,6 @@ import { FROM_ALONE_RESULT, ROOM_TYPE_ALONE } from '@/constants';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import NotFound from '@/pages/NotFound/not-found';
 
 export default function MidpointAloneResult() {
   const { roomId } = useParams();
@@ -28,8 +27,7 @@ export default function MidpointAloneResult() {
         navigate(`/page/alone/${roomId}`);
       }
       if (error.response && error.response.status === 422) {
-        console.log('midpoint-alone-results 422 에러확인');
-        return <NotFound />;
+        navigate('/not-found');
       }
     }
   }
