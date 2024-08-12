@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { fetchEachSavePlace } from '@/apis/enter-location';
 import { default_format, IForm } from '@/types/Location/each';
 import Parasol from '@/assets/imgs/Location/parasol.svg?react';
 import Button from '@/components/common/Button/button';
-import { BACKEND_URL } from '@/apis';
+import { axiosInstance, BACKEND_URL } from '@/apis';
 import { FROM_ENTER_EACH, ROOM_TYPE_EACH } from '@/constants';
 import EnterEachMap from '@/components/common/shared/EnterEachMap';
 
@@ -94,9 +93,8 @@ export default function LocationEach() {
   useEffect(() => {
     async function handleEnterEach() {
       try {
-        const { data } = await axios.get(`${BACKEND_URL}/api/place-rooms`, {
+        const { data } = await axiosInstance.get(`${BACKEND_URL}/api/place-rooms`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             RoomId: roomId,
             RoomType: ROOM_TYPE_EACH,
           },

@@ -6,8 +6,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid';
 import { default_format, IForm, SubmissionData } from '@/types/Location/alone';
 import { fetchAloneSavePlace } from '@/apis/enter-location';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-import { BACKEND_URL } from '@/apis';
+import { axiosInstance, BACKEND_URL } from '@/apis';
 import { FROM_ENTER_ALONE, ROOM_TYPE_ALONE } from '@/constants';
 import Button from '@/components/common/Button/button';
 import KakaoMap from '@/components/common/shared/kakao-map';
@@ -115,9 +114,8 @@ export default function LocationAlone() {
   useEffect(() => {
     async function handleEnterAlone() {
       try {
-        const { data } = await axios.get(`${BACKEND_URL}/api/place-rooms/self`, {
+        const { data } = await axiosInstance.get(`${BACKEND_URL}/api/place-rooms/self`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             RoomId: roomId,
             RoomType: ROOM_TYPE_ALONE,
           },
