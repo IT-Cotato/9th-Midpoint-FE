@@ -5,3 +5,8 @@ export const FROM_ENTER_EACH = 'enterEach';
 
 export const ROOM_TYPE_ALONE = 'SELF';
 export const ROOM_TYPE_EACH = 'TOGETHER';
+
+export const PLACE_ALL = 'ALL';
+export const PLACE_STUDY = 'STUDY';
+export const PLACE_CAFE = 'CAFE';
+export const PLACE_RESTAURANT = 'RESTAURANT';

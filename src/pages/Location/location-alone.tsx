@@ -11,7 +11,6 @@ import { BACKEND_URL } from '@/apis';
 import { FROM_ENTER_ALONE, ROOM_TYPE_ALONE } from '@/constants';
 import Button from '@/components/common/Button/button';
 import KakaoMap from '@/components/common/shared/kakao-map';
-import NotFound from '../NotFound/not-found';
 
 export default function LocationAlone() {
   const { roomId } = useParams();
@@ -142,7 +141,7 @@ export default function LocationAlone() {
           navigate(`/page/login/${roomId}`, { state: { from: FROM_ENTER_ALONE } });
         }
         if (error.response && error.response.status === 422) {
-          return <NotFound />;
+          navigate('/not-found');
         }
       }
     }

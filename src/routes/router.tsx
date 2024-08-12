@@ -9,6 +9,8 @@ import MidpointAloneResult from '@/pages/MidpointResult/MidpointAloneResult';
 import MidpointEachResult from '@/pages/MidpointResult/MidpointEachResult';
 import ProtectedRoute from '@/components/Layout/ProtectedRoute';
 import Layout from '@/components/Layout/Layout';
+import RecommendEach from '@/pages/Recommend/RecommendEach';
+import RecommendAlone from '@/pages/Recommend/RecommendAlone';
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +44,14 @@ export const router = createBrowserRouter([
       {
         path: 'e/results/:roomId',
         element: <MidpointEachResult />,
+      },
+      {
+        path: '/page/a/results/:roomId/recommendations',
+        element: <RecommendAlone />,
+      },
+      {
+        path: '/page/e/results/:roomId/recommendations',
+        element: <RecommendEach />,
       },
       {
         path: ':roomId/time',
