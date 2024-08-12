@@ -1,4 +1,3 @@
-import KakaoMap from '@/components/common/shared/kakao-map';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -10,6 +9,7 @@ import Parasol from '@/assets/imgs/Location/parasol.svg?react';
 import Button from '@/components/common/Button/button';
 import { BACKEND_URL } from '@/apis';
 import { FROM_ENTER_EACH, ROOM_TYPE_EACH } from '@/constants';
+import EnterEachMap from '@/components/common/shared/EnterEachMap';
 
 export default function LocationEach() {
   const { roomId } = useParams<{ roomId: string }>();
@@ -175,7 +175,10 @@ export default function LocationEach() {
           />
         </div>
         <div className="rounded-2xl h-[500px] shadow-lg row-span-5">
-          <KakaoMap coordinates={coordinatesList.length === 0 ? [] : coordinatesList} />
+          <EnterEachMap
+            coordinates={coordinatesList.length === 0 ? [] : coordinatesList}
+            selectedCoordinate={userCoordinates}
+          />
         </div>
       </div>
     </>
