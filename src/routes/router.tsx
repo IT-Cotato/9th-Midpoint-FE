@@ -46,11 +46,11 @@ export const router = createBrowserRouter([
         element: <MidpointEachResult />,
       },
       {
-        path: '/page/a/results/:roomId/recommendations',
+        path: 'a/results/:roomId/recommendations',
         element: <RecommendAlone />,
       },
       {
-        path: '/page/e/results/:roomId/recommendations',
+        path: 'e/results/:roomId/recommendations',
         element: <RecommendEach />,
       },
       {
