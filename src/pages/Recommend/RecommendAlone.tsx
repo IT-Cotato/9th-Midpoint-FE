@@ -37,7 +37,7 @@ export default function RecommendAlone() {
   const [coordinates, setCoordinates] = useState<Coordinate[]>([]);
   const [selectedCoordinate, setSelectedCoordinate] = useState<Coordinate | null>(null);
   const [clickedItemNum, setClickedItemNum] = useState<number | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number | null>(null);
   const [recommendations, setRecommendations] = useState<IContents[]>([]);
   const [clickedOption, setClickedOption] = useState<string>(PLACE_ALL);
@@ -95,6 +95,7 @@ export default function RecommendAlone() {
         if (error.response && error.response.status === 422) {
           navigate('/not-found');
         }
+        setLoading(false);
       }
     }
 
@@ -111,7 +112,7 @@ export default function RecommendAlone() {
   }
 
   function handlePageClick(page: number) {
-    if (page <= totalPages!) {
+    if (page < totalPages!) {
       setCurrentPage(page);
     }
   }
@@ -123,7 +124,7 @@ export default function RecommendAlone() {
   function renderPageNumbers() {
     const pages = [];
     const startPage = Math.floor((currentPage - 1) / 5) * 5 + 1;
-    const endPage = Math.min(startPage + 4, totalPages!);
+    const endPage = Math.min(startPage + 4, totalPages! - 1);
 
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
