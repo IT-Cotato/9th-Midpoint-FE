@@ -1,7 +1,6 @@
-import { BACKEND_URL } from '@/apis';
+import { axiosInstance, BACKEND_URL } from '@/apis';
 import MidpointMap from '@/components/common/shared/MidpointMap';
 import { FROM_EACH_RESULT, ROOM_TYPE_EACH } from '@/constants';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import WherePin from '@/assets/imgs/Midpoints/wherePin.svg?react';
@@ -35,9 +34,8 @@ export default function MidpointEachResult() {
 
   async function handleEachResult() {
     try {
-      const { data } = await axios.get(BACKEND_URL + '/api/mid-points', {
+      const { data } = await axiosInstance.get(BACKEND_URL + '/api/mid-points', {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
           RoomId: roomId,
           RoomType: ROOM_TYPE_EACH,
         },
