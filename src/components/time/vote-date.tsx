@@ -22,7 +22,7 @@ const DateInfo = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 50%;
   margin: 20px 0; // 추가된 간격
   background: #f8f8fb;
   padding: 10px 5px;

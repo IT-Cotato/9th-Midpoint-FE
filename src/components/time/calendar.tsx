@@ -17,7 +17,7 @@ export type DatePickerProps = {
 let dates: string[] = [];
 
 export const defineRoomType = (): { roomType: string; roomTypeUrl: string } => {
-  const isAloneRoomType = useMatch('/page/:roomId/a/time');
+  const isAloneRoomType = useMatch('/page/a/time/:roomId') || useMatch('/page/a/time/vote/:roomId');
   const roomType = isAloneRoomType ? ROOM_TYPE_ALONE : ROOM_TYPE_EACH;
   let roomTypeUrl: string;
   roomType === ROOM_TYPE_ALONE ? (roomTypeUrl = 'a') : (roomTypeUrl = 'e');
@@ -29,7 +29,6 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
   const navigate = useNavigate();
   const { roomId } = useParams<{ roomId: string }>(); // URL에서 id 파라미터 가져오기
   const { roomType, roomTypeUrl } = defineRoomType();
-
   useEffect(() => {
     const verifyRoomExistence = async () => {
       if (!roomId) {
@@ -37,12 +36,10 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
         return;
       }
       try {
-        const roomExists = await checkVoteRoom({ roomId, roomType, navigate });
-        if (roomExists) {
-          dates = selectedDates
-            .filter((date) => date instanceof Date) // 유효한 날짜만 필터링
-            .map((date) => date.toISOString().split('T')[0]); // dates 전역 변수 업데이트
-          navigate(`/page/${roomId}/${roomTypeUrl}/time/vote`, { state: { selectedDates: dates } });
+        const res = await checkVoteRoom({ roomId, roomType, navigate });
+
+        if (res.existence && res.dates && res.dates.length > 0) {
+          navigate(`/page/${roomTypeUrl}/time/vote/${roomId}`);
         }
       } catch (error) {
         console.error('방 존재 여부 확인 중 오류 발생:', error);
@@ -79,6 +76,11 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
   };
 
   const gotoVote = async () => {
+    dates = selectedDates
+      .filter((date) => date instanceof Date) // 유효한 날짜만 필터링
+      .sort((a, b) => a.getTime() - b.getTime()) // 날짜를 순서대로 정렬
+      .map((date) => date.toISOString().split('T')[0]); // dates 전역 변수 업데이트
+
     if (!roomId) {
       alert('방 ID가 없습니다. 다른 페이지로 이동합니다.');
       navigate('/');
@@ -91,7 +93,7 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
       try {
         await createVoteRoom({ roomId, dates, roomType, navigate });
         console.log('시간투표방 생성 완료');
-        navigate(`/page/${roomId}/time/vote`, { state: { selectedDates: dates } });
+        navigate(`/page/${roomTypeUrl}/time/vote/${roomId}`);
       } catch (error) {
         console.error('시간투표방 생성 실패:', error);
       }

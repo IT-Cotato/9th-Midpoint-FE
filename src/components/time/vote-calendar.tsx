@@ -7,6 +7,7 @@ import CalIcon from '@/assets/imgs/time-calItem-icon1.svg?react';
 import ClockIcon from '@/assets/imgs/time-clock-icon.svg?react';
 import { DatePickerProps } from './calendar';
 import { Value, ValuePiece } from '@/pages/Time/time';
+import Button from '../common/Button/button';
 
 const VoteCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange }) => {
   const handleDateClick = (date: Value) => {
@@ -15,7 +16,7 @@ const VoteCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange }
 
   return (
     <>
-      <div className="flex flex-col item-center justify-center">
+      <div className="flex flex-row item-center justify-center">
         <ContainerItem>
           <CalIcon />
           <StyledCalendar
@@ -37,27 +38,31 @@ const VoteCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange }
                 : ''
             }
             tileDisabled={({ date }) =>
-              !selectedDates ||
               !selectedDates.some(
                 (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
               )
             }
-            onClickDay={(date) => onDateChange(date)} // 날짜 클릭 시 함수 호출
+            onClickDay={(date) => {
+              if (
+                selectedDates.some(
+                  (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+                )
+              ) {
+                handleDateClick(date);
+              }
+            }} // 날짜 클릭 시 함수 호출
           />
         </ContainerItem>
+        <ContainerItem>
+          <ClockIcon />
+          <p className="my-2">참석 일시 투표</p>
+          {Array.isArray(selectedDates) &&
+            selectedDates.map((date, index) => (
+              <DateOption key={date instanceof Date ? date.toISOString() : `invalid-date-${index}`} date={date} />
+            ))}
+          <Button text="투표하기" isLoading={false}></Button>
+        </ContainerItem>
       </div>
-
-      <ContainerItem>
-        <ClockIcon />
-        <p className="my-2">참석 일시 투표</p>
-        {Array.isArray(selectedDates) &&
-          selectedDates.map((date, index) => (
-            <DateOption key={date instanceof Date ? date.toISOString() : `invalid-date-${index}`} date={date} />
-          ))}
-        {/* : (
-          <DateOption key={isDate(selectedDates) ? selectedDates.toISOString() : 'invalid-date'} date={selectedDates} />
-        )} */}
-      </ContainerItem>
     </>
   );
 };
@@ -109,7 +114,7 @@ const ContainerItem = styled.div`
   min-height: 500px;
   background: #f8f8fb;
   padding: 10px 5px;
-  margin: 0 auto;
+  margin: 10px;
   border-radius: 15px;
   font-size: 18px;
   font-weight: bold;
