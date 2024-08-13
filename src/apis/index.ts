@@ -26,7 +26,7 @@ const getNewToken = async () => {
 
     const response = await axios.get(REFRESH_URL, {
       headers: {
-        'Authorization-refresh': refreshToken,
+        'Authorization-refresh': `Bearer ${refreshToken}`,
       },
     });
     const { accessToken, refreshToken: newRefreshToken } = response.data.data;
