@@ -55,21 +55,21 @@ export const router = createBrowserRouter([
         element: <RecommendEach />,
       },
       {
-        path: ':roomId/a/time',
+        path: 'a/time/:roomId',
         element: <Time />,
       },
 
       {
-        path: ':roomId/e/time',
+        path: 'e/time/:roomId',
         element: <Time />,
       },
       {
-        path: ':roomId/a/time/vote',
+        path: 'a/time/vote/:roomId',
         element: <TimeVote />,
       },
 
       {
-        path: ':roomId/e/time/vote',
+        path: 'e/time/vote/:roomId',
         element: <TimeVote />,
       },
     ],

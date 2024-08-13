@@ -17,7 +17,7 @@ interface IDatePayload {
 //시간투표방 존재여부 확인하기
 export const checkVoteRoom = async ({ roomId, roomType, navigate }: IDatePayload) => {
   try {
-    const response = await axiosInstance.get(`/api/time-vote-rooms/existence`, {
+    const response = await axiosInstance.get(`/api/time-vote-rooms`, {
       headers: {
         roomId,
         roomType,
@@ -25,7 +25,7 @@ export const checkVoteRoom = async ({ roomId, roomType, navigate }: IDatePayload
       withCredentials: true,
     });
 
-    return response.data; // 응답 데이터 반환
+    return response.data.data; // 응답 데이터 반환
   } catch (error) {
     const axiosError = error as AxiosError;
 
@@ -39,10 +39,6 @@ export const checkVoteRoom = async ({ roomId, roomType, navigate }: IDatePayload
           }
           break;
 
-        case 402:
-          console.log('accessToken 만료');
-          break;
-
         case 403:
           if (roomType === ROOM_TYPE_ALONE) {
             navigate(`/page/alone/${roomId}`);
@@ -53,10 +49,10 @@ export const checkVoteRoom = async ({ roomId, roomType, navigate }: IDatePayload
           }
           break;
 
-        case 422:
-          navigate('/not-found');
-          console.log(roomId, roomType);
-          break;
+        // case 422:
+        //   navigate('/not-found');
+        //   console.log(roomId, roomType);
+        //   break;
 
         default:
           console.error('알 수 없는 오류:', axiosError);
@@ -94,10 +90,6 @@ export const resultVoteRoom = async ({ roomId, roomType, navigate }: IDatePayloa
           }
           break;
 
-        case 402:
-          console.log('accessToken 만료');
-          break;
-
         case 403:
           if (roomType === ROOM_TYPE_ALONE) {
             navigate(`/page/alone/${roomId}`);
@@ -110,9 +102,9 @@ export const resultVoteRoom = async ({ roomId, roomType, navigate }: IDatePayloa
 
         case 404:
           if (roomType === ROOM_TYPE_ALONE) {
-            navigate(`/page/${roomId}/a/time`);
+            navigate(`/page/a/time/${roomId}`);
           } else if (roomType === ROOM_TYPE_EACH) {
-            navigate(`/page/${roomId}/e/time`);
+            navigate(`/page/e/time/${roomId}`);
           } else {
             console.log(roomType);
           }

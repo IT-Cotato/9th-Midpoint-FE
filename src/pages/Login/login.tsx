@@ -62,10 +62,10 @@ export default function Login() {
           navigate(`/page/each/${roomId}`);
           break;
         case FROM_ALONE_TIME:
-          navigate(`/page/${roomId}/a/time`);
+          navigate(`/page/a/time/${roomId}`);
           break;
         case FROM_EACH_TIME:
-          navigate(`/page/${roomId}/e/time`);
+          navigate(`/page/e/time/${roomId}`);
           break;
         default:
           navigate('/');
