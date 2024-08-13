@@ -95,6 +95,7 @@ export default function RecommendEach() {
         if (error.response && error.response.status === 422) {
           navigate('/not-found');
         }
+        setLoading(false);
       }
     }
 
