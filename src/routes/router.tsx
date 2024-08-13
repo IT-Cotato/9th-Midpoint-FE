@@ -9,7 +9,7 @@ import MidpointAloneResult from '@/pages/MidpointResult/MidpointAloneResult';
 import MidpointEachResult from '@/pages/MidpointResult/MidpointEachResult';
 import ProtectedRoute from '@/components/Layout/ProtectedRoute';
 import Layout from '@/components/Layout/Layout';
-import TimeVote from '@/pages/Time/time-vote';
+import TimeVote from '@/pages/TimeVote/time-vote';
 import RecommendEach from '@/pages/Recommend/RecommendEach';
 import RecommendAlone from '@/pages/Recommend/RecommendAlone';
 
@@ -55,11 +55,21 @@ export const router = createBrowserRouter([
         element: <RecommendEach />,
       },
       {
-        path: ':roomId/time',
+        path: ':roomId/a/time',
+        element: <Time />,
+      },
+
+      {
+        path: ':roomId/e/time',
         element: <Time />,
       },
       {
-        path: ':roomId/time/vote',
+        path: ':roomId/a/time/vote',
+        element: <TimeVote />,
+      },
+
+      {
+        path: ':roomId/e/time/vote',
         element: <TimeVote />,
       },
     ],

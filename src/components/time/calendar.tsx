@@ -1,36 +1,48 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import CalItemIcon from '@/assets/imgs/time-calItem-icon1.svg?react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Value } from '@/pages/Time/time';
 import { checkVoteRoom, createVoteRoom } from '@/apis/time-vote.api';
-import { useParams } from 'react-router-dom';
+import { useMatch, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from '@/constants';
 
 export type DatePickerProps = {
   selectedDates: Value[];
   onDateChange: (value: Value) => void;
 };
 
+let dates: string[] = [];
+
+export const defineRoomType = (): { roomType: string; roomTypeUrl: string } => {
+  const isAloneRoomType = useMatch('/page/:roomId/a/time');
+  const roomType = isAloneRoomType ? ROOM_TYPE_ALONE : ROOM_TYPE_EACH;
+  let roomTypeUrl: string;
+  roomType === ROOM_TYPE_ALONE ? (roomTypeUrl = 'a') : (roomTypeUrl = 'e');
+
+  return { roomType, roomTypeUrl };
+};
+
 const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange }) => {
   const navigate = useNavigate();
-
   const { roomId } = useParams<{ roomId: string }>(); // URL에서 id 파라미터 가져오기
+  const { roomType, roomTypeUrl } = defineRoomType();
+
   useEffect(() => {
     const verifyRoomExistence = async () => {
       if (!roomId) {
         console.error('방 ID가 정의되지 않았습니다.');
-        return; // roomId가 없으면 함수 종료
+        return;
       }
       try {
-        const roomExists = await checkVoteRoom(roomId);
+        const roomExists = await checkVoteRoom({ roomId, roomType, navigate });
         if (roomExists) {
-          console.log('방이 존재합니다.');
-          // 방이 존재하는 경우의 추가 로직
-        } else {
-          console.log('방이 존재하지 않습니다.');
-          // 방이 존재하지 않는 경우의 추가 로직
+          dates = selectedDates
+            .filter((date) => date instanceof Date) // 유효한 날짜만 필터링
+            .map((date) => date.toISOString().split('T')[0]); // dates 전역 변수 업데이트
+          navigate(`/page/${roomId}/${roomTypeUrl}/time/vote`, { state: { selectedDates: dates } });
         }
       } catch (error) {
         console.error('방 존재 여부 확인 중 오류 발생:', error);
@@ -56,7 +68,7 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
     return sortedDates.length > 0 ? (
       <ul className="list-none">
         {sortedDates.map((date, index) => (
-          <li key={index}>{date instanceof Date ? date.toLocaleDateString('ko-KR', options) : '날짜 없음'}</li>
+          <li key={index}>{date instanceof Date && date.toLocaleDateString('ko-KR', options)}</li>
         ))}
       </ul>
     ) : (
@@ -69,17 +81,15 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
   const gotoVote = async () => {
     if (!roomId) {
       alert('방 ID가 없습니다. 다른 페이지로 이동합니다.');
-      navigate('/'); // roomId가 없을 경우 이동할 페이지
+      navigate('/');
       return;
     }
 
     if (selectedDates.length === 0) {
       alert('날짜를 선택해 주세요');
     } else {
-      const dates = selectedDates.map((date) => (date instanceof Date ? date.toISOString().split('T')[0] : ''));
-
       try {
-        await createVoteRoom(roomId, dates); // API 호출
+        await createVoteRoom({ roomId, dates, roomType, navigate });
         console.log('시간투표방 생성 완료');
         navigate(`/page/${roomId}/time/vote`, { state: { selectedDates: dates } });
       } catch (error) {

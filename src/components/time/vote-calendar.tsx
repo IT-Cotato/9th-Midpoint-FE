@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 
 import 'react-calendar/dist/Calendar.css';
 import CalIcon from '@/assets/imgs/time-calItem-icon1.svg?react';
 import ClockIcon from '@/assets/imgs/time-clock-icon.svg?react';
+import { DatePickerProps } from './calendar';
+import { Value, ValuePiece } from '@/pages/Time/time';
 
-
-const VoteCalendar: React.FC = ({ selectedDates }) => {
-  const [clickedDate, setClickedDate] = useState<Date | null>(null);
-  // const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
-
-  const handleDateClick = (date: Date) => {
-    if (selectedDates!.some((selectedDate) => selectedDate.toDateString() === date.toDateString())) {
-      setClickedDate(date);
-      console.log(date); // 클릭한 날짜를 콘솔에 출력
-    }
+const VoteCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange }) => {
+  const handleDateClick = (date: Value) => {
+    onDateChange(date);
   };
 
   return (
@@ -24,7 +19,8 @@ const VoteCalendar: React.FC = ({ selectedDates }) => {
         <ContainerItem>
           <CalIcon />
           <StyledCalendar
-            // value={selectedDates!.length > 0 ? selectedDates : undefined}
+            value={null}
+            onChange={(value) => handleDateClick(value)}
             locale="ko-KR"
             selectRange={false}
             formatDay={(_locale, date) => date.getDate().toString()} //일 제거
@@ -40,38 +36,41 @@ const VoteCalendar: React.FC = ({ selectedDates }) => {
                 ? 'selected'
                 : ''
             }
-            tileDisabled={
-              ({ date }) => !selectedDates!.some((selectedDate) => selectedDate.toDateString() === date.toDateString()) // 선택된 날짜가 아닐 경우 클릭 비활성화
+            tileDisabled={({ date }) =>
+              !selectedDates ||
+              !selectedDates.some(
+                (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+              )
             }
-            onClickDay={(date) => handleDateClick(date)} // 날짜 클릭 시 함수 호출
+            onClickDay={(date) => onDateChange(date)} // 날짜 클릭 시 함수 호출
           />
         </ContainerItem>
-        {clickedDate && (
-          <DateInfo>
-            <div className="bg-white rounded-[15px] text-[#5786FF] p-4 w-full max-w-[100px] mx-auto">닉네임</div>
-            <div className="bg-white rounded-[15px] text-[#5786FF] p-4 w-full max-w-[300px] mx-auto">
-              00시 00분 ~ 24시 00분
-            </div>
-          </DateInfo>
-        )}
       </div>
 
       <ContainerItem>
         <ClockIcon />
         <p className="my-2">참석 일시 투표</p>
-        {selectedDates!.map((date) => (
-          <DateOption key={date.toISOString()} date={date} />
-        ))}
+        {Array.isArray(selectedDates) &&
+          selectedDates.map((date, index) => (
+            <DateOption key={date instanceof Date ? date.toISOString() : `invalid-date-${index}`} date={date} />
+          ))}
+        {/* : (
+          <DateOption key={isDate(selectedDates) ? selectedDates.toISOString() : 'invalid-date'} date={selectedDates} />
+        )} */}
       </ContainerItem>
     </>
   );
 };
 
-const DateOption = ({ date }: Props) => (
+interface DateOptionProps {
+  date: ValuePiece | Value; // date의 타입을 ValuePiece로 변경
+}
+
+const DateOption = ({ date }: DateOptionProps) => (
   <div className="flex flex-col justify-center items-start mb-2.5 bg-white rounded-[15px] h-[120px] w-[450px] mx-auto p-4">
     <div className="flex items-center mb-2">
       <input type="checkbox" className="form-checkbox h-5 w-5 text-blue-600 rounded-full" />
-      <span className="mx-2.5">{date.toLocaleString()}</span>
+      <span className="mx-2.5">{date ? date.toLocaleString() : '날짜없음'}</span>
     </div>
     <div className="flex justify-center items-center space-x-4 mx-auto">
       <TimeSelect />
@@ -116,20 +115,6 @@ const ContainerItem = styled.div`
   font-weight: bold;
   text-align: center;
   color: #2f5fdd;
-`;
-
-const DateInfo = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin: 20px 0; // 추가된 간격
-  background: #f8f8fb;
-  padding: 10px 5px;
-  border-radius: 15px;
-  font-size: 18px;
-  font-weight: bold;
 `;
 
 const StyledCalendar = styled(Calendar)`

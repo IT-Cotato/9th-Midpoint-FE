@@ -8,7 +8,14 @@ import { fetchLogin } from '@/apis/login';
 import LoginLogo from '@/assets/imgs/loginLogo.svg?react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from '@/types/Login';
-import { FROM_ALONE_RESULT, FROM_EACH_RESULT, FROM_ENTER_ALONE, FROM_ENTER_EACH } from '@/constants';
+import {
+  FROM_ALONE_RESULT,
+  FROM_ALONE_TIME,
+  FROM_EACH_RESULT,
+  FROM_EACH_TIME,
+  FROM_ENTER_ALONE,
+  FROM_ENTER_EACH,
+} from '@/constants';
 
 interface IForm {
   name: string;
@@ -53,6 +60,12 @@ export default function Login() {
           break;
         case FROM_ENTER_EACH:
           navigate(`/page/each/${roomId}`);
+          break;
+        case FROM_ALONE_TIME:
+          navigate(`/page/${roomId}/a/time`);
+          break;
+        case FROM_EACH_TIME:
+          navigate(`/page/${roomId}/e/time`);
           break;
         default:
           navigate('/');
