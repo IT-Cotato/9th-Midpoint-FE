@@ -9,29 +9,44 @@ import { checkVoteRoom, resultVoteRoom } from '@/apis/time-vote.api';
 import VoteDate from '@/components/time/vote-date';
 import { defineRoomType } from '@/components/time/calendar';
 
+interface ResultResponse {
+  result: {
+    [date: string]: {
+      memberName: string;
+      dateTime: {
+        memberAvailableStartTime: string;
+        memberAvailableEndTime: string;
+      }[];
+    }[];
+  };
+  totalMemberNum: number;
+}
+
 const TimeVote = () => {
   const navigate = useNavigate();
 
   const [clickedDate, setClickedDate] = useState<ValuePiece>(null);
   const [selectedDates, setSelectedDates] = useState<ValuePiece[]>([]);
+  const [resultRes, setResultRes] = useState<ResultResponse | null>(null);
 
-  const { roomId } = useParams<{ roomId: string }>(); // URL에서 id 파라미터 가져오기
+  const { roomId } = useParams<{ roomId: string }>();
 
   const { roomType, roomTypeUrl } = defineRoomType();
 
+  if (!roomId) {
+    console.error('방 ID가 정의되지 않았습니다.');
+    return;
+  }
+
   useEffect(() => {
     const verifyRoomExistence = async () => {
-      if (!roomId) {
-        console.error('방 ID가 정의되지 않았습니다.');
-        return;
-      }
       try {
         const res = await checkVoteRoom({ roomId, roomType, navigate });
         if (res.existence && res.dates && res.dates.length > 0) {
-          // selectedDates를 상태로 관리하도록 수정
-          setSelectedDates(res.dates.map((date: string) => new Date(date))); // 날짜를 Date 객체로 변환하여 저장
-          console.log(selectedDates);
-          console.log(selectedDates);
+          setSelectedDates(res.dates.map((date: string) => new Date(date)));
+          const result: ResultResponse = await resultVoteRoom({ roomId, roomType, navigate });
+          setResultRes(result); // 상태 업데이트
+          console.log(result);
         } else {
           navigate(`/page/${roomTypeUrl}/time/${roomId}`);
         }
@@ -50,18 +65,42 @@ const TimeVote = () => {
       );
 
       if (isSelected) {
-        setClickedDate(date); // 클릭한 날짜를 상태에 설정
-        console.log(date); // 클릭한 날짜를 콘솔에 출력
+        setClickedDate(date);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const day = String(date.getDate()).padStart(2, '0');
+
+        // YYYY-MM-DD 형식으로 조합
+        const dateString = `${year}-${month}-${day}`;
+        console.log('캘린더에서 클릭한 날짜', dateString);
+
+        // resultRes가 null이 아닐 경우에만 처리
+        if (resultRes) {
+          const dateExists = Object.keys(resultRes.result)
+            .map((key) => key === dateString)
+            .includes(true);
+
+          if (dateExists) {
+            console.log('해당 날짜의 하위 정보:', resultRes.result[dateString]);
+          } else {
+            console.log('해당 날짜에 대한 정보가 없습니다.');
+          }
+        }
       }
     } else {
-      // date가 Date가 아닌 경우 추가 처리 (필요시)
       console.warn('클릭한 날짜는 유효한 Date 형식이 아닙니다:', date);
     }
   };
 
   return (
     <TimeVoteStyle className="flex flex-col">
-      <VoteCalendar selectedDates={selectedDates} onDateChange={handleDateClick} />
+      <VoteCalendar
+        selectedDates={selectedDates}
+        onDateChange={handleDateClick}
+        roomId={roomId}
+        roomType={roomType}
+        navigate={navigate}
+      />
       <VoteDate clickedDate={clickedDate} />
     </TimeVoteStyle>
   );

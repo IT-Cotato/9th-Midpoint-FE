@@ -3,7 +3,7 @@ import { FROM_ALONE_TIME, FROM_EACH_TIME, ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from
 import { axiosInstance } from '.';
 import { AxiosError } from 'axios';
 
-interface IDatePayload {
+export interface IDatePayload {
   navigate: Function;
   roomId: string;
   roomType: string;
@@ -44,15 +44,13 @@ export const checkVoteRoom = async ({ roomId, roomType, navigate }: IDatePayload
             navigate(`/page/alone/${roomId}`);
           } else if (roomType === ROOM_TYPE_EACH) {
             navigate(`/page/each/${roomId}`);
-          } else {
-            console.log(roomType);
           }
           break;
 
-        // case 422:
-        //   navigate('/not-found');
-        //   console.log(roomId, roomType);
-        //   break;
+        case 422:
+          navigate('/not-found');
+          console.log(roomId, roomType);
+          break;
 
         default:
           console.error('알 수 없는 오류:', axiosError);
@@ -76,7 +74,7 @@ export const resultVoteRoom = async ({ roomId, roomType, navigate }: IDatePayloa
       withCredentials: true,
     });
 
-    return response.data; // 응답 데이터 반환
+    return response.data.data; // 응답 데이터 반환
   } catch (error) {
     const axiosError = error as AxiosError;
 
@@ -105,8 +103,6 @@ export const resultVoteRoom = async ({ roomId, roomType, navigate }: IDatePayloa
             navigate(`/page/a/time/${roomId}`);
           } else if (roomType === ROOM_TYPE_EACH) {
             navigate(`/page/e/time/${roomId}`);
-          } else {
-            console.log(roomType);
           }
           break;
 
@@ -180,6 +176,69 @@ export const createVoteRoom = async ({ roomId, dates, roomType, navigate }: IDat
   }
 };
 
-// export const postVoteTime = async (payload: IDatePayload) => {
-//   return axios.post(`${BACKEND_URL}/api/time-vote-rooms/vote`, payload);
-// };
+//투표하기
+export const postVoteTime = async ({ roomId, dateTime, roomType, navigate }: IDatePayload) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/time-vote-rooms/vote`,
+      {
+        dateTime,
+      },
+      {
+        headers: {
+          roomId,
+          roomType,
+        },
+        withCredentials: true,
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+
+    if (axiosError.response) {
+      switch (axiosError.response.status) {
+        case 401:
+          if (roomType === ROOM_TYPE_ALONE) {
+            navigate(`/page/login/${roomId}`, { state: { from: FROM_ALONE_TIME } });
+          } else if (roomType === ROOM_TYPE_EACH) {
+            navigate(`/page/login/${roomId}`, { state: { from: FROM_EACH_TIME } });
+          }
+          break;
+        case 403:
+          if (roomType === ROOM_TYPE_ALONE) {
+            navigate(`/alone/${roomId}`);
+          } else if (roomType === ROOM_TYPE_EACH) {
+            navigate(`/each/${roomId}`);
+          }
+          break;
+        case 404:
+          console.log('생성된 투표방이 없습니다');
+          if (roomType === ROOM_TYPE_ALONE) {
+            navigate(`/page/a/time/${roomId}`);
+          } else if (roomType === ROOM_TYPE_EACH) {
+            navigate(`/page/e/time/${roomId}`);
+          }
+          break;
+        case 409:
+          console.log('이미 투표를 하였습니다');
+          if (roomType === ROOM_TYPE_ALONE) {
+            navigate(`/page/a/time/${roomId}/results`);
+          } else if (roomType === ROOM_TYPE_EACH) {
+            navigate(`/page/e/time/${roomId}/results`);
+          }
+          break;
+        case 422:
+          navigate('/not-found');
+          break;
+        default:
+          console.error('알 수 없는 오류:', axiosError);
+      }
+    } else {
+      console.error('API 호출 오류:', error); // 네트워크 오류 등
+    }
+
+    throw error;
+  }
+};
