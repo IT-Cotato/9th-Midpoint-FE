@@ -5,15 +5,8 @@ export const REFRESH_URL = BACKEND_URL + '/api/auth/refresh';
 
 // login이 완료된 사람의 요청의 경우 axiosInstance를 사용하여 요청
 export const axiosInstance = axios.create({
-  baseURL: BACKEND_URL,
+  baseURL: 'https://www.api.cotato-midpoint.site',
 });
-
-// 로그 아웃 함수
-const logout = () => {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('refreshToken');
-  localStorage.removeItem('roomId');
-};
 
 // accessToken, refreshToken 재발급하는 함수
 const getNewToken = async () => {
@@ -32,7 +25,6 @@ const getNewToken = async () => {
     const { accessToken, refreshToken: newRefreshToken } = response.data.data;
     return { accessToken, refreshToken: newRefreshToken };
   } catch (e) {
-    logout();
     return null;
   }
 };
