@@ -1,7 +1,7 @@
 // import { checkVoteRoom } from '@/apis/time-vote.api';
 import VoteCalendar from '@/components/time/vote-calendar';
 // import VoteDate from '@/components/time/vote-date';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Value, ValuePiece } from '../Time/time';
@@ -22,12 +22,16 @@ interface ResultResponse {
   totalMemberNum: number;
 }
 
+export type VoteDateInfo = Pick<ResultResponse['result'][string][0], 'memberName' | 'dateTime'>;
+
 const TimeVote = () => {
   const navigate = useNavigate();
+  const componentRef = useRef<HTMLDivElement>(null);
 
   const [clickedDate, setClickedDate] = useState<ValuePiece>(null);
   const [selectedDates, setSelectedDates] = useState<ValuePiece[]>([]);
   const [resultRes, setResultRes] = useState<ResultResponse | null>(null);
+  const [voteDateInfo, setVoteDateInfo] = useState<VoteDateInfo[]>([]);
 
   const { roomId } = useParams<{ roomId: string }>();
 
@@ -45,7 +49,7 @@ const TimeVote = () => {
         if (res.existence && res.dates && res.dates.length > 0) {
           setSelectedDates(res.dates.map((date: string) => new Date(date)));
           const result: ResultResponse = await resultVoteRoom({ roomId, roomType, navigate });
-          setResultRes(result); // 상태 업데이트
+          setResultRes(result);
           console.log(result);
         } else {
           navigate(`/page/${roomTypeUrl}/time/${roomId}`);
@@ -58,7 +62,6 @@ const TimeVote = () => {
   }, [roomId]);
 
   const handleDateClick = (date: Value | ValuePiece) => {
-    // date가 Date 인스턴스인지 확인
     if (date instanceof Date) {
       const isSelected = selectedDates.some(
         (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
@@ -67,41 +70,58 @@ const TimeVote = () => {
       if (isSelected) {
         setClickedDate(date);
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
 
-        // YYYY-MM-DD 형식으로 조합
         const dateString = `${year}-${month}-${day}`;
         console.log('캘린더에서 클릭한 날짜', dateString);
 
-        // resultRes가 null이 아닐 경우에만 처리
         if (resultRes) {
-          const dateExists = Object.keys(resultRes.result)
-            .map((key) => key === dateString)
-            .includes(true);
+          let foundInfo = resultRes.result[dateString];
 
-          if (dateExists) {
-            console.log('해당 날짜의 하위 정보:', resultRes.result[dateString]);
+          if (foundInfo) {
+            console.log('해당 날짜의 하위 정보:', foundInfo);
+            setVoteDateInfo(foundInfo);
+
+            if (foundInfo.length === 0) console.log('빈값');
           } else {
             console.log('해당 날짜에 대한 정보가 없습니다.');
           }
         }
+        setClickedDate(date);
+      } else {
+        setClickedDate(null);
       }
     } else {
       console.warn('클릭한 날짜는 유효한 Date 형식이 아닙니다:', date);
     }
   };
 
+  // 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (componentRef.current && !componentRef.current.contains(event.target as Node)) {
+        setClickedDate(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <TimeVoteStyle className="flex flex-col">
+    <TimeVoteStyle ref={componentRef} className="flex flex-col">
       <VoteCalendar
         selectedDates={selectedDates}
         onDateChange={handleDateClick}
         roomId={roomId}
         roomType={roomType}
+        roomTypeUrl={roomTypeUrl}
         navigate={navigate}
       />
-      <VoteDate clickedDate={clickedDate} />
+      {clickedDate && <VoteDate clickedDate={clickedDate} voteDateInfo={voteDateInfo} />}
     </TimeVoteStyle>
   );
 };

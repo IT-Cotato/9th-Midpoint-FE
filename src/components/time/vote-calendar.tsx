@@ -24,13 +24,9 @@ interface Time {
 
 const formatTime = (time: number) => (time < 10 ? `0${time}` : time);
 
-const VoteCalendar: React.FC<DatePickerProps & { roomId: string; roomType: string; navigate: Function }> = ({
-  selectedDates,
-  onDateChange,
-  roomId,
-  roomType,
-  navigate,
-}) => {
+const VoteCalendar: React.FC<
+  DatePickerProps & { roomId: string; roomType: string; roomTypeUrl: string; navigate: Function }
+> = ({ selectedDates, onDateChange, roomId, roomType, roomTypeUrl, navigate }) => {
   const [dateTimeOptions, setDateTimeOptions] = useState<DateTimeOption[]>([]);
 
   const handleTimeChange = (date: Value, startTime: Time, endTime: Time) => {
@@ -65,6 +61,7 @@ const VoteCalendar: React.FC<DatePickerProps & { roomId: string; roomType: strin
       await postVoteTime(payload);
       console.log(payload);
       console.log('투표 결과가 성공적으로 처리되었습니다.');
+      navigate(`/page/${roomTypeUrl}/time/result/${roomId}`);
     } catch (err) {
       console.error('투표 처리 중 오류 발생:', err);
     }
@@ -133,7 +130,7 @@ const VoteCalendar: React.FC<DatePickerProps & { roomId: string; roomType: strin
 };
 
 interface DateOptionProps {
-  date: ValuePiece | Value; // date의 타입을 ValuePiece로 변경
+  date: ValuePiece | Value;
   onTimeChange: (date: Value, startTime: Time, endTime: Time) => void;
 }
 
