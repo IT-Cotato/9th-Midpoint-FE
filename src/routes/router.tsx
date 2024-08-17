@@ -17,6 +17,12 @@ import VoteAlone from '@/pages/PlaceVote/Vote/VoteAlone';
 import VoteEach from '@/pages/PlaceVote/Vote/VoteEach';
 import PlaceResultAlone from '@/pages/PlaceVote/Result/PlaceResultAlone';
 import PlaceResultEach from '@/pages/PlaceVote/Result/PlaceResultEach';
+import TimeCreateAlone from '@/pages/TimeVote/Create/TimeCreateAlone';
+import TimeCreateEach from '@/pages/TimeVote/Create/TimeCreateEach';
+import TimeVoteAlone from '@/pages/TimeVote/Vote/TimeVoteAlone';
+import TimeVoteEach from '@/pages/TimeVote/Vote/TimeVoteEach';
+import TimeResultAlone from '@/pages/TimeVote/Result/TimeResultAlone';
+import TimeResultEach from '@/pages/TimeVote/Result/TimeResultEach';
 
 export const router = createBrowserRouter([
   {
@@ -82,6 +88,30 @@ export const router = createBrowserRouter([
       {
         path: 'e/place-vote/results/:roomId',
         element: <PlaceResultEach />,
+      },
+      {
+        path: 'a/create/time-vote-room/:roomId',
+        element: <TimeCreateAlone />,
+      },
+      {
+        path: 'e/create/time-vote-room/:roomId',
+        element: <TimeCreateEach />,
+      },
+      {
+        path: 'a/time-vote/:roomId',
+        element: <TimeVoteAlone />,
+      },
+      {
+        path: 'e/time-vote/:roomId',
+        element: <TimeVoteEach />,
+      },
+      {
+        path: 'a/time-vote/results/:roomId',
+        element: <TimeResultAlone />,
+      },
+      {
+        path: 'e/time-vote/results/:roomId',
+        element: <TimeResultEach />,
       },
       {
         path: ':roomId/time',

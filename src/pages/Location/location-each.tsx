@@ -9,8 +9,11 @@ import Button from '@/components/common/Button/button';
 import { axiosInstance, BACKEND_URL } from '@/apis';
 import {
   FROM_EACH_CREATE_VOTE_PLACE,
+  FROM_EACH_CREATE_VOTE_TIME,
   FROM_EACH_PLACE_VOTE,
   FROM_EACH_PLACE_VOTE_RESULT,
+  FROM_EACH_TIME_VOTE,
+  FROM_EACH_TIME_VOTE_RESULT,
   FROM_ENTER_EACH,
   ROOM_TYPE_EACH,
 } from '@/constants';
@@ -84,6 +87,15 @@ export default function LocationEach() {
           break;
         case FROM_EACH_PLACE_VOTE_RESULT:
           navigate(`/page/e/place-vote/results/${roomId}`);
+          break;
+        case FROM_EACH_CREATE_VOTE_TIME:
+          navigate(`/page/e/create/time-vote-room/${roomId}`);
+          break;
+        case FROM_EACH_TIME_VOTE:
+          navigate(`/page/e/time-vote/${roomId}`);
+          break;
+        case FROM_EACH_TIME_VOTE_RESULT:
+          navigate(`/page/e/time-vote/results/${roomId}`);
           break;
         default:
           navigate(`/page/e/results/${roomId}`);
