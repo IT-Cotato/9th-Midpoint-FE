@@ -67,7 +67,7 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
 
     const sortedDates = selectedDates
       .filter((date) => date instanceof Date) // 유효한 날짜만 필터링
-      .sort((a, b) => a.getTime() - b.getTime()); // 날짜 오름차순 정렬
+      .sort((a, b) => a?.getTime() - b?.getTime()); // 날짜 오름차순 정렬
 
     return sortedDates.length > 0 ? (
       <ul className="list-none">
@@ -85,8 +85,8 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
   const gotoVote = async (isTimeVoteRoomExists: boolean) => {
     dates = selectedDates
       .filter((date) => date instanceof Date) // 유효한 날짜만 필터링
-      .sort((a, b) => a.getTime() - b.getTime()) // 날짜를 순서대로 정렬
-      .map((date) => date.toISOString().split('T')[0]); // dates 전역 변수 업데이트
+      .sort((a, b) => a?.getTime() - b?.getTime()) // 날짜를 순서대로 정렬
+      .map((date) => date?.toISOString().split('T')[0]); // dates 전역 변수 업데이트
     console.log(dates);
 
     if (!roomId) {
