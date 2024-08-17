@@ -3,37 +3,80 @@ import styled from 'styled-components';
 import Calendar from 'react-calendar';
 
 import 'react-calendar/dist/Calendar.css';
-import CalIcon from '@/assets/imgs/time-calItem-icon1.svg?react';
-import ClockIcon from '@/assets/imgs/time-clock-icon.svg?react';
-import { CalendarProps } from '@/pages/time';
+import CalIcon from '@/assets/imgs/Time/time-calItem-icon1.svg?react';
+import { Value, ValuePiece } from '@/pages/Time/time';
+import VoteDate from './vote-date';
+import { ResultResponse, VoteDateInfo } from '@/pages/TimeVote/time-vote';
 
-interface Props {
-  date: Date;
+// 타입 정의
+export interface DateTimeOption {
+  date: Value;
+  startTime: Time;
+  endTime: Time;
 }
 
-// type ValuePiece = Date | null;
-// type Value = ValuePiece | [ValuePiece, ValuePiece];
+export interface Time {
+  hour: number;
+  minute: number;
+}
 
-const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates }) => {
-  // const [calendarValue, setCalendarValue] = useState<Value>(new Date());
-  const [clickedDate, setClickedDate] = useState<Date | null>(null);
-  // const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+interface VoteCalendarProps {
+  selectedDates: ValuePiece[];
+  resultRes: ResultResponse | null;
+  clickedDate: ValuePiece;
+  setClickedDate: (date: ValuePiece) => void;
+}
 
-  const handleDateClick = (date: Date) => {
-    if (selectedDates!.some((selectedDate) => selectedDate.toDateString() === date.toDateString())) {
-      setClickedDate(date);
-      console.log(date); // 클릭한 날짜를 콘솔에 출력
+export const formatTime = (time: number) => (time < 10 ? `0${time}` : time);
+
+const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, clickedDate, setClickedDate }) => {
+  const [voteDateInfo, setVoteDateInfo] = useState<VoteDateInfo[]>([]);
+
+  const handleDateClick = (date: Value | ValuePiece) => {
+    if (date instanceof Date) {
+      const isSelected =
+        selectedDates.some(
+          (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+        );
+
+      if (isSelected) {
+        setClickedDate(date);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        const dateString = `${year}-${month}-${day}`;
+        console.log('캘린더에서 클릭한 날짜', dateString);
+
+        if (resultRes) {
+          let foundInfo = resultRes.result[dateString];
+
+          if (foundInfo) {
+            console.log('해당 날짜의 하위 정보:', foundInfo);
+            setVoteDateInfo(foundInfo);
+
+            if (foundInfo.length === 0) console.log('빈값');
+          } else {
+            console.log('해당 날짜에 대한 정보가 없습니다.');
+          }
+        }
+        setClickedDate(date);
+      } else {
+        setClickedDate(null);
+      }
+    } else {
+      console.warn('클릭한 날짜는 유효한 Date 형식이 아닙니다:', date);
     }
   };
 
-
   return (
     <>
-      <div className="flex flex-col item-center justify-center">
+      <div className="flex flex-col item-center justify-start">
         <ContainerItem>
           <CalIcon />
           <StyledCalendar
-            // value={selectedDates!.length > 0 ? selectedDates : undefined}
+            value={null}
+            onChange={(value) => handleDateClick(value)}
             locale="ko-KR"
             selectRange={false}
             formatDay={(_locale, date) => date.getDate().toString()} //일 제거
@@ -42,73 +85,34 @@ const VoteCalendar: React.FC<CalendarProps> = ({ selectedDates }) => {
             next2Label={null} // +1년 & +10년 이동 버튼 숨기기
             prev2Label={null} // -1년 & -10년 이동 버튼 숨기기
             minDetail="year" // 10년단위 년도 숨기기
-            tileClassName={
-              ({ date }) =>
-                selectedDates!.some((selectedDate) => selectedDate.toDateString() === date.toDateString())
-                  ? 'selected'
-                  : clickedDate && clickedDate.toDateString() === date.toDateString()
-                    ? 'selected'
-                    : '' // 클릭한 날짜에 대한 클래스 추가
+            tileClassName={({ date }) =>
+              selectedDates.some(
+                (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+              )
+                ? 'selected'
+                : ''
             }
-            tileDisabled={
-              ({ date }) => !selectedDates!.some((selectedDate) => selectedDate.toDateString() === date.toDateString()) // 선택된 날짜가 아닐 경우 클릭 비활성화
+            tileDisabled={({ date }) =>
+              !selectedDates.some(
+                (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+              )
             }
-            onClickDay={(date) => handleDateClick(date)} // 날짜 클릭 시 함수 호출
+            onClickDay={(date) => {
+              if (
+                selectedDates.some(
+                  (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+                )
+              ) {
+                handleDateClick(date);
+              }
+            }}
           />
         </ContainerItem>
-        {clickedDate && (
-          <DateInfo>
-            <div className="bg-white rounded-[15px] text-[#5786FF] p-4 w-full max-w-[100px] mx-auto">닉네임</div>
-            <div className="bg-white rounded-[15px] text-[#5786FF] p-4 w-full max-w-[300px] mx-auto">
-              00시 00분 ~ 24시 00분
-            </div>
-          </DateInfo>
-        )}
+        {clickedDate && <VoteDate clickedDate={clickedDate} voteDateInfo={voteDateInfo} />}
       </div>
-
-      <ContainerItem>
-        <ClockIcon />
-        <p className="my-2">참석 일시 투표</p>
-        {selectedDates!.map((date) => (
-          <DateOption key={date.toISOString()} date={date} />
-        ))}
-      </ContainerItem>
     </>
   );
 };
-
-const DateOption = ({ date }: Props) => (
-  <div className="flex flex-col justify-center items-start mb-2.5 bg-white rounded-[15px] h-[120px] w-[450px] mx-auto p-4">
-    <div className="flex items-center mb-2">
-      <input type="checkbox" className="form-checkbox h-5 w-5 text-blue-600 rounded-full" />
-      <span className="mx-2.5">{date.toLocaleString()}</span>
-    </div>
-    <div className="flex justify-center items-center space-x-4 mx-auto">
-      <TimeSelect />
-      <p>~</p>
-      <TimeSelect />
-    </div>
-  </div>
-);
-
-const TimeSelect = () => (
-  <>
-    <select className="p-2 border border-gray-300 rounded bg-white h-10 w-20">
-      {Array.from({ length: 24 }, (_, index) => (
-        <option key={index} value={index}>
-          {index < 10 ? `0${index}` : index} 시
-        </option>
-      ))}
-    </select>
-    <select className="p-2 border border-gray-300 rounded bg-white h-10 w-20">
-      {Array.from({ length: 12 }, (_, index) => (
-        <option key={index} value={index * 5}>
-          {index * 5 < 10 ? `0${index * 5}` : index * 5} 분
-        </option>
-      ))}
-    </select>
-  </>
-);
 
 const ContainerItem = styled.div`
   display: flex;
@@ -120,26 +124,12 @@ const ContainerItem = styled.div`
   min-height: 500px;
   background: #f8f8fb;
   padding: 10px 5px;
-  margin: 0 auto;
+  margin: 10px;
   border-radius: 15px;
   font-size: 18px;
   font-weight: bold;
   text-align: center;
   color: #2f5fdd;
-`;
-
-const DateInfo = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin: 20px 0; // 추가된 간격
-  background: #f8f8fb;
-  padding: 10px 5px;
-  border-radius: 15px;
-  font-size: 18px;
-  font-weight: bold;
 `;
 
 const StyledCalendar = styled(Calendar)`

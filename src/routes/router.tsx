@@ -1,6 +1,6 @@
 import LocationAlone from '@/pages/Location/location-alone';
 import NotFound from '@/pages/NotFound/not-found';
-import Time from '@/pages/time';
+import Time from '@/pages/Time/time';
 import { createBrowserRouter } from 'react-router-dom';
 import LocationEach from '@/pages/Location/location-each';
 import Home from '@/pages/Home/home';
@@ -9,20 +9,16 @@ import MidpointAloneResult from '@/pages/MidpointResult/MidpointAloneResult';
 import MidpointEachResult from '@/pages/MidpointResult/MidpointEachResult';
 import ProtectedRoute from '@/components/Layout/ProtectedRoute';
 import Layout from '@/components/Layout/Layout';
+import TimeVote from '@/pages/TimeVote/time-vote';
 import RecommendEach from '@/pages/Recommend/RecommendEach';
 import RecommendAlone from '@/pages/Recommend/RecommendAlone';
+import TimeResult from '@/pages/TimeResult/time-result';
 import CreateAlone from '@/pages/PlaceVote/Create/CreateAlone';
 import CreateEach from '@/pages/PlaceVote/Create/CreateEach';
 import VoteAlone from '@/pages/PlaceVote/Vote/VoteAlone';
 import VoteEach from '@/pages/PlaceVote/Vote/VoteEach';
 import PlaceResultAlone from '@/pages/PlaceVote/Result/PlaceResultAlone';
 import PlaceResultEach from '@/pages/PlaceVote/Result/PlaceResultEach';
-import TimeCreateAlone from '@/pages/TimeVote/Create/TimeCreateAlone';
-import TimeCreateEach from '@/pages/TimeVote/Create/TimeCreateEach';
-import TimeVoteAlone from '@/pages/TimeVote/Vote/TimeVoteAlone';
-import TimeVoteEach from '@/pages/TimeVote/Vote/TimeVoteEach';
-import TimeResultAlone from '@/pages/TimeVote/Result/TimeResultAlone';
-import TimeResultEach from '@/pages/TimeVote/Result/TimeResultEach';
 
 export const router = createBrowserRouter([
   {
@@ -91,31 +87,27 @@ export const router = createBrowserRouter([
       },
       {
         path: 'a/create/time-vote-room/:roomId',
-        element: <TimeCreateAlone />,
+        element: <Time />,
       },
       {
         path: 'e/create/time-vote-room/:roomId',
-        element: <TimeCreateEach />,
+        element: <Time />,
       },
       {
         path: 'a/time-vote/:roomId',
-        element: <TimeVoteAlone />,
+        element: <TimeVote />,
       },
       {
         path: 'e/time-vote/:roomId',
-        element: <TimeVoteEach />,
+        element: <TimeVote />,
       },
       {
         path: 'a/time-vote/results/:roomId',
-        element: <TimeResultAlone />,
+        element: <TimeResult />,
       },
       {
         path: 'e/time-vote/results/:roomId',
-        element: <TimeResultEach />,
-      },
-      {
-        path: ':roomId/time',
-        element: <Time />,
+        element: <TimeResult />,
       },
     ],
   },
