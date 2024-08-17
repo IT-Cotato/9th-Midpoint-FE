@@ -1,15 +1,15 @@
-// import { checkVoteRoom } from '@/apis/time-vote.api';
-import VoteCalendar from '@/components/time/vote-calendar';
-// import VoteDate from '@/components/time/vote-date';
+import VoteCalendar, { DateTimeOption, formatTime, Time } from '@/components/time/vote-calendar';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Value, ValuePiece } from '../Time/time';
-import { checkVoteRoom, resultVoteRoom } from '@/apis/time-vote.api';
-import VoteDate from '@/components/time/vote-date';
+import { checkVoteRoom, IDatePayload, postVoteTime, rePostVoteTime, resultVoteRoom } from '@/apis/time-vote.api';
 import { defineRoomType } from '@/components/time/calendar';
+import ClockIcon from '@/assets/imgs/Time/time-clock-icon.svg?react';
+import Button from '@/components/common/Button/button';
+import { DateOption } from '@/components/time/vote-date-picker';
 
-interface ResultResponse {
+export interface ResultResponse {
   result: {
     [date: string]: {
       memberName: string;
@@ -31,26 +31,27 @@ const TimeVote = () => {
   const [clickedDate, setClickedDate] = useState<ValuePiece>(null);
   const [selectedDates, setSelectedDates] = useState<ValuePiece[]>([]);
   const [resultRes, setResultRes] = useState<ResultResponse | null>(null);
-  const [voteDateInfo, setVoteDateInfo] = useState<VoteDateInfo[]>([]);
+  const [dateTimeOptions, setDateTimeOptions] = useState<DateTimeOption[]>([]);
 
+  const [voteExistence, setVoteExistence] = useState<boolean>(false);
   const { roomId } = useParams<{ roomId: string }>();
-
   const { roomType, roomTypeUrl } = defineRoomType();
 
   if (!roomId) {
     console.error('방 ID가 정의되지 않았습니다.');
     return;
   }
-
+  //존재 여부 검증
   useEffect(() => {
     const verifyRoomExistence = async () => {
       try {
+        //시간투표방 존재하는지
         const res = await checkVoteRoom({ roomId, roomType, navigate });
         if (res.existence && res.dates && res.dates.length > 0) {
+          //투표가능날짜 받아오기
           setSelectedDates(res.dates.map((date: string) => new Date(date)));
           const result: ResultResponse = await resultVoteRoom({ roomId, roomType, navigate });
           setResultRes(result);
-          console.log(result);
         } else {
           navigate(`/page/${roomTypeUrl}/time/${roomId}`);
         }
@@ -61,40 +62,66 @@ const TimeVote = () => {
     verifyRoomExistence();
   }, [roomId]);
 
-  const handleDateClick = (date: Value | ValuePiece) => {
-    if (date instanceof Date) {
-      const isSelected = selectedDates.some(
-        (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
-      );
-
-      if (isSelected) {
-        setClickedDate(date);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-
-        const dateString = `${year}-${month}-${day}`;
-        console.log('캘린더에서 클릭한 날짜', dateString);
-
-        if (resultRes) {
-          let foundInfo = resultRes.result[dateString];
-
-          if (foundInfo) {
-            console.log('해당 날짜의 하위 정보:', foundInfo);
-            setVoteDateInfo(foundInfo);
-
-            if (foundInfo.length === 0) console.log('빈값');
-          } else {
-            console.log('해당 날짜에 대한 정보가 없습니다.');
-          }
-        }
-        setClickedDate(date);
+  const handleTimeChange = (date: Value, startTime: Time, endTime: Time) => {
+    setDateTimeOptions((prev) => {
+      const existingOption = prev.find((option) => option.date === date);
+      if (existingOption) {
+        return prev.map((option) => (option.date === date ? { ...option, startTime, endTime } : option));
       } else {
-        setClickedDate(null);
+        return [...prev, { date, startTime, endTime }];
       }
-    } else {
-      console.warn('클릭한 날짜는 유효한 Date 형식이 아닙니다:', date);
+    });
+  };
+
+  const handleVote = async () => {
+    const dateTimePayload = dateTimeOptions
+      .map(({ date, startTime, endTime }) => {
+        const memberAvailableStartTime = formatDateTime(date, startTime);
+        const memberAvailableEndTime = formatDateTime(date, endTime);
+        //시작 시간이 클경우 동작취소
+        if (memberAvailableStartTime > memberAvailableEndTime) {
+          alert('시작 시간은 종료 시간보다 빨라야 합니다.');
+          return null;
+        }
+        return {
+          memberAvailableStartTime,
+          memberAvailableEndTime,
+        };
+      })
+      .filter((item) => item !== null);
+
+    const payload: IDatePayload = {
+      roomId,
+      roomType,
+      navigate,
+      dateTime: dateTimePayload,
+    };
+
+    if (!dateTimePayload.length) {
+      alert('참석 일시를 투표해주세요!');
+      return;
     }
+    if (!voteExistence) {
+      try {
+        await postVoteTime(payload);
+        navigate(`/page/${roomTypeUrl}/time/results/${roomId}`);
+      } catch (err) {
+        console.error('투표 처리 중 오류 발생:', err);
+      }
+    }
+    else{
+      try {
+        await rePostVoteTime(payload);
+        navigate(`/page/${roomTypeUrl}/time/results/${roomId}`);
+      } catch (err) {
+        console.error('재투표 처리 중 오류 발생:', err);
+      }
+    }
+  };
+
+  const formatDateTime = (date: Value, time: Time): string => {
+    if (!(date instanceof Date)) return '';
+    return `${date.toISOString().split('T')[0]} ${formatTime(time.hour)}:${formatTime(time.minute)}`;
   };
 
   // 외부 클릭 감지
@@ -112,20 +139,52 @@ const TimeVote = () => {
   }, []);
 
   return (
-    <TimeVoteStyle ref={componentRef} className="flex flex-col">
+    <TimeVoteStyle ref={componentRef} className="flex flex-row ">
       <VoteCalendar
         selectedDates={selectedDates}
-        onDateChange={handleDateClick}
-        roomId={roomId}
-        roomType={roomType}
-        roomTypeUrl={roomTypeUrl}
-        navigate={navigate}
+        resultRes={resultRes}
+        clickedDate={clickedDate}
+        setClickedDate={setClickedDate}
       />
-      {clickedDate && <VoteDate clickedDate={clickedDate} voteDateInfo={voteDateInfo} />}
+
+      <ContainerItem className="relative">
+        <ClockIcon />
+        <p className="my-2">참석 일시 투표</p>
+        {Array.isArray(selectedDates) &&
+          selectedDates.map((date, index) => (
+            <DateOption
+              key={date instanceof Date ? date.toISOString() : `invalid-date-${index}`}
+              date={date}
+              onTimeChange={handleTimeChange}
+              roomId={roomId}
+              setVoteExistence={setVoteExistence}
+            />
+          ))}
+        <div className="absolute bottom-0 w-full">
+          <Button text="투표하기" onClick={handleVote} isLoading={false}></Button>
+        </div>
+      </ContainerItem>
     </TimeVoteStyle>
   );
 };
 
 const TimeVoteStyle = styled.div``;
+const ContainerItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 40%;
+  min-width: 480px;
+  min-height: 500px;
+  background: #f8f8fb;
+  padding: 10px 5px;
+  margin: 10px;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  color: #2f5fdd;
+`;
 
 export default TimeVote;

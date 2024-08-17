@@ -3,78 +3,75 @@ import styled from 'styled-components';
 import Calendar from 'react-calendar';
 
 import 'react-calendar/dist/Calendar.css';
-import CalIcon from '@/assets/imgs/time-calItem-icon1.svg?react';
-import ClockIcon from '@/assets/imgs/time-clock-icon.svg?react';
-import { DatePickerProps } from './calendar';
+import CalIcon from '@/assets/imgs/Time/time-calItem-icon1.svg?react';
 import { Value, ValuePiece } from '@/pages/Time/time';
-import Button from '../common/Button/button';
-import { IDatePayload, postVoteTime } from '@/apis/time-vote.api';
+import VoteDate from './vote-date';
+import { ResultResponse, VoteDateInfo } from '@/pages/TimeVote/time-vote';
 
 // 타입 정의
-interface DateTimeOption {
+export interface DateTimeOption {
   date: Value;
   startTime: Time;
   endTime: Time;
 }
 
-interface Time {
+export interface Time {
   hour: number;
   minute: number;
 }
 
-const formatTime = (time: number) => (time < 10 ? `0${time}` : time);
+interface VoteCalendarProps {
+  selectedDates: ValuePiece[];
+  resultRes: ResultResponse | null;
+  clickedDate: ValuePiece;
+  setClickedDate: (date: ValuePiece) => void;
+}
 
-const VoteCalendar: React.FC<
-  DatePickerProps & { roomId: string; roomType: string; roomTypeUrl: string; navigate: Function }
-> = ({ selectedDates, onDateChange, roomId, roomType, roomTypeUrl, navigate }) => {
-  const [dateTimeOptions, setDateTimeOptions] = useState<DateTimeOption[]>([]);
+export const formatTime = (time: number) => (time < 10 ? `0${time}` : time);
 
-  const handleTimeChange = (date: Value, startTime: Time, endTime: Time) => {
-    setDateTimeOptions((prev) => {
-      const existingOption = prev.find((option) => option.date === date);
-      if (existingOption) {
-        return prev.map((option) => (option.date === date ? { ...option, startTime, endTime } : option));
+const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, clickedDate, setClickedDate }) => {
+  const [voteDateInfo, setVoteDateInfo] = useState<VoteDateInfo[]>([]);
+
+  const handleDateClick = (date: Value | ValuePiece) => {
+    if (date instanceof Date) {
+      const isSelected =
+        selectedDates.some(
+          (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+        );
+
+      if (isSelected) {
+        setClickedDate(date);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        const dateString = `${year}-${month}-${day}`;
+        console.log('캘린더에서 클릭한 날짜', dateString);
+
+        if (resultRes) {
+          let foundInfo = resultRes.result[dateString];
+
+          if (foundInfo) {
+            console.log('해당 날짜의 하위 정보:', foundInfo);
+            setVoteDateInfo(foundInfo);
+
+            if (foundInfo.length === 0) console.log('빈값');
+          } else {
+            console.log('해당 날짜에 대한 정보가 없습니다.');
+          }
+        }
+        setClickedDate(date);
       } else {
-        return [...prev, { date, startTime, endTime }];
+        setClickedDate(null);
       }
-    });
-  };
-
-  const handleDateClick = (date: Value) => {
-    onDateChange(date);
-  };
-
-  const handleVote = async () => {
-    const dateTimePayload = dateTimeOptions.map(({ date, startTime, endTime }) => ({
-      memberAvailableStartTime: formatDateTime(date, startTime),
-      memberAvailableEndTime: formatDateTime(date, endTime),
-    }));
-
-    const payload: IDatePayload = {
-      roomId,
-      roomType,
-      navigate,
-      dateTime: dateTimePayload.length > 0 ? dateTimePayload : undefined,
-    };
-
-    try {
-      await postVoteTime(payload);
-      console.log(payload);
-      console.log('투표 결과가 성공적으로 처리되었습니다.');
-      navigate(`/page/${roomTypeUrl}/time/result/${roomId}`);
-    } catch (err) {
-      console.error('투표 처리 중 오류 발생:', err);
+    } else {
+      console.warn('클릭한 날짜는 유효한 Date 형식이 아닙니다:', date);
     }
-  };
-
-  const formatDateTime = (date: Value, time: Time): string => {
-    if (!(date instanceof Date)) return '';
-    return `${date.toISOString().split('T')[0]} ${formatTime(time.hour)}:${formatTime(time.minute)}`;
   };
 
   return (
     <>
-      <div className="flex flex-row item-center justify-center">
+      <div className="flex flex-col item-center justify-start">
         <ContainerItem>
           <CalIcon />
           <StyledCalendar
@@ -108,118 +105,11 @@ const VoteCalendar: React.FC<
               ) {
                 handleDateClick(date);
               }
-            }} // 날짜 클릭 시 함수 호출
+            }}
           />
         </ContainerItem>
-        <ContainerItem>
-          <ClockIcon />
-          <p className="my-2">참석 일시 투표</p>
-          {Array.isArray(selectedDates) &&
-            selectedDates.map((date, index) => (
-              <DateOption
-                key={date instanceof Date ? date.toISOString() : `invalid-date-${index}`}
-                date={date}
-                onTimeChange={handleTimeChange}
-              />
-            ))}
-          <Button text="투표하기" onClick={handleVote} isLoading={false}></Button>
-        </ContainerItem>
+        {clickedDate && <VoteDate clickedDate={clickedDate} voteDateInfo={voteDateInfo} />}
       </div>
-    </>
-  );
-};
-
-interface DateOptionProps {
-  date: ValuePiece | Value;
-  onTimeChange: (date: Value, startTime: Time, endTime: Time) => void;
-}
-
-const DateOption = ({ date, onTimeChange }: DateOptionProps) => {
-  const [isChecked, setIsChecked] = useState(false);
-
-  const [startTime, setStartTime] = useState<Time>({ hour: 0, minute: 0 });
-  const [endTime, setEndTime] = useState<Time>({ hour: 0, minute: 0 });
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
-
-  const handleStartTimeChange = (hour: number, minute: number) => {
-    const newStartTime = { hour, minute };
-    setStartTime(newStartTime);
-    if (isChecked) onTimeChange(date, newStartTime, endTime);
-  };
-
-  const handleEndTimeChange = (hour: number, minute: number) => {
-    const newEndTime = { hour, minute };
-    setEndTime(newEndTime);
-    if (isChecked) onTimeChange(date, startTime, newEndTime);
-  };
-
-  return (
-    <div
-      className={`flex flex-col justify-center items-start mb-2.5 bg-white rounded-[15px] h-[120px] w-[450px] mx-auto p-4 ${!isChecked ? 'opacity-50 pointer-events-none' : ''}`}
-    >
-      <div className="flex items-center mb-2 pointer-events-auto">
-        <input
-          type="checkbox"
-          className="form-checkbox h-5 w-5 text-blue-600 rounded-full"
-          checked={isChecked}
-          onChange={handleCheckboxChange}
-        />
-        <span className="mx-2.5">{date instanceof Date ? date.toLocaleDateString() : '날짜없음'}</span>
-      </div>
-      <div className="flex justify-center items-center space-x-4 mx-auto">
-        <TimeSelect onChange={handleStartTimeChange} />
-        <p>~</p>
-        <TimeSelect onChange={handleEndTimeChange} />
-      </div>
-    </div>
-  );
-};
-
-interface TimeSelectProps {
-  onChange: (hour: number, minute: number) => void;
-}
-
-const TimeSelect = ({ onChange }: TimeSelectProps) => {
-  const [hour, setHour] = useState(0);
-  const [minute, setMinute] = useState(0);
-
-  const handleHourChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newHour = parseInt(e.target.value, 10);
-    setHour(newHour);
-    onChange(newHour, minute);
-  };
-
-  const handleMinuteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newMinute = parseInt(e.target.value, 10);
-    setMinute(newMinute);
-    onChange(hour, newMinute);
-  };
-
-  return (
-    <>
-      <select
-        className="p-2 border border-gray-300 rounded-md bg-white h-10 w-20 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-        onChange={handleHourChange}
-      >
-        {Array.from({ length: 24 }, (_, index) => (
-          <option key={index} value={index} className="bg-white">
-            {formatTime(index)} 시
-          </option>
-        ))}
-      </select>
-      <select
-        className="p-2 border border-gray-300 rounded-md bg-white h-10 w-20 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-        onChange={handleMinuteChange}
-      >
-        {Array.from({ length: 12 }, (_, index) => (
-          <option key={index} value={index * 5} className="bg-white">
-            {formatTime(index * 5)} 분
-          </option>
-        ))}
-      </select>
     </>
   );
 };

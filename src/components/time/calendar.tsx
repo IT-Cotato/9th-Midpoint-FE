@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
-import CalItemIcon from '@/assets/imgs/time-calItem-icon1.svg?react';
+import CalItemIcon from '@/assets/imgs/Time/time-calItem-icon1.svg?react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Value } from '@/pages/Time/time';
@@ -17,7 +17,10 @@ export type DatePickerProps = {
 let dates: string[] = [];
 
 export const defineRoomType = (): { roomType: string; roomTypeUrl: string } => {
-  const isAloneRoomType = useMatch('/page/a/time/:roomId') || useMatch('/page/a/time/vote/:roomId');
+  const isAloneRoomType =
+    useMatch('/page/a/time/:roomId') ||
+    useMatch('/page/a/time/vote/:roomId') ||
+    useMatch('/page/a/time/results/:roomId');
   const roomType = isAloneRoomType ? ROOM_TYPE_ALONE : ROOM_TYPE_EACH;
   let roomTypeUrl: string;
   roomType === ROOM_TYPE_ALONE ? (roomTypeUrl = 'a') : (roomTypeUrl = 'e');
@@ -87,7 +90,7 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
       return;
     }
 
-    if (selectedDates.length === 0) {
+    if (dates.length === 0) {
       alert('날짜를 선택해 주세요');
     } else {
       try {

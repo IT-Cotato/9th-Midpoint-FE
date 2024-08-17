@@ -12,6 +12,7 @@ import Layout from '@/components/Layout/Layout';
 import TimeVote from '@/pages/TimeVote/time-vote';
 import RecommendEach from '@/pages/Recommend/RecommendEach';
 import RecommendAlone from '@/pages/Recommend/RecommendAlone';
+import TimeResult from '@/pages/TimeResult/time-result';
 
 export const router = createBrowserRouter([
   {
@@ -71,6 +72,15 @@ export const router = createBrowserRouter([
       {
         path: 'e/time/vote/:roomId',
         element: <TimeVote />,
+      },
+      {
+        path: 'a/time/results/:roomId',
+        element: <TimeResult />,
+      },
+
+      {
+        path: 'e/time/results/:roomId',
+        element: <TimeResult />,
       },
     ],
   },
