@@ -4,7 +4,7 @@ import Button from '@/components/common/Button/button';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { defineRoomType } from '@/components/time/calendar';
-import { checkVoteRoom, resultVoteRoom } from '@/apis/time-vote.api';
+import { resultVote } from '@/apis/time-vote.api';
 
 interface GridItem {
   id: number;
@@ -49,17 +49,11 @@ const TimeResult = () => {
   useEffect(() => {
     const verifyRoomExistence = async () => {
       try {
-        //시간투표방 존재하는지
-        const res = await checkVoteRoom({ roomId, roomType, navigate });
-        if (res.existence && res.dates && res.dates.length > 0) {
-          //투표가능날짜 받아오기
-          const result = await resultVoteRoom({ roomId, roomType, navigate });
-          setResDates(result.result);
-          setMaxId(result.totalMemberNum);
-          console.log(resDates);
-        } else {
-          navigate(`/page/${roomTypeUrl}/time/${roomId}`);
-        }
+        //투표가능날짜 받아오기
+        const result = await resultVote({ roomId, roomType, navigate });
+        setResDates(result.result);
+        setMaxId(result.totalMemberNum);
+        console.log(resDates);
       } catch (error) {
         console.error('방 존재 여부 확인 중 오류 발생:', error);
       }
@@ -108,9 +102,9 @@ const TimeResult = () => {
 
           <div
             className={`grid h-10 border-2 border-[#5786FF] rounded-lg overflow-hidden `}
-            style={{ gridTemplateColumns: `repeat(${maxId+1}, 20px)` }}
+            style={{ gridTemplateColumns: `repeat(${maxId + 1}, 20px)` }}
           >
-            {items.slice(0, maxId+1).map((item) => (
+            {items.slice(0, maxId + 1).map((item) => (
               <div
                 key={item.id}
                 className="h-full flex items-center justify-center"
@@ -184,9 +178,13 @@ const TimeResult = () => {
         <Button
           text="투표 다시하기"
           isLoading={false}
-          onClick={() => navigate(`/page/${roomTypeUrl}/time/vote/${roomId}`)}
+          onClick={() => navigate(`/page/${roomTypeUrl}/time-vote/${roomId}`)}
         ></Button>
-        <Button text="투표 재생성하기" isLoading={false}></Button>
+        <Button
+          text="투표 재생성하기"
+          isLoading={false}
+          onClick={() => navigate(`page//${roomTypeUrl}/create/time-vote-room/${roomId}`)}
+        ></Button>
       </div>
     </TimeResultStyle>
   );

@@ -6,7 +6,6 @@ import VoteLogo from '@/assets/imgs/Home/vote.svg?react';
 import SharePin from '@/assets/imgs/Location/sharepin.svg?react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
-import { BACKEND_URL } from '@/apis';
 import { useNavigate } from 'react-router-dom';
 import { ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from '@/constants';
 
@@ -46,11 +45,25 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('roomId');
     if (selectedOption === 'friend') {
-      const { data } = await axios.post(BACKEND_URL + '/api/rooms', { roomType: ROOM_TYPE_EACH });
+      const { data } = await axios.post(
+        'https://www.api.cotato-midpoint.site/api/rooms',
+        {
+          roomType: ROOM_TYPE_EACH,
+        },
+        { withCredentials: true },
+      );
       setRoomId(data.data.id);
       setCurrentView('shareLink');
     } else {
-      const { data } = await axios.post(BACKEND_URL + '/api/rooms', { roomType: ROOM_TYPE_ALONE });
+      const { data } = await axios.post(
+        'https://www.api.cotato-midpoint.site/api/rooms',
+        {
+          roomType: ROOM_TYPE_ALONE,
+        },
+        {
+          withCredentials: true,
+        },
+      );
       const newRoomId = data.data.id;
       navigate(`/page/a/results/${newRoomId}`);
     }

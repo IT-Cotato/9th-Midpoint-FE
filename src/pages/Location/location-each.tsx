@@ -1,16 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { fetchEachSavePlace } from '@/apis/enter-location';
 import { default_format, IForm } from '@/types/Location/each';
 import Parasol from '@/assets/imgs/Location/parasol.svg?react';
 import Button from '@/components/common/Button/button';
 import { axiosInstance, BACKEND_URL } from '@/apis';
-import { FROM_ENTER_EACH, ROOM_TYPE_EACH } from '@/constants';
+import {
+  FROM_EACH_CREATE_VOTE_PLACE,
+  FROM_EACH_CREATE_VOTE_TIME,
+  FROM_EACH_PLACE_VOTE,
+  FROM_EACH_PLACE_VOTE_RESULT,
+  FROM_EACH_TIME_VOTE,
+  FROM_EACH_TIME_VOTE_RESULT,
+  FROM_ENTER_EACH,
+  ROOM_TYPE_EACH,
+} from '@/constants';
 import EnterEachMap from '@/components/common/shared/EnterEachMap';
 
 export default function LocationEach() {
+  const location = useLocation();
+  const from = location.state?.from;
+
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -65,9 +77,29 @@ export default function LocationEach() {
   // 입력 완료 버튼 클릭 시
   const { mutate: submitLocation } = useMutation({
     mutationFn: (data: IForm) => fetchEachSavePlace(data, roomId!),
-    onSuccess: (data) => {
-      console.log('입력 완료 API 요청 성공:', data);
-      navigate(`/page/e/results/${roomId}`);
+    onSuccess: () => {
+      switch (from) {
+        case FROM_EACH_CREATE_VOTE_PLACE:
+          navigate(`/page/e/create/place-vote-room/${roomId}`);
+          break;
+        case FROM_EACH_PLACE_VOTE:
+          navigate(`/page/e/place-vote/${roomId}`);
+          break;
+        case FROM_EACH_PLACE_VOTE_RESULT:
+          navigate(`/page/e/place-vote/results/${roomId}`);
+          break;
+        case FROM_EACH_CREATE_VOTE_TIME:
+          navigate(`/page/e/create/time-vote-room/${roomId}`);
+          break;
+        case FROM_EACH_TIME_VOTE:
+          navigate(`/page/e/time-vote/${roomId}`);
+          break;
+        case FROM_EACH_TIME_VOTE_RESULT:
+          navigate(`/page/e/time-vote/results/${roomId}`);
+          break;
+        default:
+          navigate(`/page/e/results/${roomId}`);
+      }
     },
     onError: (error) => {
       console.error('입력 완료 API 요청 실패:', error);

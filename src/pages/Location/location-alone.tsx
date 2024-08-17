@@ -5,13 +5,25 @@ import Parasol from '@/assets/imgs/Location/parasol.svg?react';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { default_format, IForm, SubmissionData } from '@/types/Location/alone';
 import { fetchAloneSavePlace } from '@/apis/enter-location';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance, BACKEND_URL } from '@/apis';
-import { FROM_ENTER_ALONE, ROOM_TYPE_ALONE } from '@/constants';
+import {
+  FROM_ALONE_CREATE_VOTE_PLACE,
+  FROM_ALONE_CREATE_VOTE_TIME,
+  FROM_ALONE_PLACE_VOTE,
+  FROM_ALONE_PLACE_VOTE_RESULT,
+  FROM_ALONE_TIME_VOTE,
+  FROM_ALONE_TIME_VOTE_RESULT,
+  FROM_ENTER_ALONE,
+  ROOM_TYPE_ALONE,
+} from '@/constants';
 import Button from '@/components/common/Button/button';
 import KakaoMap from '@/components/common/shared/kakao-map';
 
 export default function LocationAlone() {
+  const location = useLocation();
+  const from = location.state?.from;
+
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false); // 중간지점찾기 로딩상태
@@ -64,11 +76,29 @@ export default function LocationAlone() {
   // 중간지점찾기 API 요청
   const { mutate: searchMiddlePoint } = useMutation({
     mutationFn: (data: SubmissionData[]) => fetchAloneSavePlace(data, roomId!),
-    onSuccess: (data, variable) => {
-      console.log('API 요청 성공');
-      console.log('중간지점찾기 API 요청시 보낸 데이터', variable);
-      console.log('중간지점찾기 API 요청 이후 받은 응답 데이터', data);
-      navigate(`/page/a/results/${roomId}`);
+    onSuccess: () => {
+      switch (from) {
+        case FROM_ALONE_CREATE_VOTE_PLACE:
+          navigate(`/page/a/create/place-vote-room/${roomId}`);
+          break;
+        case FROM_ALONE_PLACE_VOTE:
+          navigate(`/page/a/place-vote/${roomId}`);
+          break;
+        case FROM_ALONE_PLACE_VOTE_RESULT:
+          navigate(`/page/a/place-vote/results/${roomId}`);
+          break;
+        case FROM_ALONE_CREATE_VOTE_TIME:
+          navigate(`/page/a/create/time-vote-room/${roomId}`);
+          break;
+        case FROM_ALONE_TIME_VOTE:
+          navigate(`/page/a/time-vote/${roomId}`);
+          break;
+        case FROM_ALONE_TIME_VOTE_RESULT:
+          navigate(`/page/a/time-vote/results/${roomId}`);
+          break;
+        default:
+          navigate(`/page/a/results/${roomId}`);
+      }
     },
     onError: (error) => {
       console.error(`중간 지점 결과 조회 API 요청 실패, 에러명 : ${error}`);

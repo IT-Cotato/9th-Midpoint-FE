@@ -5,22 +5,22 @@ import { checkVoted } from '@/apis/time-vote.api';
 import { useNavigate } from 'react-router-dom';
 import { defineRoomType } from './calendar';
 
-export const validateTime = (start: Time, end: Time): boolean => {
-  // 시작 시간이 00:00인 경우 비교하지 않음
-  if (start.hour === 0 && start.minute === 0) {
-    return true;
-  }
-  if (end.hour === 0 && end.minute === 0) {
-    return true;
-  }
-  // 시작 시간이 종료 시간보다 크거나 같은 경우
-  if (start.hour >= end.hour || (start.hour === end.hour && start.minute > end.minute)) {
-    alert('시작 시간은 종료 시간보다 빨라야 합니다.');
-    return false;
-  }
-  console.log('Validation passed');
-  return true;
-};
+// export const validateTime = (start: Time, end: Time): boolean => {
+//   // 시작 시간이 00:00인 경우 비교하지 않음
+//   if (start.hour === 0 && start.minute === 0) {
+//     return true;
+//   }
+//   if (end.hour === 0 && end.minute === 0) {
+//     return true;
+//   }
+//   // 시작 시간이 종료 시간보다 크거나 같은 경우
+//   if (start.hour >= end.hour || (start.hour === end.hour && start.minute > end.minute)) {
+//     alert('시작 시간은 종료 시간보다 빨라야 합니다.');
+//     return false;
+//   }
+//   console.log('Validation passed');
+//   return true;
+// };
 
 interface DateOptionProps {
   date: ValuePiece | Value;
@@ -105,26 +105,14 @@ export const DateOption = ({ date, onTimeChange, roomId, setVoteExistence }: Dat
   const handleStartTimeChange = (hour: number, minute: number) => {
     const newStartTime = { hour, minute };
 
-    const isValid = validateTime(newStartTime, endTime);
-
-    if (isValid) {
-      setStartTime(newStartTime);
-      if (isChecked) onTimeChange(date, newStartTime, endTime);
-    } else {
-      setStartTime(startTime);
-    }
+    setStartTime(newStartTime);
+    if (isChecked) onTimeChange(date, newStartTime, endTime);
   };
 
   const handleEndTimeChange = (hour: number, minute: number) => {
     const newEndTime = { hour, minute };
-
-    if (validateTime(startTime, newEndTime)) {
-      setEndTime(newEndTime);
-      if (isChecked) onTimeChange(date, startTime, newEndTime);
-    } else {
-      //이전값 유지
-      setEndTime(endTime);
-    }
+    setEndTime(newEndTime);
+    if (isChecked) onTimeChange(date, startTime, newEndTime);
   };
 
   return (
@@ -168,24 +156,14 @@ export const TimeSelect = ({ onChange, initialHour, initialMinute }: TimeSelectP
 
   const handleHourChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newHour = parseInt(e.target.value, 10);
-    const previousHour = hour;
     setHour(newHour);
     onChange(newHour, minute);
-
-    if (!validateTime({ hour: newHour, minute }, { hour: hour, minute: minute })) {
-      setHour(previousHour); // 잘못된 입력이면 이전 값을 유지합니다.
-    }
   };
 
   const handleMinuteChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newMinute = parseInt(e.target.value, 10);
-    const previousMinute = minute;
     setMinute(newMinute);
     onChange(hour, newMinute);
-
-    if (!validateTime({ hour, minute: newMinute }, { hour, minute })) {
-      setMinute(previousMinute); // 잘못된 입력이면 이전 값을 유지합니다.
-    }
   };
 
   return (
