@@ -12,9 +12,9 @@ const VoteDate = ({ clickedDate, voteDateInfo }: { clickedDate: ValuePiece | nul
               key={memberIndex}
               className="text-[#5786FF] w-11/12 max-w-[600px] flex flex-row justify-around mx-auto mt-1 mb-1 "
             >
-              <div className="w-[30%] text-center bg-white rounded-[15px] p-3 mx-auto">{memberInfo.memberName}</div>
+              <div className="w-[30%] text-center bg-white rounded-[15px] p-3 mx-auto">{memberInfo?.memberName}</div>
               <div className="w-[60%] text-center bg-white rounded-[15px] p-3 mx-auto">
-                {memberInfo.dateTime.map((timeSlot, timeIndex) => {
+                {memberInfo?.dateTime?.map((timeSlot, timeIndex) => {
                   const startTime = timeSlot.memberAvailableStartTime.split(' ')[1];
                   const endTime = timeSlot.memberAvailableEndTime.split(' ')[1];
 
