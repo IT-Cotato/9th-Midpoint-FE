@@ -14,7 +14,7 @@ export interface ResultResponse {
   result: {
     [date: string]: {
       memberName: string;
-      dateTime?: {
+      dateTime: {
         memberAvailableStartTime: string;
         memberAvailableEndTime: string;
       }[];
@@ -91,7 +91,7 @@ const TimeVote = () => {
           memberAvailableEndTime,
         };
       })
-      .filter((item) => item !== null);
+      .filter((item): item is { memberAvailableStartTime: string; memberAvailableEndTime: string } => item !== null);
 
     const payload: IDatePayload = {
       roomId,
