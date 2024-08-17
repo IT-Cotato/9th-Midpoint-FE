@@ -10,13 +10,19 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from '@/types/Login';
 import {
   FROM_ALONE_CREATE_VOTE_PLACE,
+  FROM_ALONE_CREATE_VOTE_TIME,
   FROM_ALONE_PLACE_VOTE,
   FROM_ALONE_PLACE_VOTE_RESULT,
   FROM_ALONE_RESULT,
+  FROM_ALONE_TIME_VOTE,
+  FROM_ALONE_TIME_VOTE_RESULT,
   FROM_EACH_CREATE_VOTE_PLACE,
+  FROM_EACH_CREATE_VOTE_TIME,
   FROM_EACH_PLACE_VOTE,
   FROM_EACH_PLACE_VOTE_RESULT,
   FROM_EACH_RESULT,
+  FROM_EACH_TIME_VOTE,
+  FROM_EACH_TIME_VOTE_RESULT,
   FROM_ENTER_ALONE,
   FROM_ENTER_EACH,
 } from '@/constants';
@@ -82,6 +88,24 @@ export default function Login() {
           break;
         case FROM_EACH_PLACE_VOTE_RESULT:
           navigate(`/page/e/place-vote/results/${roomId}`);
+          break;
+        case FROM_ALONE_CREATE_VOTE_TIME:
+          navigate(`/page/a/create/time-vote-room/${roomId}`);
+          break;
+        case FROM_ALONE_TIME_VOTE:
+          navigate(`/page/a/time-vote/${roomId}`);
+          break;
+        case FROM_ALONE_TIME_VOTE_RESULT:
+          navigate(`/page/a/time-vote/results/${roomId}`);
+          break;
+        case FROM_EACH_CREATE_VOTE_TIME:
+          navigate(`/page/e/create/time-vote-room/${roomId}`);
+          break;
+        case FROM_EACH_TIME_VOTE:
+          navigate(`/page/e/time-vote/${roomId}`);
+          break;
+        case FROM_EACH_TIME_VOTE_RESULT:
+          navigate(`/page/e/time-vote/results/${roomId}`);
           break;
         default:
           navigate('/');

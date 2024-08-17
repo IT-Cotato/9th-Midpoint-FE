@@ -9,8 +9,11 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance, BACKEND_URL } from '@/apis';
 import {
   FROM_ALONE_CREATE_VOTE_PLACE,
+  FROM_ALONE_CREATE_VOTE_TIME,
   FROM_ALONE_PLACE_VOTE,
   FROM_ALONE_PLACE_VOTE_RESULT,
+  FROM_ALONE_TIME_VOTE,
+  FROM_ALONE_TIME_VOTE_RESULT,
   FROM_ENTER_ALONE,
   ROOM_TYPE_ALONE,
 } from '@/constants';
@@ -83,6 +86,15 @@ export default function LocationAlone() {
           break;
         case FROM_ALONE_PLACE_VOTE_RESULT:
           navigate(`/page/a/place-vote/results/${roomId}`);
+          break;
+        case FROM_ALONE_CREATE_VOTE_TIME:
+          navigate(`/page/a/create/time-vote-room/${roomId}`);
+          break;
+        case FROM_ALONE_TIME_VOTE:
+          navigate(`/page/a/time-vote/${roomId}`);
+          break;
+        case FROM_ALONE_TIME_VOTE_RESULT:
+          navigate(`/page/a/time-vote/results/${roomId}`);
           break;
         default:
           navigate(`/page/a/results/${roomId}`);
