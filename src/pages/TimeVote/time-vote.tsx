@@ -14,7 +14,7 @@ export interface ResultResponse {
   result: {
     [date: string]: {
       memberName: string;
-      dateTime: {
+      dateTime?: {
         memberAvailableStartTime: string;
         memberAvailableEndTime: string;
       }[];
