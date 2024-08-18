@@ -8,6 +8,8 @@ import { fetchLogin } from '@/apis/login';
 import LoginLogo from '@/assets/imgs/loginLogo.svg?react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from '@/types/Login';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   FROM_ALONE_CREATE_VOTE_PLACE,
   FROM_ALONE_CREATE_VOTE_TIME,
@@ -54,66 +56,75 @@ export default function Login() {
   const { mutate: userLogin } = useMutation({
     mutationFn: fetchLogin,
     onSuccess: (data: any) => {
-      localStorage.setItem('accessToken', data.data.data.accessToken);
-      localStorage.setItem('refreshToken', data.data.data.refreshToken);
-      localStorage.setItem('roomId', roomId!);
-      setLoginState(true);
-      switch (from) {
-        case FROM_ALONE_RESULT:
-          navigate(`/page/a/results/${roomId}`);
-          break;
-        case FROM_EACH_RESULT:
-          navigate(`/page/e/results/${roomId}`);
-          break;
-        case FROM_ENTER_ALONE:
-          navigate(`/page/alone/${roomId}`);
-          break;
-        case FROM_ENTER_EACH:
-          navigate(`/page/each/${roomId}`);
-          break;
-        case FROM_ALONE_CREATE_VOTE_PLACE:
-          navigate(`/page/a/create/place-vote-room/${roomId}`);
-          break;
-        case FROM_ALONE_PLACE_VOTE:
-          navigate(`/page/a/place-vote/${roomId}`);
-          break;
-        case FROM_ALONE_PLACE_VOTE_RESULT:
-          navigate(`/page/a/place-vote/results/${roomId}`);
-          break;
-        case FROM_EACH_CREATE_VOTE_PLACE:
-          navigate(`/page/e/create/place-vote-room/${roomId}`);
-          break;
-        case FROM_EACH_PLACE_VOTE:
-          navigate(`/page/e/place-vote/${roomId}`);
-          break;
-        case FROM_EACH_PLACE_VOTE_RESULT:
-          navigate(`/page/e/place-vote/results/${roomId}`);
-          break;
-        case FROM_ALONE_CREATE_VOTE_TIME:
-          navigate(`/page/a/create/time-vote-room/${roomId}`);
-          break;
-        case FROM_ALONE_TIME_VOTE:
-          navigate(`/page/a/time-vote/${roomId}`);
-          break;
-        case FROM_ALONE_TIME_VOTE_RESULT:
-          navigate(`/page/a/time-vote/results/${roomId}`);
-          break;
-        case FROM_EACH_CREATE_VOTE_TIME:
-          navigate(`/page/e/create/time-vote-room/${roomId}`);
-          break;
-        case FROM_EACH_TIME_VOTE:
-          navigate(`/page/e/time-vote/${roomId}`);
-          break;
-        case FROM_EACH_TIME_VOTE_RESULT:
-          navigate(`/page/e/time-vote/results/${roomId}`);
-          break;
-        default:
-          navigate('/');
-          break;
+      if (data.data.data) {
+        localStorage.setItem('accessToken', data.data.data.accessToken);
+        localStorage.setItem('refreshToken', data.data.data.refreshToken);
+        localStorage.setItem('roomId', roomId!);
+        setLoginState(true);
+        switch (from) {
+          case FROM_ALONE_RESULT:
+            navigate(`/page/a/results/${roomId}`);
+            break;
+          case FROM_EACH_RESULT:
+            navigate(`/page/e/results/${roomId}`);
+            break;
+          case FROM_ENTER_ALONE:
+            navigate(`/page/alone/${roomId}`);
+            break;
+          case FROM_ENTER_EACH:
+            navigate(`/page/each/${roomId}`);
+            break;
+          case FROM_ALONE_CREATE_VOTE_PLACE:
+            navigate(`/page/a/create/place-vote-room/${roomId}`);
+            break;
+          case FROM_ALONE_PLACE_VOTE:
+            navigate(`/page/a/place-vote/${roomId}`);
+            break;
+          case FROM_ALONE_PLACE_VOTE_RESULT:
+            navigate(`/page/a/place-vote/results/${roomId}`);
+            break;
+          case FROM_EACH_CREATE_VOTE_PLACE:
+            navigate(`/page/e/create/place-vote-room/${roomId}`);
+            break;
+          case FROM_EACH_PLACE_VOTE:
+            navigate(`/page/e/place-vote/${roomId}`);
+            break;
+          case FROM_EACH_PLACE_VOTE_RESULT:
+            navigate(`/page/e/place-vote/results/${roomId}`);
+            break;
+          case FROM_ALONE_CREATE_VOTE_TIME:
+            navigate(`/page/a/create/time-vote-room/${roomId}`);
+            break;
+          case FROM_ALONE_TIME_VOTE:
+            navigate(`/page/a/time-vote/${roomId}`);
+            break;
+          case FROM_ALONE_TIME_VOTE_RESULT:
+            navigate(`/page/a/time-vote/results/${roomId}`);
+            break;
+          case FROM_EACH_CREATE_VOTE_TIME:
+            navigate(`/page/e/create/time-vote-room/${roomId}`);
+            break;
+          case FROM_EACH_TIME_VOTE:
+            navigate(`/page/e/time-vote/${roomId}`);
+            break;
+          case FROM_EACH_TIME_VOTE_RESULT:
+            navigate(`/page/e/time-vote/results/${roomId}`);
+            break;
+          default:
+            navigate('/');
+            break;
+        }
+      } else {
+        toast.error('로그인 정보가 올바르지 않습니다!', {
+          position: 'top-center',
+        }); // 로그인 실패 시 토스트 메시지
       }
     },
     onError: (error) => {
       console.log('로그인 과정 에러', error);
+      toast.error('로그인 중 문제가 발생했습니다!', {
+        position: 'top-center',
+      }); // 에러 발생 시 토스트 메시지
     },
   });
 
@@ -159,7 +170,6 @@ export default function Login() {
           className="w-full py-2 transition bg-gray-100 border-none outline-none focus:ring-2 ring-indigo-100 focus:outline-none"
         />
         {errors.name && <span className="font-semibold text-red-500">{errors.name.message}</span>}
-
         <input
           {...register('pw')}
           type="password"
@@ -167,7 +177,6 @@ export default function Login() {
           className="w-full py-2 transition bg-gray-100 border-none focus:ring-2 ring-indigo-100 focus:outline-none"
         />
         {errors.pw && <span className="font-semibold text-red-500">{errors.pw.message}</span>}
-
         <button
           type="submit"
           className={`w-full min-h-10 ${isValid ? 'primary-btn' : 'bg-gray-50 cursor-not-allowed'} disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed`}
@@ -176,6 +185,7 @@ export default function Login() {
           {formLoading ? '잠시만 기다려 주세요...' : '사용자등록'}
         </button>
       </form>
+      <ToastContainer />
     </div>
   );
 }

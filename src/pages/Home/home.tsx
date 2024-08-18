@@ -12,9 +12,9 @@ import Map from '@/assets/imgs/Home/Map.svg?react';
 import PinkVote from '@/assets/imgs/Home/PinkVote.svg?react';
 import SpeechBubble from '@/assets/imgs/Home/speechBubble.svg?react';
 import Target from '@/assets/imgs/Home/Target.svg?react';
-import NextArrow from '@/assets/imgs/Home/nextArrow.svg?react';
 import Tower from '@/assets/imgs/Home/Tower.svg?react';
 import MiniCar from '@/assets/imgs/Home/MiniCar.svg?react';
+import { ArrowLongRightIcon } from '@heroicons/react/24/solid';
 
 interface DotProps {
   num: number;
@@ -207,7 +207,7 @@ export default function Home() {
         </div>
         <div className="bg-[#AFC5FF] w-full rounded-2xl h-1/2 relative">
           <motion.button
-            className="absolute flex items-center gap-4 px-10 py-5 text-lg font-semibold text-white transition-all cursor-pointer -top-10 left-5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl"
+            className="absolute z-50 flex items-center gap-4 px-10 py-5 text-lg font-semibold text-white transition-all cursor-pointer -top-10 left-5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl"
             onClick={handleIconClick}
             whileHover={{
               background: '#FFFFFF',
@@ -227,10 +227,10 @@ export default function Home() {
               background: 'linear-gradient(to right, #06b6d4, #3b82f6)',
             }}
           >
-            지금 바로 중간지점을 찾아보세요! <NextArrow className="size-6" />
+            지금 바로 중간지점을 찾아보세요! <ArrowLongRightIcon className="size-6" />
           </motion.button>
-          <SpeechBubble className="absolute -top-40 left-64" />
-          <h1 className="absolute font-semibold text-md text-white -top-[95px] left-[355px]">
+          <SpeechBubble className="absolute -top-[270px] left-72 size-[380px]" />
+          <h1 className="absolute font-semibold text-md text-white -top-[100px] left-[355px]">
             여기를 눌러 싱크스팟을 사용해 보세요!
           </h1>
           <div className="flex items-center gap-5 mt-20 ml-14 *:text-xl text-[#1A3C95]">

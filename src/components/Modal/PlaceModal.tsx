@@ -8,6 +8,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from '@/constants';
+import { BACKEND_URL } from '@/apis';
 
 interface ModalProps {
   isOpen: boolean;
@@ -46,17 +47,19 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
     localStorage.removeItem('roomId');
     if (selectedOption === 'friend') {
       const { data } = await axios.post(
-        'https://www.api.cotato-midpoint.site/api/rooms',
+        BACKEND_URL + '/api/rooms',
         {
           roomType: ROOM_TYPE_EACH,
         },
-        { withCredentials: true },
+        {
+          withCredentials: true,
+        },
       );
       setRoomId(data.data.id);
       setCurrentView('shareLink');
     } else {
       const { data } = await axios.post(
-        'https://www.api.cotato-midpoint.site/api/rooms',
+        BACKEND_URL + '/api/rooms',
         {
           roomType: ROOM_TYPE_ALONE,
         },
@@ -111,7 +114,7 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
                 </motion.div>
               </div>
               <button
-                className={`absolute bottom-5 w-[90%] py-2 rounded-lg text-white transition-colors ${
+                className={`absolute bottom-5 w-[90%] py-2 rounded-lg text-white transition-colors hover:bg-blue-400 ${
                   selectedOption ? 'bg-blue-500 cursor-pointer' : 'bg-gray-300 cursor-not-allowed'
                 }`}
                 onClick={handleNextBtn}
