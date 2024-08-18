@@ -114,7 +114,7 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
                 </motion.div>
               </div>
               <button
-                className={`absolute bottom-5 w-[90%] py-2 rounded-lg text-white transition-colors ${
+                className={`absolute bottom-5 w-[90%] py-2 rounded-lg text-white transition-colors hover:bg-blue-400 ${
                   selectedOption ? 'bg-blue-500 cursor-pointer' : 'bg-gray-300 cursor-not-allowed'
                 }`}
                 onClick={handleNextBtn}
