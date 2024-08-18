@@ -81,17 +81,28 @@ const TimeVote = () => {
       .map(({ date, startTime, endTime }) => {
         const memberAvailableStartTime = formatDateTime(date, startTime);
         const memberAvailableEndTime = formatDateTime(date, endTime);
-        //시작 시간이 클경우 동작취소
-        if (memberAvailableStartTime > memberAvailableEndTime) {
-          alert('시작 시간은 종료 시간보다 빨라야 합니다.');
-          return null;
-        }
+
         return {
           memberAvailableStartTime,
           memberAvailableEndTime,
         };
       })
       .filter((item): item is { memberAvailableStartTime: string; memberAvailableEndTime: string } => item !== null);
+
+    // dateTimePayload가 비어 있을 경우 바로 종료
+    if (!dateTimePayload.length) {
+      alert('참석 일시를 투표해주세요!');
+      return;
+    }
+
+    // 시작 시간이 클 경우 동작 취소
+    const hasInvalidTime = dateTimePayload.some(
+      ({ memberAvailableStartTime, memberAvailableEndTime }) => memberAvailableStartTime >= memberAvailableEndTime,
+    );
+    if (hasInvalidTime) {
+      alert('시작 시간은 종료 시간보다 빨라야 합니다.');
+      return;
+    }
 
     const payload: IDatePayload = {
       roomId,
@@ -100,10 +111,6 @@ const TimeVote = () => {
       dateTime: dateTimePayload,
     };
 
-    if (!dateTimePayload.length) {
-      alert('참석 일시를 투표해주세요!');
-      return;
-    }
     if (!voteExistence) {
       try {
         await postVoteTime(payload);
@@ -142,7 +149,7 @@ const TimeVote = () => {
   }, []);
 
   return (
-    <TimeVoteStyle ref={componentRef} className="flex flex-row ">
+    <TimeVoteStyle ref={componentRef} className="flex gap-2">
       <VoteCalendar
         selectedDates={selectedDates}
         resultRes={resultRes}
@@ -163,6 +170,7 @@ const TimeVote = () => {
               setVoteExistence={setVoteExistence}
             />
           ))}
+        <div className="h-10"></div>
         <div className="absolute bottom-0 w-full">
           <Button text="투표하기" onClick={handleVote} isLoading={false}></Button>
         </div>
@@ -171,18 +179,19 @@ const TimeVote = () => {
   );
 };
 
-const TimeVoteStyle = styled.div``;
+const TimeVoteStyle = styled.div`
+  width: 80%;
+`;
+
 const ContainerItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: 40%;
-  min-width: 480px;
+  width: 50%;
   min-height: 500px;
   background: #f8f8fb;
   padding: 10px 5px;
-  margin: 10px;
   border-radius: 15px;
   font-size: 18px;
   font-weight: bold;

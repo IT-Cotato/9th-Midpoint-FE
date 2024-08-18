@@ -2,11 +2,20 @@ import { ValuePiece } from '@/pages/Time/time';
 import { VoteDateInfo } from '@/pages/TimeVote/time-vote';
 import styled from 'styled-components';
 
-const VoteDate = ({ clickedDate, voteDateInfo }: { clickedDate: ValuePiece | null; voteDateInfo: VoteDateInfo[] }) => {
+const VoteDate = ({
+  clickedDate,
+  voteDateInfo,
+  noVotes,
+}: {
+  clickedDate: ValuePiece | null;
+  voteDateInfo: VoteDateInfo[];
+  noVotes: boolean;
+}) => {
   return (
     <VoteDateStyle>
       {clickedDate && (
         <DateInfo>
+          {noVotes && <p className="text-[#5786FF] mx-auto">투표한 사람이 없습니다</p>}
           {voteDateInfo.map((memberInfo, memberIndex) => (
             <div
               key={memberIndex}
@@ -41,10 +50,10 @@ const DateInfo = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin: 20px 0;
+  margin: 10px 0;
   background: #f8f8fb;
-  padding: 10px 5px;
-  border-radius: 15px;
+  padding: 10px;
+  border-radius: 10px;
   font-size: 18px;
   font-weight: bold;
 `;

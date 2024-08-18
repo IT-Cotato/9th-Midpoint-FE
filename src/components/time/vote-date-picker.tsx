@@ -5,23 +5,6 @@ import { checkVoted } from '@/apis/time-vote.api';
 import { useNavigate } from 'react-router-dom';
 import { defineRoomType } from './calendar';
 
-// export const validateTime = (start: Time, end: Time): boolean => {
-//   // 시작 시간이 00:00인 경우 비교하지 않음
-//   if (start.hour === 0 && start.minute === 0) {
-//     return true;
-//   }
-//   if (end.hour === 0 && end.minute === 0) {
-//     return true;
-//   }
-//   // 시작 시간이 종료 시간보다 크거나 같은 경우
-//   if (start.hour >= end.hour || (start.hour === end.hour && start.minute > end.minute)) {
-//     alert('시작 시간은 종료 시간보다 빨라야 합니다.');
-//     return false;
-//   }
-//   console.log('Validation passed');
-//   return true;
-// };
-
 interface DateOptionProps {
   date: ValuePiece | Value;
   onTimeChange: (date: Value, startTime: Time, endTime: Time) => void;
@@ -117,7 +100,7 @@ export const DateOption = ({ date, onTimeChange, roomId, setVoteExistence }: Dat
 
   return (
     <div
-      className={`flex flex-col justify-center items-start mb-2.5 bg-white rounded-[15px] h-[120px] w-[450px] mx-auto p-4 ${!isChecked ? 'opacity-50 pointer-events-none' : ''}`}
+      className={`flex flex-col justify-center items-start mb-2.5 bg-white rounded-[15px] h-[120px] w-full mx-auto p-4 ${!isChecked ? 'opacity-50 pointer-events-none' : ''}`}
     >
       <div className="flex items-center mb-2 pointer-events-auto">
         <input
@@ -128,7 +111,7 @@ export const DateOption = ({ date, onTimeChange, roomId, setVoteExistence }: Dat
         />
         <span className="mx-2.5">{date instanceof Date ? date.toLocaleDateString() : '날짜없음'}</span>
       </div>
-      <div className="flex justify-center items-center space-x-4 mx-auto">
+      <div className="flex justify-center items-center space-x-4 mx-auto w-full">
         <TimeSelect onChange={handleStartTimeChange} initialHour={startTime.hour} initialMinute={startTime.minute} />
         <p>~</p>
         <TimeSelect onChange={handleEndTimeChange} initialHour={endTime.hour} initialMinute={endTime.minute} />
@@ -184,9 +167,9 @@ export const TimeSelect = ({ onChange, initialHour, initialMinute }: TimeSelectP
         value={minute}
         onChange={handleMinuteChange}
       >
-        {Array.from({ length: 12 }, (_, index) => (
-          <option key={index} value={index * 5} className="bg-white">
-            {formatTime(index * 5)} 분
+        {Array.from({ length: 6 }, (_, index) => (
+          <option key={index} value={index * 10} className="bg-white">
+            {formatTime(index * 10)} 분
           </option>
         ))}
       </select>

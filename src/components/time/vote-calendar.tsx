@@ -31,13 +31,13 @@ export const formatTime = (time: number) => (time < 10 ? `0${time}` : time);
 
 const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, clickedDate, setClickedDate }) => {
   const [voteDateInfo, setVoteDateInfo] = useState<VoteDateInfo[]>([]);
+  const [noVotes, setNoVotes] = useState(false);
 
   const handleDateClick = (date: Value | ValuePiece) => {
     if (date instanceof Date) {
-      const isSelected =
-        selectedDates.some(
-          (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
-        );
+      const isSelected = selectedDates.some(
+        (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+      );
 
       if (isSelected) {
         setClickedDate(date);
@@ -46,18 +46,16 @@ const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, c
         const day = String(date.getDate()).padStart(2, '0');
 
         const dateString = `${year}-${month}-${day}`;
-        console.log('캘린더에서 클릭한 날짜', dateString);
 
         if (resultRes) {
           let foundInfo = resultRes.result[dateString];
 
           if (foundInfo) {
-            console.log('해당 날짜의 하위 정보:', foundInfo);
             setVoteDateInfo(foundInfo);
 
-            if (foundInfo.length === 0) console.log('빈값');
+            if (foundInfo.length === 0) setNoVotes(true);
           } else {
-            console.log('해당 날짜에 대한 정보가 없습니다.');
+            console.error('해당 날짜에 대한 정보가 없습니다.');
           }
         }
         setClickedDate(date);
@@ -71,7 +69,7 @@ const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, c
 
   return (
     <>
-      <div className="flex flex-col item-center justify-start">
+      <div className="flex flex-col item-center justify-start w-[50%]">
         <ContainerItem>
           <CalIcon />
           <StyledCalendar
@@ -108,7 +106,7 @@ const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, c
             }}
           />
         </ContainerItem>
-        {clickedDate && <VoteDate clickedDate={clickedDate} voteDateInfo={voteDateInfo} />}
+        {clickedDate && <VoteDate clickedDate={clickedDate} voteDateInfo={voteDateInfo} noVotes={noVotes} />}
       </div>
     </>
   );
@@ -119,12 +117,10 @@ const ContainerItem = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: 40%;
-  min-width: 480px;
-  min-height: 500px;
+  width: 100%;
+  // min-height: 500px;
   background: #f8f8fb;
   padding: 10px 5px;
-  margin: 10px;
   border-radius: 15px;
   font-size: 18px;
   font-weight: bold;
@@ -133,7 +129,7 @@ const ContainerItem = styled.div`
 `;
 
 const StyledCalendar = styled(Calendar)`
-  width: 88%;
+  width: 100%%;
   height: 100%;
   background: #f8f8fb;
   border: none;
