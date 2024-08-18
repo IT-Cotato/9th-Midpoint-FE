@@ -53,7 +53,7 @@ export default function BannerMessage() {
   };
 
   return (
-    <div className="flex items-center justify-center gap-2 p-2 py-5 rounded-lg *:text-lg">
+    <div className="flex items-center justify-center gap-2 p-2 py-5 rounded-lg *:text-lg w-4/5 bg-[#EFF3FF]">
       <CopyLogo />
       <div className="relative">
         상대방에게{' '}
