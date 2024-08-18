@@ -9,9 +9,11 @@ import { useMatch, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from '@/constants';
 import { useQueryClient } from '@tanstack/react-query';
+import Button from '../common/Button/button';
 
 export type DatePickerProps = {
   selectedDates: Value[];
+  isValue: boolean;
   onDateChange: (value: Value) => void;
 };
 
@@ -29,9 +31,9 @@ export const defineRoomType = (): { roomType: string; roomTypeUrl: string } => {
   return { roomType, roomTypeUrl };
 };
 
-const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange }) => {
+const FristCalendar: React.FC<DatePickerProps> = ({ isValue, selectedDates, onDateChange }) => {
   const navigate = useNavigate();
-  const { roomId } = useParams<{ roomId: string }>(); // URL에서 id 파라미터 가져오기
+  const { roomId } = useParams<{ roomId: string }>();
   const { roomType, roomTypeUrl } = defineRoomType();
   const [isTimeVoteRoomExists, setTimeVoteRoomExists] = useState(false);
   const queryClient = useQueryClient();
@@ -59,34 +61,11 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
     onDateChange(date);
   };
 
-  const renderDate = () => {
-    const options: Intl.DateTimeFormatOptions = {
-      month: 'long',
-      day: '2-digit',
-    };
-
-    const sortedDates = selectedDates
-      .filter((date): date is Date => date instanceof Date)
-      .sort((a, b) => a?.getTime() - b?.getTime()); // 날짜 오름차순 정렬
-
-    return sortedDates.length > 0 ? (
-      <ul className="list-none">
-        {sortedDates.map((date, index) => (
-          <li key={index}>{date instanceof Date && date.toLocaleDateString('ko-KR', options)}</li>
-        ))}
-      </ul>
-    ) : (
-      <ul className="list-none">
-        <li>선택된 날짜가 없습니다.</li>
-      </ul>
-    );
-  };
-
   const gotoVote = async (isTimeVoteRoomExists: boolean) => {
     dates = selectedDates
-      .filter((date): date is Date => date instanceof Date) // 유효한 날짜만 필터링
-      .sort((a, b) => a.getTime() - b.getTime()) // 날짜를 순서대로 정렬
-      .map((date) => date.toISOString().split('T')[0]); // dates 전역 변수 업데이트
+      .filter((date): date is Date => date instanceof Date)
+      .sort((a, b) => a.getTime() - b.getTime())
+      .map((date) => date.toLocaleDateString('en-CA'));
 
     if (!roomId) {
       alert('방 ID가 없습니다. 다른 페이지로 이동합니다.');
@@ -120,7 +99,6 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
           <CalItemIcon />
           <StyledCalendar
             value={null}
-            // {selectedDates.length > 0 ? selectedDates[selectedDates.length - 1] : null}
             onChange={(value) => handleDateChange(value)}
             selectRange={false}
             locale="ko-KR"
@@ -139,11 +117,16 @@ const FristCalendar: React.FC<DatePickerProps> = ({ selectedDates, onDateChange 
             }
           />
         </div>
-        <div className="ml-4 w-1/5">
-          <ul className="list-none">{renderDate()}</ul>
-        </div>
       </ContainerBox>
-      <LinkBtn onClick={() => gotoVote(isTimeVoteRoomExists)}>다음</LinkBtn>
+      <div className="w-[50%] mx-auto">
+        <Button
+          onClick={() => gotoVote(isTimeVoteRoomExists)}
+          isMore={isValue}
+          isMoreMessage="날짜를 클릭하세요"
+          text="다음"
+          isLoading={false}
+        />
+      </div>
     </div>
   );
 };
@@ -163,23 +146,6 @@ const ContainerBox = styled.div`
   font-size: 18px;
   text-align: center;
   color: #2f5fdd;
-`;
-
-const LinkBtn = styled.button`
-  width: 30%;
-  margin: 0 auto;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #2f5fdd;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #5786ff;
-  }
 `;
 
 const StyledCalendar = styled(Calendar)`
