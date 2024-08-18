@@ -8,6 +8,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from '@/constants';
+import { BACKEND_URL } from '@/apis';
 
 interface ModalProps {
   isOpen: boolean;
@@ -46,7 +47,7 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
     localStorage.removeItem('roomId');
     if (selectedOption === 'friend') {
       const { data } = await axios.post(
-        'https://www.api.cotato-midpoint.site/api/rooms',
+        BACKEND_URL + '/api/rooms',
         {
           roomType: ROOM_TYPE_EACH,
         },
@@ -58,7 +59,7 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
       setCurrentView('shareLink');
     } else {
       const { data } = await axios.post(
-        'https://www.api.cotato-midpoint.site/api/rooms',
+        BACKEND_URL + '/api/rooms',
         {
           roomType: ROOM_TYPE_ALONE,
         },
