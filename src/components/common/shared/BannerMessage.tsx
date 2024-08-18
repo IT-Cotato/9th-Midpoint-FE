@@ -36,6 +36,7 @@ const fallbackCopyTextToClipboard = (text: string) => {
 export default function BannerMessage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  // 경로별 매칭 필요
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
