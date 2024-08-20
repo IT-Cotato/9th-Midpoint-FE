@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MainLogo from '@/assets/imgs/Navbar/mainLogo.svg?react';
-import WAvatar from '@/assets/imgs/Home/w_avatar.png';
 import PlaceModal from '@/components/Modal/PlaceModal';
 import BigClock from '@/assets/imgs/Home/BigClock.svg?react';
 import Blinker from '@/assets/imgs/Home/Blinker.svg?react';
@@ -14,6 +13,14 @@ import SpeechBubble from '@/assets/imgs/Home/speechBubble.svg?react';
 import Target from '@/assets/imgs/Home/Target.svg?react';
 import Tower from '@/assets/imgs/Home/Tower.svg?react';
 import MiniCar from '@/assets/imgs/Home/MiniCar.svg?react';
+import YeonSu from '@/assets/imgs/Home/YeonSu.svg?react';
+import GiRim from '@/assets/imgs/Home/GiRim.svg?react';
+import DaHee from '@/assets/imgs/Home/DaHee.svg?react';
+import TaeYoon from '@/assets/imgs/Home/TaeYoon.svg?react';
+import Sol from '@/assets/imgs/Home/Sol.svg?react';
+import ChanHo from '@/assets/imgs/Home/ChanHo.svg?react';
+import YeJin from '@/assets/imgs/Home/YeJin.svg?react';
+
 import { ArrowLongRightIcon } from '@heroicons/react/24/solid';
 
 interface DotProps {
@@ -110,11 +117,6 @@ export default function Home() {
     setCurrentPage(page);
   };
 
-  const handleIconClick = () => {
-    setCurrentPage(4);
-    fourthSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev);
   };
@@ -124,20 +126,22 @@ export default function Home() {
       name: '이솔',
       role: 'PM',
       univ: '이화여대',
-      description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당',
-      avartar: <MainLogo />,
+      description: ['모두가 편안한 만남을 쉽게 가질 순 없을까?', '서비스의 시작과 끝에서 모두를 뒷받침하는 팀장'],
+      avatar: <Sol />,
     },
     {
       name: '김기림',
       role: 'PM',
       univ: '이화여대',
-      description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당',
+      description: ['싱크스팟 기획을 맡은 김기림입니다.', '모임 장소 정하는 시간을 아껴드릴게요!'],
+      avatar: <GiRim />,
     },
     {
       name: '조연수',
       role: 'DS',
       univ: '홍익대',
-      description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당',
+      description: ['컨셉부터 UI/UX 디자인까지!', '실용적인 디자인을 추구하는 디자이너'],
+      avatar: <YeonSu />,
     },
   ];
   const botPerson = [
@@ -145,25 +149,29 @@ export default function Home() {
       name: '김태윤',
       role: 'FE-LEAD',
       univ: '동국대',
-      description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당',
+      description: ['문제해결을 위해 깊게 고민하는', '프런트엔드 개발자 김태윤입니다!'],
+      avatar: <TaeYoon />,
     },
     {
       name: '채다희',
       role: 'FE',
       univ: '가톨릭대',
-      description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당',
+      description: ['꼼꼼하게를 목표로 개발하는 채다희입니다.', '싱크스팟의 다양한 기능을 사용해보세요!'],
+      avatar: <DaHee />,
     },
     {
       name: '윤찬호',
       role: 'BE-LEAD',
       univ: '홍익대',
-      description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당',
+      description: ['안녕하세요. 동료들과 함께 성장하며', '백엔드 개발자를 꿈꾸는 윤찬호입니다.'],
+      avatar: <ChanHo />,
     },
     {
       name: '신예진',
       role: 'BE',
       univ: '숙명여대',
-      description: '서비스 전체를 총괄하고 최종 방향성을 제시하며 기획과 디자인을 담당',
+      description: ['백엔드파트를 맡게된 신예진입니다.', 'synspot 많은 관심 부탁드립니다!'],
+      avatar: <YeJin />,
     },
   ];
 
@@ -208,7 +216,7 @@ export default function Home() {
         <div className="bg-[#AFC5FF] w-full rounded-2xl h-1/2 relative">
           <motion.button
             className="absolute z-50 flex items-center gap-4 px-10 py-5 text-lg font-semibold text-white transition-all cursor-pointer -top-10 left-5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-3xl"
-            onClick={handleIconClick}
+            onClick={toggleModal}
             whileHover={{
               background: '#FFFFFF',
               color: '#1A3C95',
@@ -275,21 +283,25 @@ export default function Home() {
                 </p>
               </motion.div>
               <div className="*:text-black mt-32 rounded-xl p-10 min-w-[1024px] mx-auto">
-                <div className="grid grid-cols-3 gap-2 mt-16">
+                <div className="grid grid-cols-3 mt-20">
                   {topPerson.map((avatar, index) => (
                     <motion.div
                       key={index}
-                      className="relative flex flex-col items-center w-[90%] mx-auto"
+                      className="relative flex flex-col items-center w-[95%] mx-auto "
                       variants={itemVariants}
                     >
-                      <img src={WAvatar} alt="Avatar" className="absolute size-24 -top-14" />
+                      <span className="absolute -top-[76px]">{avatar.avatar}</span>
                       <div className="flex flex-col items-center w-full gap-2 px-1 bg-white pt-14 rounded-xl">
                         <div className="flex items-center gap-2">
                           <span className="bg-[#EA3B70] text-white p-1 rounded-lg font-semibold">{avatar.role}</span>
                           <span className="text-[#1A3C95] font-semibold text-lg">{avatar.name}</span>
                           <span className="text-[#7C8BB2]">{avatar.univ}</span>
                         </div>
-                        <p className="text-[#253E7F] text-center">{avatar.description}</p>
+                        <div className="flex flex-col items-center gap-1">
+                          {avatar.description.map((word) => (
+                            <span className="text-[#253E7F] last:mb-2">{word}</span>
+                          ))}
+                        </div>
                       </div>
                     </motion.div>
                   ))}
@@ -301,14 +313,18 @@ export default function Home() {
                       className="relative flex flex-col items-center w-full mx-auto"
                       variants={itemVariants}
                     >
-                      <img src={WAvatar} alt="Avatar" className="absolute size-24 -top-14" />
-                      <div className="flex flex-col items-center w-full gap-2 px-1 bg-white pt-14 rounded-xl">
+                      <span className="absolute -top-20">{avatar.avatar}</span>
+                      <div className="flex flex-col items-center w-full gap-2 p-3 px-1 bg-white pt-14 rounded-xl">
                         <div className="flex items-center gap-2">
                           <span className="bg-[#EA3B70] text-white p-1 rounded-lg font-semibold">{avatar.role}</span>
                           <span className="text-[#1A3C95] font-semibold text-lg">{avatar.name}</span>
                           <span className="text-[#7C8BB2]">{avatar.univ}</span>
                         </div>
-                        <p className="text-[#253E7F] text-center">{avatar.description}</p>
+                        <div className="flex flex-col items-center gap-1">
+                          {avatar.description.map((word) => (
+                            <span className="text-[#253E7F]">{word}</span>
+                          ))}
+                        </div>
                       </div>
                     </motion.div>
                   ))}

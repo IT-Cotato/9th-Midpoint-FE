@@ -41,7 +41,7 @@ export default function MidpointMap({ coordinates, selectedCoordinate }: IKakaoM
 
     // 텍스트 오버레이
     const textOverlay = document.createElement('div');
-    textOverlay.className = `absolute -top-10 flex items-center justify-center p-2 rounded-xl shadow-xl ring-2 ring-[#2F5FDD] font-semibold ${
+    textOverlay.className = `absolute -top-10 flex items-center justify-center p-2 px-3 rounded-3xl shadow-xl ring-2 ring-[#2F5FDD]  ${
       isSelected ? 'bg-[#2F5FDD] text-white' : 'bg-white'
     }`;
     textOverlay.style.zIndex = isSelected ? '1000' : '1'; // z-index 적용

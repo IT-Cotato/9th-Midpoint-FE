@@ -31,7 +31,7 @@ export const formatTime = (time: number) => (time < 10 ? `0${time}` : time);
 
 const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, clickedDate, setClickedDate }) => {
   const [voteDateInfo, setVoteDateInfo] = useState<VoteDateInfo[]>([]);
-  const [noVotes, setNoVotes] = useState(false);
+  const [noVotes, setNoVotes] = useState(true);
 
   const handleDateClick = (date: Value | ValuePiece) => {
     if (date instanceof Date) {
@@ -50,15 +50,18 @@ const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, c
         if (resultRes) {
           let foundInfo = resultRes.result[dateString];
 
-          if (foundInfo) {
+          if (foundInfo && foundInfo.length > 0) {
             setVoteDateInfo(foundInfo);
 
-            if (foundInfo.length === 0) setNoVotes(true);
+            setNoVotes(false);
           } else {
-            console.error('해당 날짜에 대한 정보가 없습니다.');
+            setVoteDateInfo([]);
+            setNoVotes(true);
           }
+        } else {
+          setVoteDateInfo([]);
+          setNoVotes(true);
         }
-        setClickedDate(date);
       } else {
         setClickedDate(null);
       }
@@ -71,7 +74,7 @@ const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, c
     <>
       <div className="flex flex-col item-center justify-start w-[50%]">
         <ContainerItem>
-          <CalIcon />
+          <CalIcon className="pt-4 size-14" />
           <StyledCalendar
             value={null}
             onChange={(value) => handleDateClick(value)}
@@ -118,7 +121,6 @@ const ContainerItem = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  // min-height: 500px;
   background: #f8f8fb;
   padding: 10px 5px;
   border-radius: 15px;
@@ -129,15 +131,16 @@ const ContainerItem = styled.div`
 `;
 
 const StyledCalendar = styled(Calendar)`
-  width: 100%%;
+  width: 95%;
   height: 100%;
   background: #f8f8fb;
   border: none;
-  border-radius: 10px;
   margin-top: 10px;
 
   //전체 폰트 컬러
   .react-calendar__month-view {
+    display: flex;
+    margin-top: -10px;
     abbr {
       color: #15254d;
     }
@@ -147,13 +150,12 @@ const StyledCalendar = styled(Calendar)`
     justify-content: center;
   }
   .react-calendar__navigation__label {
-    font-weight: bold; /* 년월을 굵게 표시 */
+    font-weight: bold;
     color: #2f5fdd;
     flex-grow: 0 !important;
   }
   .react-calendar__navigation:enabled:hover {
     background-color: #5786ff !important;
-    border-radius: 5px !important;
   }
 
   //요일 색, 밑줄
@@ -163,27 +165,39 @@ const StyledCalendar = styled(Calendar)`
   .react-calendar__month-view__weekdays__weekday abbr[title='토요일'] {
     color: #5786ff;
   }
+
+  //요일 영역
+  .react-calendar__month-view__weekdays {
+    flex: 0 0 13% !important;
+    margin-right: 4px;
+  }
+  //각 요일
   .react-calendar__month-view__weekdays abbr {
     text-decoration: none;
     font-weight: 800;
   }
 
-  //일 스타일
+  // 타일 영역
+  .react-calendar__month-view__days {
+    padding-left: 0.1rem;
+  }
+  //각 일 스타일
   .react-calendar__tile {
-    max-width: initial !important;
-    border-radius: 5px; /* 모든 날짜 타일을 동그랗게 */
+    border-radius: 12px; /* 모든 날짜 타일을 동그랗게 */
     cursor: pointer;
+    height: 56px;
+
+    flex: 0 0 13% !important;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin: 4px;
 
     &:hover {
       background: #5786ff;
       color: white;
       border-radius: 5px;
     }
-  }
-  //일 날짜 간격
-  .react-calendar__tile {
-    padding: 5px 0px 30px;
-    position: relative;
+    // position: relative;
   }
   //일 오늘 날짜
   .react-calendar__tile--now {
@@ -204,14 +218,14 @@ const StyledCalendar = styled(Calendar)`
   .react-calendar__tile:enabled:hover,
   .react-calendar__tile:enabled:focus {
     background-color: #377bff !important; /* 클릭한 날짜 색상 */
-    border-radius: 5px !important;
+    border-radius: 12px !important;
   }
 
   /* 클릭된 날짜 (현재 선택된 날짜) */
   .react-calendar__tile--active,
   .selected {
     background-color: #bcd7ff !important; /* 클릭된 날짜 색상 */
-    border-radius: 5px !important;
+    border-radius: 12px !important;
   }
 
   /* 클릭한 날짜의 텍스트 색상 */

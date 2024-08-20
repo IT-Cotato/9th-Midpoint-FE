@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import FolderImg from '@/assets/imgs/Time/time-folder.svg?react';
-import Button from '@/components/common/Button/button';
+import { MdArrowLeft } from 'react-icons/md';
+import { MdArrowRight } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { defineRoomType } from '@/components/time/calendar';
@@ -132,17 +133,14 @@ const TimeResult = () => {
           const endIndex = getTimeIndex(endTime);
 
           // 0~12시 범위
-          if (startIndex >= 0 && startIndex < 72) {
-            // startIndex가 유효한지 확인
-            for (let i = startIndex; i < endIndex && i < 72; i++) {
+          if (startIndex >= 0 && startIndex <= 72) {
+            for (let i = startIndex; i < Math.min(endIndex, 72); i++) {
               morCount[i]++;
             }
           }
-
           // 12~24시 범위
           if (endIndex > 72) {
-            // endIndex가 72보다 클 때만 처리
-            for (let i = 0; i < endIndex - 72 && i < 72; i++) {
+            for (let i = Math.max(startIndex - 72, 0); i < Math.min(endIndex - 72, 72); i++) {
               afterCount[i]++;
             }
           }
@@ -174,43 +172,42 @@ const TimeResult = () => {
   };
 
   return (
-    <TimeResultStyle className="w-[80%] h-[80%] flex flex-col bg-[#F8F8FB] p-4 rounded-[20px] mx-auto">
-      <div className="flex flex-col items-center justify-center mx-auto">
+    <TimeResultStyle className="w-[80%] h-full flex flex-col bg-[#F8F8FB] p-4 rounded-[20px] mx-auto">
+      <div className="flex flex-col items-center justify-center mx-auto mt-5">
         <FolderImg className="w-16 h-16" />
-        <p className="font-bold text-[#1A3C95] text-xl mt-2">이번 모임 일시는...</p>
-        <p className="text-[#5E6D93] text-center mt-1">이번 모임 만남이 가능한 시간을 확인해보세요!</p>
+        <p className="font-bold text-[#1A3C95] text-xl mt-3">이번 모임 일시는...</p>
+        <p className="text-[#5E6D93] text-center mt-3">이번 모임 만남이 가능한 시간을 확인해보세요!</p>
       </div>
-      <div className="flex flex-col items-center justify-center mt-3 w-full">
-        <div className="flex items-center justify-evenly w-full mx-auto">
+      <div className="flex flex-col items-center justify-center flex-grow w-full -mt-3">
+        <div className="flex items-center w-[25%] mx-auto mb-3 justify-evenly">
           <button
             onClick={handlePrev}
-            className={`font-bold ${currentIndex === 0 ? 'text-[#F8F8FB]' : 'text-[#1A3C95]'}`}
+            className={`${currentIndex === 0 ? 'text-[#F8F8FB]' : 'text-[#BCD7FF]'}`}
             disabled={currentIndex === 0}
           >
-            &lt;
+            <MdArrowLeft className="text-4xl" />
           </button>
           <p className="text-xl font-bold text-[#1A3C95] text-center">{formattedDates[currentIndex]}</p>
           <button
             onClick={handleNext}
-            className={`font-bold ${currentIndex === formattedDates.length - 1 ? 'text-[#F8F8FB]' : 'text-[#1A3C95]'}`}
+            className={`${currentIndex === formattedDates.length - 1 ? 'text-[#F8F8FB]' : 'text-[#BCD7FF]'}`}
             disabled={currentIndex === formattedDates.length - 1}
           >
-            &gt;
+            <MdArrowRight className="text-4xl" />
           </button>
         </div>
 
         {/* 인원 */}
-        <div className="flex flex-row items-center justify-center mt-2 w-full">
-          <span className="mr-2">0/0 가능</span>
-
+        <div className="flex flex-row items-center justify-center w-full mx-auto mt-2 mb-2">
+          <span className="mr-3">0/0 가능</span>
           <div
-            className={`grid h-10 border-2 border-[#5786FF] rounded-lg overflow-hidden `}
+            className={`grid h-10 border-2 border-[#5786FF] rounded-2xl overflow-hidden `}
             style={{ gridTemplateColumns: `repeat(${maxId + 1}, 20px)` }}
           >
             {items.slice(0, maxId + 1).map((item) => (
               <div
                 key={item.id}
-                className="h-full flex items-center justify-center"
+                className="flex items-center justify-center h-full"
                 style={{ backgroundColor: item.color, color: item.color }}
               >
                 {item.id}
@@ -218,7 +215,7 @@ const TimeResult = () => {
             ))}
           </div>
 
-          <span className="ml-2">
+          <span className="ml-3">
             {maxId}/{maxId} 가능
           </span>
         </div>
@@ -226,9 +223,9 @@ const TimeResult = () => {
         {/* 00~12시 */}
         <div className="flex flex-col w-[80%] mt-4">
           {/* 시간 표시 */}
-          <div className="flex justify-between mb-1 w-full ">
+          <div className="flex justify-between w-full mb-1 ">
             {Array.from({ length: 13 }).map((_, index) => (
-              <div key={index} className="text-center  ">
+              <div key={index} className="text-center ">
                 {hoursTo12[index]}
               </div>
             ))}
@@ -236,7 +233,7 @@ const TimeResult = () => {
 
           {/* 그리드 */}
           <div
-            className={`grid h-14 w-full border-2 border-[#5786FF] rounded-lg overflow-hidden`}
+            className={`grid h-14 w-full border-2 border-[#5786FF] rounded-2xl overflow-hidden`}
             style={{ gridTemplateColumns: `repeat(72, 1fr)` }}
           >
             {morGridColors.map((color, index) => (
@@ -254,7 +251,7 @@ const TimeResult = () => {
         {/* 12~24시 그리드 */}
         <div className="flex flex-col w-[80%] mt-4">
           {/* 시간 표시 */}
-          <div className="flex justify-between mb-1 w-full ">
+          <div className="flex justify-between w-full mb-1 ">
             {Array.from({ length: 13 }).map((_, index) => (
               <div key={index} className="text-center">
                 {hoursTo24[index]}
@@ -264,7 +261,7 @@ const TimeResult = () => {
 
           {/* 그리드 */}
           <div
-            className={`grid h-14 w-full border-2 border-[#5786FF] rounded-lg overflow-hidden`}
+            className={`grid h-14 w-full border-2 border-[#5786FF] rounded-2xl overflow-hidden`}
             style={{ gridTemplateColumns: `repeat(72, 1fr)` }}
           >
             {afterGridColors.map((color, index) => (
@@ -279,17 +276,21 @@ const TimeResult = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between w-full mt-6 space-x-4">
-        <Button
-          text="투표 다시하기"
-          isLoading={false}
+      <div className="bottom-0 flex justify-between w-full gap-4 -mt-1">
+        <button
+          type="submit"
+          className="min-h-12 primary-btn rounded-2xl bg-[#5786FF]"
           onClick={() => navigate(`/page/${roomTypeUrl}/time-vote/${roomId}`)}
-        ></Button>
-        <Button
-          text="투표 재생성하기"
-          isLoading={false}
+        >
+          투표 다시하기
+        </button>
+        <button
+          type="submit"
+          className="min-h-12 primary-btn rounded-2xl bg-[#B7BDCC] hover:bg-gray-400"
           onClick={() => navigate(`/page/${roomTypeUrl}/create/time-vote-room/${roomId}`)}
-        ></Button>
+        >
+          투표 재생성하기
+        </button>
       </div>
     </TimeResultStyle>
   );

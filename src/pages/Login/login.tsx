@@ -155,7 +155,7 @@ export default function Login() {
     <div className="w-[60%] mx-auto flex flex-col items-center gap-5 mt-14">
       <LoginLogo />
       <h1 className="text-2xl font-semibold text-[#1A3C95]">싱크스팟 로그인</h1>
-      <p className="flex flex-col items-center w-full">
+      <p className="flex flex-col items-center w-full *:text-[#5E6D93]">
         <span>번거롭기만 한 회원 가입은 이제 그만!</span>
         <span> 일회용 비밀번호를 사용해 편하게 로그인할 수 있어요!</span>
       </p>
@@ -167,22 +167,22 @@ export default function Login() {
           {...register('name')}
           type="text"
           placeholder="이름"
-          className="w-full py-2 transition bg-gray-100 border-none outline-none focus:ring-2 ring-indigo-100 focus:outline-none"
+          className="w-full h-12 py-2 transition bg-gray-100 border-none outline-none rounded-2xl focus:ring-2 ring-indigo-100 focus:outline-none placeholder:text-[#b7bdcc] pl-5"
         />
         {errors.name && <span className="font-semibold text-red-500">{errors.name.message}</span>}
         <input
           {...register('pw')}
           type="password"
           placeholder="비밀번호"
-          className="w-full py-2 transition bg-gray-100 border-none focus:ring-2 ring-indigo-100 focus:outline-none"
+          className="w-full h-12 py-2 transition bg-gray-100 border-none rounded-2xl focus:ring-2 ring-indigo-100 focus:outline-none placeholder:text-[#b7bdcc] pl-5"
         />
         {errors.pw && <span className="font-semibold text-red-500">{errors.pw.message}</span>}
         <button
           type="submit"
-          className={`w-full min-h-10 ${isValid ? 'primary-btn' : 'bg-gray-50 cursor-not-allowed'} disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed`}
+          className={`w-full min-h-10 h-12 rounded-2xl ${isValid ? 'primary-btn' : 'bg-gray-50 cursor-not-allowed'} disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed`}
           disabled={!isValid || formLoading}
         >
-          {formLoading ? '잠시만 기다려 주세요...' : '사용자등록'}
+          {formLoading ? '잠시만 기다려 주세요...' : '사용자 등록'}
         </button>
       </form>
       <ToastContainer />

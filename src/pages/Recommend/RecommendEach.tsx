@@ -150,7 +150,7 @@ export default function RecommendEach() {
     <div className="flex flex-col w-4/5 gap-3">
       <div className="flex items-center w-full">
         <span className="w-1/2 font-semibold text-[#2F5FDD] text-lg">{name}에서 뭐하지?</span>
-        <ul className="flex w-1/2 gap-2 *:font-semibold *:cursor-pointer *:rounded-2xl *:py-1 *:px-2 *:w-max *:shadow-md ">
+        <ul className="flex w-1/2 gap-2 *:font-semibold *:cursor-pointer *:rounded-3xl *:py-[6px] *:px-4 *:w-max *:shadow-md ">
           <li
             onClick={() => handleClickedOption(PLACE_ALL)}
             className={`transition-colors ${clickedOption === PLACE_ALL ? 'bg-blue-500 text-white' : ''}`}
@@ -191,12 +191,12 @@ export default function RecommendEach() {
             ) => (
               <div
                 key={index}
-                className={`bg-[#F8F8FB] rounded-xl shadow-md cursor-pointer flex flex-col p-3 gap-1 transition-all ${
+                className={`bg-[#F8F8FB] rounded-2xl cursor-pointer flex flex-col p-3 pl-6 gap-1 transition-all ${
                   clickedItemNum === index ? 'bg-blue-100 opacity-95 ring-2 ring-blue-500' : ''
                 } h-max`}
                 onClick={() => handleClickItem(name, addressLat, addressLong, index)}
               >
-                <div className="*:font-semibold *:text-[#1A3C95]">
+                <div className="*:font-semibold *:text-[#1A3C95] pt-1">
                   {placeStandard === PLACE_STUDY && (
                     <span className="flex gap-2 ">
                       <BooksIcon />

@@ -56,17 +56,17 @@ export default function PlaceResultAlone() {
   return (
     <div className="w-4/5 bg-[#F8F8FB] p-3 rounded-lg shadow-lg">
       <div className="flex flex-col items-center gap-2 mb-6">
-        <FolderIcon className="mb-3" />
+        <FolderIcon className="pt-5" />
         <h1 className="text-2xl font-semibold text-[#1A3C95]">이번 모임 장소는...</h1>
         <p className="text-gray-600 text-md">이번 모임 만남이 가능한 장소를 확인해보세요!</p>
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col">
         {placeVoteResult.map((place) => (
-          <div key={place.id} className="grid items-center grid-cols-2 gap-3 p-3">
-            <span className="w-2/5 p-1 py-2 text-xl font-semibold text-center text-blue-500 bg-white rounded-md shadow-md ml-28 justify-self-center">
+          <div key={place.id} className="grid items-center grid-cols-2 gap-3 p-1">
+            <span className="w-1/5 p-1 py-4 text-xl font-semibold text-center text-blue-500 bg-white rounded-2xl ml-28 justify-self-center">
               {place.count}표
             </span>
-            <span className="w-4/5 px-4 py-2 text-xl font-semibold text-center bg-white rounded-md shadow-md min-w-2/5 text-nowrap">
+            <span className="w-4/5 px-4 py-4 text-xl  text-center bg-white rounded-2xl  min-w-2/5 text-nowrap text-[#5E6D93]">
               {place.roadNameAddress}
             </span>
           </div>
@@ -74,14 +74,14 @@ export default function PlaceResultAlone() {
         <div className="flex justify-center w-full gap-3 p-3">
           <button
             type="button"
-            className="w-2/5 py-3 font-semibold text-white transition-colors rounded-lg min-h-10 primary-btn"
+            className="w-2/5 py-3 font-semibold text-white transition-colors rounded-2xl min-h-10 primary-btn"
             onClick={() => navigate(`/page/a/place-vote/${roomId}`)}
           >
             투표 다시하기
           </button>
           <button
             type="button"
-            className="w-2/5 py-3 font-semibold text-gray-600 transition-colors bg-gray-300 rounded-lg hover:bg-gray-400"
+            className="w-2/5 py-3 font-semibold text-gray-600 transition-colors bg-gray-300 rounded-2xl hover:bg-gray-400"
             onClick={() => navigate(`/page/a/create/place-vote-room/${roomId}`)}
           >
             투표 재생성하기

@@ -9,7 +9,6 @@ import { useMatch, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from '@/constants';
 import { useQueryClient } from '@tanstack/react-query';
-import Button from '../common/Button/button';
 
 export type DatePickerProps = {
   selectedDates: Value[];
@@ -93,7 +92,7 @@ const FristCalendar: React.FC<DatePickerProps> = ({ isValue, selectedDates, onDa
   };
 
   return (
-    <div className="flex flex-col item-center h-screen w-screen">
+    <div className="flex flex-col w-screen h-screen item-center">
       <ContainerBox>
         <div className="flex flex-col items-center justify-center">
           <CalItemIcon />
@@ -119,13 +118,13 @@ const FristCalendar: React.FC<DatePickerProps> = ({ isValue, selectedDates, onDa
         </div>
       </ContainerBox>
       <div className="w-[50%] mx-auto">
-        <Button
+        <button
           onClick={() => gotoVote(isTimeVoteRoomExists)}
-          isMore={isValue}
-          isMoreMessage="날짜를 클릭하세요"
-          text="다음"
-          isLoading={false}
-        />
+          disabled={isValue}
+          className="h-12 min-h-10 primary-btn rounded-2xl disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
+        >
+          {isValue ? '날짜를 클릭하세요' : '다음'}
+        </button>
       </div>
     </div>
   );

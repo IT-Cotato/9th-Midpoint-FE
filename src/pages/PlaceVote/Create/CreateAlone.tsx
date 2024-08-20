@@ -244,21 +244,25 @@ export default function CreateAlone() {
   return (
     <>
       <div className="grid w-4/5 gap-3 grid-cols-2 grid-rows-[auto_1fr]">
-        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-2 pt-10 row-span-2 py-2 h-[520px]">
+        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-2 pt-10 row-span-2 py-2 h-[560px]">
           <div className="flex flex-col items-center gap-2">
             <FountainIcon />
-            <h1 className="text-2xl font-semibold text-[#1A3C95] mb-3">모임정보 입력</h1>
+            <h1 className="text-2xl font-semibold text-[#1A3C95] mb-2">장소 투표 생성하기</h1>
+            <div className="flex flex-col items-center *:text-[#5E6D93] -mt-2">
+              <span>우리 같이 투표해요!</span>
+              <span>원하는 모임 장소를 선택한 후 투표를 진행하세요!</span>
+            </div>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow gap-6 py-1">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow gap-3 py-1">
             {fields.map((field, index) => (
               <div key={field.id}>
                 <div className="relative w-full overflow-x-auto">
-                  <div className="absolute flex items-center gap-2 *:cursor-pointer top-2 right-3">
+                  <div className="absolute flex items-center gap-2 *:cursor-pointer top-3 right-3">
                     <PenIcon className="size-6" onClick={() => openAddressSearch(index)} />
                     {fields.length > 1 && <XIcon className="size-6" onClick={() => handleRemove(index)} />}
                   </div>
                   <div
-                    className={`flex items-center min-w-full min-h-10 px-3 bg-white w-max border-none rounded-lg cursor-pointer ${
+                    className={`flex items-center min-w-full min-h-10 h-12 px-3 bg-white w-max border-none rounded-xl cursor-pointer ${
                       watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'
                     }`}
                     onClick={() => openAddressSearch(index)}
@@ -277,14 +281,14 @@ export default function CreateAlone() {
             <button
               type="button"
               onClick={handleSubmit(onSubmit)}
-              className="w-full rounded-lg primary-btn min-h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
+              className="w-full h-12 rounded-2xl primary-btn min-h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
               disabled={isLoading}
             >
-              투표생성하기
+              투표 생성하기
             </button>
           </div>
         </div>
-        <div className="h-[520px] shadow-lg rounded-2xl row-span-2">
+        <div className="h-[560px] shadow-lg rounded-2xl row-span-2">
           <KakaoMap coordinates={coordinates} />
         </div>
       </div>
