@@ -279,14 +279,14 @@ const TimeResult = () => {
       <div className="bottom-0 flex justify-between w-full gap-4 -mt-1">
         <button
           type="submit"
-          className="min-h-12 primary-btn rounded-2xl bg-[#5786FF]"
+          className="h-14 primary-btn rounded-2xl bg-[#5786FF]"
           onClick={() => navigate(`/page/${roomTypeUrl}/time-vote/${roomId}`)}
         >
           투표 다시하기
         </button>
         <button
           type="submit"
-          className="min-h-12 primary-btn rounded-2xl bg-[#B7BDCC] hover:bg-gray-400"
+          className="h-14 primary-btn rounded-2xl bg-[#B7BDCC] hover:bg-gray-400"
           onClick={() => navigate(`/page/${roomTypeUrl}/create/time-vote-room/${roomId}`)}
         >
           투표 재생성하기

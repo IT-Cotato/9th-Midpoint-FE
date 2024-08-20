@@ -137,13 +137,13 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
                 className="w-full px-4 py-4 mb-4 text-xl text-[#15254d] underline font-light text-center bg-white border-none cursor-not-allowed h-14 rounded-2xl focus:ring-2 focus:ring-blue-500"
               />
               <button
-                className="w-full py-2 mb-2 text-xl font-semibold text-white transition-all bg-gray-400 rounded-2xl min-h-10 h-14"
+                className="w-full py-2 mb-2 text-xl font-semibold text-white transition-all bg-gray-400 rounded-2xl h-14"
                 onClick={handleCopyClicked}
               >
                 {copyClicked ? '링크 복사 완료!' : '링크 복사하기'}
               </button>
               <button
-                className="w-full py-2 mb-1 text-xl font-semibold text-white transition-colors bg-blue-500 rounded-2xl h-14 hover:bg-blue-400 min-h-10"
+                className="w-full py-2 mb-1 text-xl font-semibold text-white transition-colors bg-blue-500 rounded-2xl h-14 hover:bg-blue-400"
                 onClick={() => navigate(`/page/e/results/${roomId}`)}
               >
                 장소 입력하러 이동

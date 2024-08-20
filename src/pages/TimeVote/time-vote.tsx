@@ -171,7 +171,7 @@ const TimeVote = () => {
           ))}
         <div className="h-14"></div>
         <div className="absolute bottom-4 w-[95%] mx-auto">
-          <button className="min-h-12 primary-btn bg-[#5786FF]" onClick={handleVote}>
+          <button className="h-14 rounded-2xl primary-btn bg-[#5786FF]" onClick={handleVote}>
             투표하기
           </button>
         </div>

@@ -185,7 +185,7 @@ export default function LocationEach() {
               </div>
               <div className="relative w-full">
                 <div
-                  className={`flex items-center min-w-full min-h-10 px-3 bg-white w-max border-none rounded-xl cursor-pointer ${
+                  className={`flex items-center min-w-full h-14 px-3 bg-white w-max border-none rounded-xl cursor-pointer ${
                     watch('roadNameAddress') ? 'text-black' : 'text-gray-500'
                   }`}
                   onClick={openAddressSearch}

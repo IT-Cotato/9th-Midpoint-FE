@@ -121,7 +121,7 @@ const FristCalendar: React.FC<DatePickerProps> = ({ isValue, selectedDates, onDa
         <button
           onClick={() => gotoVote(isTimeVoteRoomExists)}
           disabled={isValue}
-          className="h-12 min-h-10 primary-btn rounded-2xl disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
+          className="h-14 primary-btn rounded-2xl disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
         >
           {isValue ? '날짜를 클릭하세요' : '다음'}
         </button>
