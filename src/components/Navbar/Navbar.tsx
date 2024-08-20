@@ -136,17 +136,21 @@ export default function Navbar() {
           </Link>
         </ul>
         <ul className="flex items-center gap-6 *:cursor-pointer *:transition-colors">
-          <li onClick={() => navigate('/')}>홈</li>
+          <li onClick={() => navigate('/')} className="text-[17px] font-light">
+            홈
+          </li>
           <li
             onMouseEnter={() => setMidpointIsDropdownOpen(true)}
             onMouseLeave={() => setMidpointIsDropdownOpen(false)}
             className="relative"
           >
-            <h1 className={Boolean(isMidpoint) ? 'text-blue-600' : 'text-black'}>중간지점찾기</h1>
+            <h1 className={Boolean(isMidpoint) ? 'text-blue-600 text-[17px]' : 'text-black text-[17px] font-light'}>
+              중간 지점 찾기
+            </h1>
             {isMidpointDropdownOpen && (
-              <ul className="absolute z-50 bg-white border border-gray-200 rounded-lg shadow-md -left-4 top-full">
+              <ul className="absolute z-50 bg-white border border-gray-200 rounded-2xl shadow-md -left-4 top-full *:text-[15px] p-2">
                 <li
-                  className="px-4 py-2 transition-colors cursor-pointer hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100"
+                  className="px-4 py-2 font-light transition-colors cursor-pointer hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100 hover:font-normal"
                   onClick={() =>
                     isAlone
                       ? navigate(`/page/alone/${roomId}`)
@@ -158,7 +162,7 @@ export default function Navbar() {
                   장소 입력하기
                 </li>
                 <li
-                  className="px-4 py-2 transition-colors cursor-pointer hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100"
+                  className="px-4 py-2 font-light text-center transition-colors cursor-pointer hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100 hover:font-normal"
                   onClick={() =>
                     isAlone
                       ? navigate(`/page/a/results/${roomId}`)
@@ -177,11 +181,13 @@ export default function Navbar() {
             onMouseLeave={() => setPlaceVoteDropdownOpen(false)}
             className="relative"
           >
-            <h1 className={isPlaceVote ? 'text-blue-600' : 'text-black'}>장소투표</h1>
+            <h1 className={isPlaceVote ? 'text-blue-600 text-[17px]' : 'text-black text-[17px] font-light'}>
+              장소 투표
+            </h1>
             {isPlaceVoteDropdownOpen && (
-              <ul className="absolute z-50 bg-white border border-gray-200 rounded-lg shadow-md -left-4 top-full">
+              <ul className="absolute z-50 bg-white border border-gray-200 rounded-2xl shadow-md -left-10 top-full p-2 *:text-[15px]">
                 <li
-                  className="px-4 py-2 transition-colors cursor-pointer hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100"
+                  className="px-4 py-2 font-light transition-colors cursor-pointer hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100 hover:font-normal"
                   onClick={() =>
                     isAlone
                       ? navigate(`/page/a/create/place-vote-room/${roomId}`)
@@ -194,7 +200,7 @@ export default function Navbar() {
                 </li>
                 {placeVoteData?.existence && (
                   <li
-                    className="px-4 py-2 transition-colors cursor-pointer hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100"
+                    className="px-4 py-2 font-light text-center transition-colors cursor-pointer hover:font-normal hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100"
                     onClick={() =>
                       isAlone
                         ? navigate(`/page/a/place-vote/${roomId}`)
@@ -214,11 +220,13 @@ export default function Navbar() {
             onMouseLeave={() => setTimeVoteDropdownOpen(false)}
             className="relative"
           >
-            <h1 className={isTimeVote ? 'text-blue-600' : 'text-black'}>시간투표</h1>
+            <h1 className={isTimeVote ? 'text-blue-600 text-[17px]' : 'text-black text-[17px] font-light'}>
+              시간 투표
+            </h1>
             {isTimeVoteDropdownOpen && (
-              <ul className="absolute z-50 bg-white border border-gray-200 rounded-lg shadow-md -left-4 top-full">
+              <ul className="absolute z-50 bg-white border border-gray-200 rounded-2xl shadow-md p-2 -left-10 top-full *:text-[15px]">
                 <li
-                  className="px-4 py-2 transition-colors cursor-pointer hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100"
+                  className="px-4 py-2 font-light transition-colors cursor-pointer hover:font-normal hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100"
                   onClick={() =>
                     isAlone
                       ? navigate(`/page/a/create/time-vote-room/${roomId}`)
@@ -231,7 +239,7 @@ export default function Navbar() {
                 </li>
                 {timeVoteData?.existence && (
                   <li
-                    className="px-4 py-2 transition-colors cursor-pointer hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100"
+                    className="px-4 py-2 font-light text-center transition-colors cursor-pointer hover:font-normal hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100"
                     onClick={() =>
                       isAlone
                         ? navigate(`/page/a/time-vote/${roomId}`)

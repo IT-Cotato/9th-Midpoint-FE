@@ -6,7 +6,6 @@ import { Value, ValuePiece } from '../Time/time';
 import { checkVoteCreate, IDatePayload, postVoteTime, rePostVoteTime, resultVoteRoom } from '@/apis/time-vote.api';
 import { defineRoomType } from '@/components/time/calendar';
 import ClockIcon from '@/assets/imgs/Time/time-clock-icon.svg?react';
-import Button from '@/components/common/Button/button';
 import { DateOption } from '@/components/time/vote-date-picker';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -157,9 +156,9 @@ const TimeVote = () => {
         setClickedDate={setClickedDate}
       />
 
-      <ContainerItem className="relative">
-        <ClockIcon />
-        <p className="my-2">참석 일시 투표</p>
+      <ContainerItem className="relative h-full">
+        <ClockIcon className="mt-3 mb-2 size-10" />
+        <p className="my-2 mb-6">참석 일시 투표</p>
         {Array.isArray(selectedDates) &&
           selectedDates.map((date, index) => (
             <DateOption
@@ -170,9 +169,11 @@ const TimeVote = () => {
               setVoteExistence={setVoteExistence}
             />
           ))}
-        <div className="h-10"></div>
-        <div className="absolute bottom-0 w-full">
-          <Button text="투표하기" onClick={handleVote} isLoading={false}></Button>
+        <div className="h-14"></div>
+        <div className="absolute bottom-4 w-[95%] mx-auto">
+          <button className="min-h-12 primary-btn bg-[#5786FF]" onClick={handleVote}>
+            투표하기
+          </button>
         </div>
       </ContainerItem>
     </TimeVoteStyle>

@@ -102,14 +102,14 @@ export default function MidpointAloneResult() {
         {midPoints.map(({ name, siDo, siGunGu, addressLat, addressLong }, index) => (
           <div
             key={index}
-            className={`bg-[#F8F8FB] rounded-xl shadow-md cursor-pointer flex flex-col p-3 gap-2 transition-all ${clickedItemNum === index ? 'bg-blue-100 opacity-95 ring-2 ring-blue-500' : ''}`}
+            className={`bg-[#F8F8FB] rounded-2xl cursor-pointer flex flex-col justify-center p-3 pl-6 gap-1 transition-all ${clickedItemNum === index ? 'bg-blue-100 opacity-95 ring-2 ring-blue-500' : ''}`}
             onClick={() => handleClickItem(name, addressLat, addressLong, index)}
           >
-            <div className="flex items-center gap-3">
-              <span className="flex items-center justify-center p-[10px] text-white bg-blue-400 rounded-full size-4">
+            <div className="flex items-center gap-1">
+              <span className="flex items-center justify-center p-[10px] text-white bg-blue-400 rounded-full size-4 text-[12px]">
                 {index + 1}
               </span>
-              <span className="text-[#1A3C95] font-semibold">우리의 {sequece[index]}번째 중간 지점</span>
+              <span className="text-[#1A3C95] font-semibold">우리의 {sequece[index]} 번째 중간 지점</span>
             </div>
             <h1 className="text-xl text-[#2F5FDD] font-semibold">{name}</h1>
             <div className="flex items-center justify-between">
@@ -119,7 +119,7 @@ export default function MidpointAloneResult() {
               {clickedItemNum === index && (
                 <span
                   onClick={() => handleNavigate(addressLat, addressLong, name)}
-                  className="p-1 transition-all bg-blue-100 rounded-lg opacity-95 hover:bg-blue-200"
+                  className="mr-2 transition-all bg-blue-100 rounded-lg opacity-95 hover:bg-blue-200"
                 >
                   <ArrowRightIcon className="text-blue-700 size-6" />
                 </span>

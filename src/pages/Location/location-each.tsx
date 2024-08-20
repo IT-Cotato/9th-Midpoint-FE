@@ -176,16 +176,16 @@ export default function LocationEach() {
   return (
     <>
       <div className="grid w-4/5 grid-cols-2 gap-3 grid-rows-[auto_1fr]">
-        <div className="rounded-2xl bg-[#F8F8FB] row-span-1 px-2 py-2">
+        <div className="rounded-2xl bg-[#F8F8FB] row-span-1 px-4 py-2">
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 py-1 mb-6">
             <div className="flex flex-col w-full gap-3">
               <div className="flex flex-col items-center gap-2 my-4">
                 <Parasol />
-                <span className="text-2xl font-semibold text-[#1A3C95]">내 정보 입력</span>
+                <span className="text-2xl font-semibold text-[#1A3C95] ml-2">내 정보 입력</span>
               </div>
               <div className="relative w-full">
                 <div
-                  className={`flex items-center min-w-full min-h-10 px-3 bg-white w-max border-none rounded-lg cursor-pointer ${
+                  className={`flex items-center min-w-full min-h-10 px-3 bg-white w-max border-none rounded-xl cursor-pointer ${
                     watch('roadNameAddress') ? 'text-black' : 'text-gray-500'
                   }`}
                   onClick={openAddressSearch}
@@ -199,8 +199,8 @@ export default function LocationEach() {
           <Button
             isLoading={isLoading}
             isMore={!Boolean(watch('roadNameAddress'))}
-            isMoreMessage="중간지점 찾기"
-            text="중간지점 찾기"
+            isMoreMessage="중간 지점 찾기"
+            text="중간 지점 찾기"
             onClick={handleSubmit(onSubmit)}
           />
         </div>

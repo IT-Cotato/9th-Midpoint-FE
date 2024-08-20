@@ -143,7 +143,10 @@ export default function VoteEach() {
           <div className="flex flex-col items-center gap-2">
             <FountainIcon />
             <h1 className="text-2xl font-semibold text-[#1A3C95]">모임 장소 투표하기</h1>
-            <p className="text-gray-600 text-md">원하는 모임 장소를 선택한 후 투표를 진행하세요!</p>
+            <div className="flex flex-col items-center *:text-[#5E6D93]">
+              <span>우리 같이 투표해요!</span>
+              <span>원하는 모임 장소를 선택한 후 투표를 진행하세요!</span>
+            </div>
           </div>
           <div className="flex flex-col gap-2">
             {placeCandidates.map((candidate) => (
@@ -161,7 +164,7 @@ export default function VoteEach() {
               type="button"
               onClick={handleOnPlaceClick}
               disabled={!isVoteButtonEnabled}
-              className={`primary-btn min-h-10 w-full rounded-lg font-semibold disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed`}
+              className={`primary-btn min-h-10 w-full rounded-2xl h-12 font-semibold disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed`}
             >
               모임 장소 투표하기
             </button>

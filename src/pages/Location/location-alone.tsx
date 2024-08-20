@@ -192,23 +192,23 @@ export default function LocationAlone() {
   return (
     <>
       <div className="grid w-4/5 gap-3 grid-cols-2 grid-rows-[auto_1fr]">
-        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-2 pt-10 row-span-2 py-2 h-[500px]">
+        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-4 pt-10 row-span-2 py-2 h-[500px]">
           <div className="flex flex-col items-center gap-2">
             <Parasol />
-            <h1 className="text-2xl font-semibold text-[#1A3C95]">모임정보 입력</h1>
+            <h1 className="text-2xl font-semibold text-[#1A3C95]">모임 정보 입력</h1>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow gap-6 py-1 overflow-y-auto ">
             {fields.map((field, index) => (
               <div key={field.id}>
-                <h2 className="flex items-center justify-between text-lg font-semibold">
-                  <span>친구 {index + 1} </span>
+                <h2 className="flex items-center justify-between mb-2 text-lg font-semibold">
+                  <span className="text-[#1A3C95] ml-2">친구 {index + 1} </span>
                   {fields.length > 1 && (
                     <XMarkIcon className="w-4 h-4 cursor-pointer" onClick={() => handleRemove(index)} />
                   )}
                 </h2>
                 <div className="relative w-full overflow-x-auto">
                   <div
-                    className={`flex items-center min-w-full min-h-10 px-3 bg-white w-max border-none rounded-lg cursor-pointer ${
+                    className={`flex items-center min-w-full min-h-10 h-12 px-3 bg-white w-max border-none rounded-xl cursor-pointer ${
                       watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'
                     }`}
                     onClick={() => openAddressSearch(index)}
