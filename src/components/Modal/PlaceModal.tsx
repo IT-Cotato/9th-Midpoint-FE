@@ -46,15 +46,25 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('roomId');
     if (selectedOption === 'friend') {
-      const { data } = await axios.post(BACKEND_URL + '/api/rooms', {
-        roomType: ROOM_TYPE_EACH,
-      });
+      const { data } = await axios.post(
+        BACKEND_URL + '/api/rooms',
+        {
+          roomType: ROOM_TYPE_EACH,
+        },
+        { withCredentials: true },
+      );
       setRoomId(data.data.id);
       setCurrentView('shareLink');
     } else {
-      const { data } = await axios.post(BACKEND_URL + '/api/rooms', {
-        roomType: ROOM_TYPE_ALONE,
-      });
+      const { data } = await axios.post(
+        BACKEND_URL + '/api/rooms',
+        {
+          roomType: ROOM_TYPE_ALONE,
+        },
+        {
+          withCredentials: true,
+        },
+      );
       const newRoomId = data.data.id;
       navigate(`/page/a/results/${newRoomId}`);
     }
