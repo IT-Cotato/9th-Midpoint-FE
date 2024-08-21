@@ -276,7 +276,7 @@ const TimeResult = () => {
           </div>
         </div>
       </div>
-      <div className="bottom-0 flex justify-between w-full gap-4 -mt-1">
+      <div className="bottom-0 flex justify-between w-full gap-4 pt-6">
         <button
           type="submit"
           className="h-14 primary-btn rounded-2xl bg-[#5786FF]"
