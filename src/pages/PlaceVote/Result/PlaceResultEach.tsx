@@ -71,7 +71,7 @@ export default function PlaceResultAlone() {
             </span>
           </div>
         ))}
-        <div className="flex justify-center w-full gap-3 p-3 mt-7">
+        <div className="flex justify-center w-full gap-3 p-3 mt-3">
           <button
             type="button"
             className="w-full py-3 font-semibold text-white transition-colors rounded-2xl h-14 primary-btn"

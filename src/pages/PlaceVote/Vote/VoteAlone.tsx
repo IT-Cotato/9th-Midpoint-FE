@@ -139,7 +139,7 @@ export default function VoteAlone() {
   return (
     <>
       <div className="grid w-4/5 gap-3 grid-cols-2 grid-rows-[auto_1fr]">
-        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-2 pt-10 row-span-2 py-2 h-[560px]">
+        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-2 pt-5 row-span-2 py-2 h-[560px]">
           <div className="flex flex-col items-center gap-2">
             <FountainIcon />
             <h1 className="text-2xl font-semibold text-[#1A3C95]">모임 장소 투표하기</h1>

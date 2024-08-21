@@ -15,7 +15,7 @@ const VoteDate = ({
     <VoteDateStyle>
       {clickedDate && (
         <DateInfo>
-          {noVotes && <p className="text-[#15254D] mx-auto text-base">투표한 사람이 없습니다</p>}
+          {noVotes && <p className="text-[#15254D] mx-auto text-base rounded-2xl">투표한 사람이 없습니다</p>}
           {voteDateInfo.map((memberInfo, memberIndex) => (
             <div
               key={memberIndex}

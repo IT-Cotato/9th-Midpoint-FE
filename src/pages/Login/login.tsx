@@ -161,25 +161,25 @@ export default function Login() {
       </p>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col w-4/5 gap-6 py-5 mx-auto *:rounded-lg *:w-[90%] *:mx-auto"
+        className="flex flex-col w-4/5 gap-6 py-5 mx-auto *:rounded-2xl *:w-[90%] *:mx-auto"
       >
         <input
           {...register('name')}
           type="text"
           placeholder="이름"
-          className="w-full h-12 py-2 transition bg-gray-100 border-none outline-none rounded-2xl focus:ring-2 ring-indigo-100 focus:outline-none placeholder:text-[#b7bdcc] pl-5"
+          className="w-full h-14 py-2 transition bg-gray-100 border-none outline-none  focus:ring-2 ring-indigo-100 focus:outline-none placeholder:text-[#b7bdcc] pl-5"
         />
         {errors.name && <span className="font-semibold text-red-500">{errors.name.message}</span>}
         <input
           {...register('pw')}
           type="password"
           placeholder="비밀번호"
-          className="w-full h-12 py-2 transition bg-gray-100 border-none rounded-2xl focus:ring-2 ring-indigo-100 focus:outline-none placeholder:text-[#b7bdcc] pl-5"
+          className="w-full h-14 py-2 transition bg-gray-100 border-none focus:ring-2 ring-indigo-100 focus:outline-none placeholder:text-[#b7bdcc] pl-5"
         />
         {errors.pw && <span className="font-semibold text-red-500">{errors.pw.message}</span>}
         <button
           type="submit"
-          className={`w-full min-h-10 h-12 rounded-2xl ${isValid ? 'primary-btn' : 'bg-gray-50 cursor-not-allowed'} disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed`}
+          className={`w-full min-h-10 h-14 rounded-2xl ${isValid ? 'primary-btn' : 'bg-gray-50 cursor-not-allowed'} disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed`}
           disabled={!isValid || formLoading}
         >
           {formLoading ? '잠시만 기다려 주세요...' : '사용자 등록'}
