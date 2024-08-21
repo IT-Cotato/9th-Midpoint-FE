@@ -241,7 +241,7 @@ export default function Home() {
           <h1 className="absolute font-semibold text-md text-white -top-[100px] left-[355px]">
             여기를 눌러 싱크스팟을 사용해 보세요!
           </h1>
-          <div className="flex items-center gap-5 mt-20 ml-14 *:text-xl text-[#1A3C95]">
+          <div className="flex items-center gap-5 mt-16 ml-14 *:text-xl text-[#1A3C95]">
             <h1>Cotato 9th</h1>
             <h1>2024.03. - 2024.08.</h1>
           </div>

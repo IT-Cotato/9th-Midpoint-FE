@@ -117,7 +117,7 @@ const FristCalendar: React.FC<DatePickerProps> = ({ isValue, selectedDates, onDa
           />
         </div>
       </ContainerBox>
-      <div className="w-[50%] mx-auto">
+      <div className="w-[50%] mx-auto mt-2">
         <button
           onClick={() => gotoVote(isTimeVoteRoomExists)}
           disabled={isValue}
@@ -168,6 +168,7 @@ const StyledCalendar = styled(Calendar)`
   //년/월 상단 네비게이션 정렬, 크기 줄이기
   .react-calendar__navigation {
     justify-content: center;
+    margin-bottom: 4px;
   }
   .react-calendar__navigation__label {
     font-weight: bold; /* 년월을 굵게 표시 */
@@ -189,7 +190,6 @@ const StyledCalendar = styled(Calendar)`
   .react-calendar__month-view__weekdays {
     flex: 0 0 13% !important;
     max-width: 100%;
-    
   }
   .react-calendar__month-view__weekdays abbr {
     text-decoration: none;

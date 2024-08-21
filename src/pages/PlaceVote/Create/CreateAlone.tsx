@@ -244,14 +244,10 @@ export default function CreateAlone() {
   return (
     <>
       <div className="grid w-4/5 gap-3 grid-cols-2 grid-rows-[auto_1fr]">
-        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-2 pt-10 row-span-2 py-2 h-[560px]">
+        <div className="bg-[#F8F8FB] rounded-2xl shadow-lg flex flex-col justify-between gap-2 px-2 pt-8 row-span-2 py-2 h-[560px]">
           <div className="flex flex-col items-center gap-2">
             <FountainIcon />
             <h1 className="text-2xl font-semibold text-[#1A3C95] mb-2">장소 투표 생성하기</h1>
-            <div className="flex flex-col items-center *:text-[#5E6D93] -mt-2">
-              <span>우리 같이 투표해요!</span>
-              <span>원하는 모임 장소를 선택한 후 투표를 진행하세요!</span>
-            </div>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow gap-3 py-1">
             {fields.map((field, index) => (
@@ -262,7 +258,7 @@ export default function CreateAlone() {
                     {fields.length > 1 && <XIcon className="size-6" onClick={() => handleRemove(index)} />}
                   </div>
                   <div
-                    className={`flex items-center min-w-full min-h-10 h-12 px-3 bg-white w-max border-none rounded-xl cursor-pointer ${
+                    className={`flex items-center min-w-full min-h-10 h-14 px-3 bg-white w-max border-none rounded-2xl cursor-pointer ${
                       watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'
                     }`}
                     onClick={() => openAddressSearch(index)}
@@ -281,7 +277,7 @@ export default function CreateAlone() {
             <button
               type="button"
               onClick={handleSubmit(onSubmit)}
-              className="w-full h-12 rounded-2xl primary-btn min-h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
+              className="w-full h-14 rounded-2xl primary-btn min-h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
               disabled={isLoading}
             >
               투표 생성하기

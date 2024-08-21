@@ -208,7 +208,7 @@ export default function LocationAlone() {
                 </h2>
                 <div className="relative w-full overflow-x-auto">
                   <div
-                    className={`flex items-center min-w-full h-14 px-3 bg-white w-max border-none rounded-xl cursor-pointer ${
+                    className={`flex items-center min-w-full h-14 px-3 pl-4 bg-white w-max border-none rounded-2xl cursor-pointer ${
                       watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'
                     }`}
                     onClick={() => openAddressSearch(index)}
@@ -223,13 +223,13 @@ export default function LocationAlone() {
               </div>
             ))}
           </form>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 mb-2">
             <button
               type="button"
               onClick={() => append(default_format)}
-              className="w-full rounded-2xl primary-btn min-h-14"
+              className="w-full rounded-2xl text-gray-500 primary-btn min-h-14 bg-[#ECECF3] hover:bg-gray-300"
             >
-              친구 추가하기
+              + 친구 추가하기
             </button>
             <Button
               isLoading={isLoading}

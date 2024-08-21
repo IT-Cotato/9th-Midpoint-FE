@@ -8,6 +8,8 @@ import { defineRoomType } from '@/components/time/calendar';
 import ClockIcon from '@/assets/imgs/Time/time-clock-icon.svg?react';
 import { DateOption } from '@/components/time/vote-date-picker';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export interface ResultResponse {
   result: {
@@ -88,18 +90,16 @@ const TimeVote = () => {
       })
       .filter((item): item is { memberAvailableStartTime: string; memberAvailableEndTime: string } => item !== null);
 
-    // dateTimePayload가 비어 있을 경우 바로 종료
     if (!dateTimePayload.length) {
-      alert('참석 일시를 투표해주세요!');
+      toast.error('참석 일시를 투표해주세요!', { position: 'top-center' });
       return;
     }
 
-    // 시작 시간이 클 경우 동작 취소
     const hasInvalidTime = dateTimePayload.some(
       ({ memberAvailableStartTime, memberAvailableEndTime }) => memberAvailableStartTime >= memberAvailableEndTime,
     );
     if (hasInvalidTime) {
-      alert('시작 시간은 종료 시간보다 빨라야 합니다.');
+      toast.error('시간대를 다시 한번 확인해주세요!', { position: 'top-center' });
       return;
     }
 
@@ -157,8 +157,8 @@ const TimeVote = () => {
       />
 
       <ContainerItem className="relative h-full">
-        <ClockIcon className="mt-3 mb-2 size-10" />
-        <p className="my-2 mb-6">참석 일시 투표</p>
+        <ClockIcon className="mt-4 mb-2 size-10" />
+        <p className="mt-1 mb-6">참석 일시 투표</p>
         {Array.isArray(selectedDates) &&
           selectedDates.map((date, index) => (
             <DateOption
@@ -170,12 +170,13 @@ const TimeVote = () => {
             />
           ))}
         <div className="h-14"></div>
-        <div className="absolute bottom-4 w-[95%] mx-auto">
+        <div className="absolute bottom-2 w-[95%] mx-auto">
           <button className="h-14 rounded-2xl primary-btn bg-[#5786FF]" onClick={handleVote}>
             투표하기
           </button>
         </div>
       </ContainerItem>
+      <ToastContainer />
     </TimeVoteStyle>
   );
 };

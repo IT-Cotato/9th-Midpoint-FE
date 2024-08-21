@@ -185,7 +185,7 @@ export default function Navbar() {
               장소 투표
             </h1>
             {isPlaceVoteDropdownOpen && (
-              <ul className="absolute z-50 bg-white border border-gray-200 rounded-2xl shadow-md -left-10 top-full p-2 *:text-[15px]">
+              <ul className="absolute z-50 bg-white border border-gray-200 rounded-2xl shadow-md -left-9 top-full p-2 *:text-[15px]">
                 <li
                   className="px-4 py-2 font-light transition-colors cursor-pointer hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100 hover:font-normal"
                   onClick={() =>
@@ -224,7 +224,7 @@ export default function Navbar() {
               시간 투표
             </h1>
             {isTimeVoteDropdownOpen && (
-              <ul className="absolute z-50 bg-white border border-gray-200 rounded-2xl shadow-md p-2 -left-10 top-full *:text-[15px]">
+              <ul className="absolute z-50 bg-white border border-gray-200 rounded-2xl shadow-md p-2 -left-9 top-full *:text-[15px]">
                 <li
                   className="px-4 py-2 font-light transition-colors cursor-pointer hover:font-normal hover:text-blue-600 whitespace-nowrap hover:opacity-90 hover:bg-gray-100"
                   onClick={() =>

@@ -178,8 +178,8 @@ const TimeResult = () => {
         <p className="font-bold text-[#1A3C95] text-xl mt-3">이번 모임 일시는...</p>
         <p className="text-[#5E6D93] text-center mt-3">이번 모임 만남이 가능한 시간을 확인해보세요!</p>
       </div>
-      <div className="flex flex-col items-center justify-center flex-grow w-full -mt-3">
-        <div className="flex items-center w-[25%] mx-auto mb-3 justify-evenly">
+      <div className="flex flex-col items-center justify-center w-full">
+        <div className="flex items-center w-[25%] mx-auto mb-3 justify-evenly mt-4">
           <button
             onClick={handlePrev}
             className={`${currentIndex === 0 ? 'text-[#F8F8FB]' : 'text-[#BCD7FF]'}`}
@@ -221,7 +221,7 @@ const TimeResult = () => {
         </div>
 
         {/* 00~12시 */}
-        <div className="flex flex-col w-[80%] mt-4">
+        <div className="flex flex-col w-[80%] mt-4 ">
           {/* 시간 표시 */}
           <div className="flex justify-between w-full mb-1 ">
             {Array.from({ length: 13 }).map((_, index) => (
@@ -249,7 +249,7 @@ const TimeResult = () => {
         </div>
 
         {/* 12~24시 그리드 */}
-        <div className="flex flex-col w-[80%] mt-4">
+        <div className="flex flex-col w-[80%] mt-4 ">
           {/* 시간 표시 */}
           <div className="flex justify-between w-full mb-1 ">
             {Array.from({ length: 13 }).map((_, index) => (
@@ -276,7 +276,7 @@ const TimeResult = () => {
           </div>
         </div>
       </div>
-      <div className="bottom-0 flex justify-between w-full gap-4 pt-6">
+      <div className="bottom-0 flex justify-between w-full gap-4 mt-8">
         <button
           type="submit"
           className="h-14 primary-btn rounded-2xl bg-[#5786FF]"
