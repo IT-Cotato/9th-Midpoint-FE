@@ -6,32 +6,25 @@
 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FIT-Cotato%2F9th-Midpoint-FE&count_bg=%231484DB&title_bg=%232F2E2E&icon=googlemaps.svg&icon_color=%23FBFBFB&title=%EC%A4%91%EA%B0%84%EC%A7%80%EC%A0%90%EC%B0%BE%EA%B8%B0&edge_flat=false)](https://hits.seeyoufarm.com)
 
-### 서비스 URL : [https://cotato-midpoint.site](https://cotato-midpoint.site)
-# 👋 팀원 소개
+###  [👉🏻 Syncspot 바로가기](https://cotato-midpoint.site)
+<br/>
 
-## Front-End
+## 👋 Front-End Member
 
-| 이름                                         | 기수   | Email                |
-| -------------------------------------------- | ------ | -------------------- |
-| [김태윤](https://github.com/Cllaude99)       | 8기 | cllaude1025@gmail.com |
-| [채다희](https://github.com/chae-dahee) |  8기 | cdh010126r@gmail.com |
-
-
-# 🛠️ Stack
-
----
-
-## 1. 프로젝트 명
+## 💁🏻‍♂️ Members
+|                           <a href="https://github.com/Cllaude99"><img src="https://github.com/Cllaude99.png" width=120/></a>                           |                          <a href="https://github.com/chae-dahee"><img src="https://github.com/chae-dahee.png" width=120/></a>                     |
+|:-----------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|
+|김태윤|채다희|:-----------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|
+| [ 8기 FE ] | [ 8기 FE ]  |
 
 
-## 2. 프로젝트 소개
+## 🛠️ Tech Stack
 
+[![My Skills](https://skillicons.dev/icons?i=html,css,js,ts,react,vite,styledcomponents,tailwind,npm,nodejs,jest)](https://skillicons.dev)
 
-## 3. 프로젝트 구조도
+## 🔨 Tools
 
-
-## 4. 화면 설명
-
+[![My Skills](https://skillicons.dev/icons?i=git,github,figma,notion,discord,vscode)](https://skillicons.dev)
 
 ---
 
