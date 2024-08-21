@@ -208,7 +208,7 @@ export default function LocationAlone() {
                 </h2>
                 <div className="relative w-full overflow-x-auto">
                   <div
-                    className={`flex items-center min-w-full min-h-10 h-12 px-3 bg-white w-max border-none rounded-xl cursor-pointer ${
+                    className={`flex items-center min-w-full h-14 px-3 bg-white w-max border-none rounded-xl cursor-pointer ${
                       watch(`friendList.${index}.roadNameAddress`) ? 'text-black' : 'text-gray-500'
                     }`}
                     onClick={() => openAddressSearch(index)}
@@ -227,7 +227,7 @@ export default function LocationAlone() {
             <button
               type="button"
               onClick={() => append(default_format)}
-              className="w-full rounded-lg primary-btn min-h-10"
+              className="w-full rounded-2xl primary-btn min-h-14"
             >
               친구 추가하기
             </button>

@@ -121,7 +121,7 @@ const FristCalendar: React.FC<DatePickerProps> = ({ isValue, selectedDates, onDa
         <button
           onClick={() => gotoVote(isTimeVoteRoomExists)}
           disabled={isValue}
-          className="h-12 min-h-10 primary-btn rounded-2xl disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
+          className="h-14 primary-btn rounded-2xl disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
         >
           {isValue ? '날짜를 클릭하세요' : '다음'}
         </button>
@@ -150,13 +150,17 @@ const ContainerBox = styled.div`
 const StyledCalendar = styled(Calendar)`
   width: 80%;
   height: 100%;
-  // background: #f8f8fb;
   border: none;
   border-radius: 10px;
   margin-top: 10px;
 
-  //전체 폰트 컬러
+  //전체 영역
   .react-calendar__month-view {
+    display: flex;
+    width: 70%;
+    margin: 0 auto;
+    margin-right: 8.3rem;
+    padding-left: 3rem;
     abbr {
       color: #15254d;
     }
@@ -172,7 +176,6 @@ const StyledCalendar = styled(Calendar)`
   }
   .react-calendar__navigation:enabled:hover {
     background-color: #5786ff !important;
-    border-radius: 5px !important;
   }
 
   //요일 색, 밑줄
@@ -182,31 +185,41 @@ const StyledCalendar = styled(Calendar)`
   .react-calendar__month-view__weekdays__weekday abbr[title='토요일'] {
     color: #5786ff;
   }
+  //요일 영역
+  .react-calendar__month-view__weekdays {
+    flex: 0 0 13% !important;
+    max-width: 100%;
+    
+  }
   .react-calendar__month-view__weekdays abbr {
     text-decoration: none;
     font-weight: 800;
   }
 
+  // 타일 영역
+  .react-calendar__month-view__days {
+    background: transparent;
+  }
   //일 스타일
   .react-calendar__tile {
-    max-width: initial !important;
-    border-radius: 5px; /* 모든 날짜 타일을 동그랗게 */
+    border-radius: 12px;
     cursor: pointer;
+    height: 60px;
+    max-width: 60px;
+
+    overflow: hidden;
+    box-sizing: border-box;
+    margin: 5px;
+    background: #f8f8fb;
 
     &:hover {
       background: #5786ff;
       color: white;
-      border-radius: 5px;
+      border-radius: 12px;
     }
-  }
-  //일 날짜 간격
-  .react-calendar__tile {
-    padding: 5px 0px 30px;
-    position: relative;
   }
   //일 오늘 날짜
   .react-calendar__tile--now {
-    background: none;
     abbr {
       color: #5c76ff;
     }
@@ -216,14 +229,14 @@ const StyledCalendar = styled(Calendar)`
   .react-calendar__tile:enabled:hover,
   .react-calendar__tile:enabled:focus {
     background-color: #377bff !important; /* 클릭한 날짜 색상 */
-    border-radius: 5px !important;
+    border-radius: 12px !important;
   }
 
   /* 클릭된 날짜 (현재 선택된 날짜) */
   .react-calendar__tile--active,
   .selected {
     background-color: #bcd7ff !important; /* 클릭된 날짜 색상 */
-    border-radius: 5px !important;
+    border-radius: 12px !important;
   }
 
   /* 클릭한 날짜의 텍스트 색상 */

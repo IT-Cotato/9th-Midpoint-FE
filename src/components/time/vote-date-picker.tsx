@@ -173,7 +173,7 @@ export const TimeSelect = ({ onChange, initialHour, initialMinute, isChecked }: 
     <SelectCustom>
       <div className="relative inline-block w-22">
         <select
-          className={`duration-200 h-10transition rounded-xl custom-select focus:outline-none focus:border-transparent border-0 ${isChecked ? 'text-[#15254D]' : 'text-[#B7BDCC]'}`}
+          className={`duration-200 h-10 transition rounded-xl custom-select focus:outline-none focus:border-transparent border-0 ${isChecked ? 'text-[#15254D]' : 'text-[#B7BDCC]'}`}
           value={hour}
           onChange={handleHourChange}
         >

@@ -10,7 +10,7 @@ export default function Button({ text, isLoading, isMoreMessage, isMore, onClick
   return (
     <button
       type="submit"
-      className="min-h-10 primary-btn disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
+      className="min-h-14 primary-btn disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed rounded-2xl"
       disabled={isLoading || isMore}
       onClick={onClick}
     >
