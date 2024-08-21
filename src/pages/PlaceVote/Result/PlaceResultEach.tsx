@@ -74,14 +74,14 @@ export default function PlaceResultAlone() {
         <div className="flex justify-center w-full gap-3 p-3 mt-7">
           <button
             type="button"
-            className="w-full py-3 font-semibold text-white transition-colors rounded-2xl min-h-10 primary-btn"
+            className="w-full py-3 font-semibold text-white transition-colors rounded-2xl h-14 primary-btn"
             onClick={() => navigate(`/page/a/place-vote/${roomId}`)}
           >
             투표 다시하기
           </button>
           <button
             type="button"
-            className="w-full py-3 font-semibold text-gray-600 transition-colors bg-gray-300 rounded-2xl hover:bg-gray-400"
+            className="w-full py-3 font-semibold text-gray-600 transition-colors bg-gray-300 h-14 rounded-2xl hover:bg-gray-400"
             onClick={() => navigate(`/page/a/create/place-vote-room/${roomId}`)}
           >
             투표 재생성하기

@@ -74,7 +74,7 @@ export default function PlaceResultAlone() {
         <div className="flex justify-center w-full gap-3 p-3 mt-7">
           <button
             type="button"
-            className="w-full py-3 font-semibold text-white transition-colors rounded-2xl min-h-10 primary-btn"
+            className="w-full py-3 font-semibold text-white transition-colors rounded-2xl min-h-14 primary-btn"
             onClick={() => navigate(`/page/a/place-vote/${roomId}`)}
           >
             투표 다시하기
