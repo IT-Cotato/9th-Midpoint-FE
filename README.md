@@ -4,7 +4,7 @@
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FIT-Cotato%2F9th-Midpoint-FE&count_bg=%231484DB&title_bg=%232F2E2E&icon=googlemaps.svg&icon_color=%23FBFBFB&title=%EC%A4%91%EA%B0%84%EC%A7%80%EC%A0%90%EC%B0%BE%EA%B8%B0&edge_flat=false)](https://hits.seeyoufarm.com)
 
 ## 📌 syncspot
-### 모두가 편하게 만날 수 있는 지름길, Syncspot! <br/>
+### 모두가 편하게 만날 수 있는 지름길, Syncspot!<br/>
 
 <p>모두가 편안하게 즐길 수 있는 만남을 위해 친구들과 내 위치의 중간 지점을 찾아주고 만날 장소를 추천하는 서비스</p>
 
