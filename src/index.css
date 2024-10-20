@@ -2,14 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    overflow-x: hidden;
-  }
+@font-face {
+  font-family: SUIT;
+  font-weight: 400;
+  src:
+    local('SUIT'),
+    url('./assets/fonts/SUIT-Regular.woff2') format('woff2');
 }
 
-@layer components {
-  .primary-btn {
-    @apply w-full bg-[#5786FF] text-white font-medium rounded-lg text-center hover:bg-blue-400 transition-colors;
-  }
+@font-face {
+  font-family: SUIT;
+  font-weight: 500;
+  src:
+    local('SUIT'),
+    url('./assets/fonts/SUIT-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: SUIT;
+  font-weight: 700;
+  src:
+    local('SUIT'),
+    url('./assets/fonts/SUIT-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Pretendard;
+  font-weight: 400;
+  src:
+    local('Pretendard Regular'),
+    url('./assets/fonts/Pretendard-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Pretendard;
+  font-weight: 500;
+  src:
+    local('Pretendard Medium'),
+    url('./assets/fonts/Pretendard-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Pretendard;
+  font-weight: 700;
+  src:
+    local('Pretendard Bold'),
+    url('./assets/fonts/Pretendard-Bold.woff2') format('woff2');
 }
