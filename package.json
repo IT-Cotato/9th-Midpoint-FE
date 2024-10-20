@@ -2,7 +2,7 @@
   "name": "mid-point-fe",
   "private": true,
   "version": "0.0.0",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "test": "jest",
@@ -27,8 +27,7 @@
     "styled-components": "^6.1.8",
     "styled-reset": "^4.5.2",
     "vite-plugin-svgr": "^4.2.0",
-    "yup": "^1.4.0",
-    "zustand": "^4.5.2"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5",
