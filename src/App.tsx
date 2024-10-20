@@ -1,19 +1,26 @@
-import { ThemeProvider } from 'styled-components';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './routes/router.tsx';
-import { theme } from './styles/shared/theme.ts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'react-toastify/dist/ReactToastify.css';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      throwOnError: true,
+    },
+    mutations: {
+      retry: 1,
+      throwOnError: true,
+    },
+  },
+});
 
 function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <RouterProvider router={router} />
-        </ThemeProvider>
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </>
   );
