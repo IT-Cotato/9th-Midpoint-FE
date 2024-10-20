@@ -35,10 +35,12 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
   }
 
   function handleCopyClicked() {
-    navigator.clipboard.writeText(`https://cotato-midpoint.site/page/e/results/${roomId}`).then(() => {
-      setCopyClicked(true);
-      setTimeout(() => setCopyClicked(false), 1000);
-    });
+    navigator.clipboard
+      .writeText(`https://cotato-midpoint.site/page/e/results/${roomId}`)
+      .then(() => {
+        setCopyClicked(true);
+        setTimeout(() => setCopyClicked(false), 1000);
+      });
   }
 
   async function handleNextBtn() {
@@ -46,25 +48,15 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('roomId');
     if (selectedOption === 'friend') {
-      const { data } = await axios.post(
-        BACKEND_URL + '/api/rooms',
-        {
-          roomType: ROOM_TYPE_EACH,
-        },
-        { withCredentials: true },
-      );
+      const { data } = await axios.post(BACKEND_URL + '/api/rooms', {
+        roomType: ROOM_TYPE_EACH,
+      });
       setRoomId(data.data.id);
       setCurrentView('shareLink');
     } else {
-      const { data } = await axios.post(
-        BACKEND_URL + '/api/rooms',
-        {
-          roomType: ROOM_TYPE_ALONE,
-        },
-        {
-          withCredentials: true,
-        },
-      );
+      const { data } = await axios.post(BACKEND_URL + '/api/rooms', {
+        roomType: ROOM_TYPE_ALONE,
+      });
       const newRoomId = data.data.id;
       navigate(`/page/a/results/${newRoomId}`);
     }
@@ -78,17 +70,26 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
         animate={{ opacity: 1, scale: 1, transition: { type: 'tween' } }}
         exit={{ opacity: 0, scale: 0.8 }}
       >
-        <XMarkIcon className="absolute text-gray-500 cursor-pointer size-7 top-2 right-2" onClick={handleCloseModal} />
+        <XMarkIcon
+          className="absolute text-gray-500 cursor-pointer size-7 top-2 right-2"
+          onClick={handleCloseModal}
+        />
         <AnimatePresence initial={false}>
           {currentView === 'alone' && (
             <motion.div className="flex flex-col items-center flex-grow w-full gap-4">
               <VoteLogo className="size-11" />
-              <h2 className="text-2xl font-semibold text-[#1A3C95]">어떤 방법으로 장소를 결정할까요?</h2>
-              <h2 className="mb-4 text-lg text-[#5E6D93]">편한 방식으로 모임 장소를 결정할 수 있어요!</h2>
+              <h2 className="text-2xl font-semibold text-[#1A3C95]">
+                어떤 방법으로 장소를 결정할까요?
+              </h2>
+              <h2 className="mb-4 text-lg text-[#5E6D93]">
+                편한 방식으로 모임 장소를 결정할 수 있어요!
+              </h2>
               <div className="flex w-full gap-4">
                 <motion.div
                   className={`flex flex-col items-center  p-2 h-[230px] rounded-lg cursor-pointer w-1/2 bg-white ${
-                    selectedOption === 'alone' ? 'ring-4 ring-blue-400 bg-blue-200' : 'border-gray-300'
+                    selectedOption === 'alone'
+                      ? 'ring-4 ring-blue-400 bg-blue-200'
+                      : 'border-gray-300'
                   }`}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleOptionClick('alone')}
@@ -96,24 +97,34 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
                   <span className="mt-2 text-[#5E6D93]">친구들의 위치를</span>
                   <span className="mb-3 text-[#5E6D93]">모두 알고 있다면?</span>
                   <AloneLogo className="my-3 size-16" />
-                  <p className="font-semibold text-[#1A3C95] text-xl mt-3">내가 모두 입력하기</p>
+                  <p className="font-semibold text-[#1A3C95] text-xl mt-3">
+                    내가 모두 입력하기
+                  </p>
                 </motion.div>
                 <motion.div
                   className={`flex flex-col items-center p-2  rounded-lg cursor-pointer w-1/2 bg-white ${
-                    selectedOption === 'friend' ? 'ring-4 ring-blue-400 bg-blue-200' : 'border-gray-300'
+                    selectedOption === 'friend'
+                      ? 'ring-4 ring-blue-400 bg-blue-200'
+                      : 'border-gray-300'
                   }`}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleOptionClick('friend')}
                 >
                   <span className="mt-2 text-[#5E6D93]">친구들과 함께</span>
-                  <span className="mb-3 text-[#5E6D93]">장소를 결정하려면?</span>
+                  <span className="mb-3 text-[#5E6D93]">
+                    장소를 결정하려면?
+                  </span>
                   <FriendLogo className="my-3 size-16" />
-                  <p className="font-semibold text-[#1A3C95] text-xl mt-3">친구에게 공유하기</p>
+                  <p className="font-semibold text-[#1A3C95] text-xl mt-3">
+                    친구에게 공유하기
+                  </p>
                 </motion.div>
               </div>
               <button
                 className={`absolute bottom-5 w-[90%] py-2 rounded-2xl h-14 text-white transition-colors text-xl  hover:bg-blue-400 ${
-                  selectedOption ? 'bg-blue-500 cursor-pointer' : 'bg-gray-300 cursor-not-allowed'
+                  selectedOption
+                    ? 'bg-blue-500 cursor-pointer'
+                    : 'bg-gray-300 cursor-not-allowed'
                 }`}
                 onClick={handleNextBtn}
                 disabled={!selectedOption}
@@ -125,7 +136,9 @@ export default function PlaceModal({ isOpen, onClose }: ModalProps) {
           {currentView === 'shareLink' && (
             <motion.div className="flex flex-col items-center w-full gap-2 mt-8">
               <SharePin className="mb-4 size-12" />
-              <h2 className="mb-4 text-2xl font-semibold text-[#1A3C95]">친구들에게 링크 공유하기</h2>
+              <h2 className="mb-4 text-2xl font-semibold text-[#1A3C95]">
+                친구들에게 링크 공유하기
+              </h2>
               <p className="flex flex-col items-center mb-6 text-lg text-[#5E6D93]">
                 <span>링크를 공유하면 각자 위치를 입력한 후</span>
                 <span>투표를 통해 중간 지점을 결정할 수 있어요!</span>
