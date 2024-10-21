@@ -3,18 +3,7 @@ import { router } from './routes/router.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'react-toastify/dist/ReactToastify.css';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      throwOnError: true,
-    },
-    mutations: {
-      retry: 1,
-      throwOnError: true,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 function App() {
   return (
