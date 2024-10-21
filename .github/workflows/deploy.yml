@@ -18,14 +18,13 @@ jobs:
           node-version: 20.10.0
           cache: npm
       - run: npm ci
-      
+
       - name: Set Environment Variables
         run: |
           echo "VITE_BACKEND_URI=${{ secrets.VITE_BACKEND_URI }}" >> $GITHUB_ENV
           echo "VITE_KAKAO_REST_API_KEY=${{ secrets.VITE_KAKAO_REST_API_KEY }}" >> $GITHUB_ENV
           echo "VITE_KAKAO_JAVASCRIPT_KEY=${{ secrets.VITE_KAKAO_JAVASCRIPT_KEY }}" >> $GITHUB_ENV
-          
-            
+
       - run: npm run build
 
       - name: deploy to s3
