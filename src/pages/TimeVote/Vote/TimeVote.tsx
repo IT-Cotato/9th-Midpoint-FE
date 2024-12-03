@@ -1,9 +1,19 @@
-import VoteCalendar, { DateTimeOption, formatTime, Time } from '@/components/time/vote-calendar';
+import VoteCalendar, {
+  DateTimeOption,
+  formatTime,
+  Time,
+} from '@/components/time/vote-calendar';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { Value, ValuePiece } from '../Time/time';
-import { checkVoteCreate, IDatePayload, postVoteTime, rePostVoteTime, resultVoteRoom } from '@/apis/time-vote.api';
+import { Value, ValuePiece } from './Create/time';
+import {
+  checkVoteCreate,
+  IDatePayload,
+  postVoteTime,
+  rePostVoteTime,
+  resultVoteRoom,
+} from '@/apis/time-vote.api';
 import { defineRoomType } from '@/components/time/calendar';
 import ClockIcon from '@/assets/imgs/Time/time-clock-icon.svg?react';
 import { DateOption } from '@/components/time/vote-date-picker';
@@ -24,7 +34,10 @@ export interface ResultResponse {
   totalMemberNum: number;
 }
 
-export type VoteDateInfo = Pick<ResultResponse['result'][string][0], 'memberName' | 'dateTime'>;
+export type VoteDateInfo = Pick<
+  ResultResponse['result'][string][0],
+  'memberName' | 'dateTime'
+>;
 
 const TimeVote = () => {
   const navigate = useNavigate();
@@ -52,9 +65,15 @@ const TimeVote = () => {
         const res = await checkVoteCreate({ roomId, roomType, navigate });
         if (res.existence && res.dates && res.dates.length > 0) {
           //투표가능날짜 받아오기
-          queryClient.invalidateQueries({ queryKey: ['timeVoteRoomExists', roomId] });
+          queryClient.invalidateQueries({
+            queryKey: ['timeVoteRoomExists', roomId],
+          });
           setSelectedDates(res.dates.map((date: string) => new Date(date)));
-          const result: ResultResponse = await resultVoteRoom({ roomId, roomType, navigate });
+          const result: ResultResponse = await resultVoteRoom({
+            roomId,
+            roomType,
+            navigate,
+          });
           setResultRes(result);
         } else {
           navigate(`/page/${roomTypeUrl}/create/time-vote-room/${roomId}`);
@@ -70,7 +89,9 @@ const TimeVote = () => {
     setDateTimeOptions((prev) => {
       const existingOption = prev.find((option) => option.date === date);
       if (existingOption) {
-        return prev.map((option) => (option.date === date ? { ...option, startTime, endTime } : option));
+        return prev.map((option) =>
+          option.date === date ? { ...option, startTime, endTime } : option,
+        );
       } else {
         return [...prev, { date, startTime, endTime }];
       }
@@ -88,7 +109,14 @@ const TimeVote = () => {
           memberAvailableEndTime,
         };
       })
-      .filter((item): item is { memberAvailableStartTime: string; memberAvailableEndTime: string } => item !== null);
+      .filter(
+        (
+          item,
+        ): item is {
+          memberAvailableStartTime: string;
+          memberAvailableEndTime: string;
+        } => item !== null,
+      );
 
     if (!dateTimePayload.length) {
       toast.error('참석 일시를 투표해주세요!', { position: 'top-center' });
@@ -96,10 +124,13 @@ const TimeVote = () => {
     }
 
     const hasInvalidTime = dateTimePayload.some(
-      ({ memberAvailableStartTime, memberAvailableEndTime }) => memberAvailableStartTime >= memberAvailableEndTime,
+      ({ memberAvailableStartTime, memberAvailableEndTime }) =>
+        memberAvailableStartTime >= memberAvailableEndTime,
     );
     if (hasInvalidTime) {
-      toast.error('시간대를 다시 한번 확인해주세요!', { position: 'top-center' });
+      toast.error('시간대를 다시 한번 확인해주세요!', {
+        position: 'top-center',
+      });
       return;
     }
 
@@ -136,7 +167,10 @@ const TimeVote = () => {
   // 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (componentRef.current && !componentRef.current.contains(event.target as Node)) {
+      if (
+        componentRef.current &&
+        !componentRef.current.contains(event.target as Node)
+      ) {
         setClickedDate(null);
       }
     };
@@ -162,7 +196,11 @@ const TimeVote = () => {
         {Array.isArray(selectedDates) &&
           selectedDates.map((date, index) => (
             <DateOption
-              key={date instanceof Date ? date.toISOString() : `invalid-date-${index}`}
+              key={
+                date instanceof Date
+                  ? date.toISOString()
+                  : `invalid-date-${index}`
+              }
               date={date}
               onTimeChange={handleTimeChange}
               roomId={roomId}
@@ -171,7 +209,10 @@ const TimeVote = () => {
           ))}
         <div className="h-14"></div>
         <div className="absolute bottom-2 w-[95%] mx-auto">
-          <button className="h-14 rounded-2xl primary-btn bg-[#5786FF]" onClick={handleVote}>
+          <button
+            className="h-14 rounded-2xl primary-btn bg-[#5786FF]"
+            onClick={handleVote}
+          >
             투표하기
           </button>
         </div>
