@@ -1,4 +1,4 @@
-import { Value, ValuePiece } from '@/pages/Time/time';
+import { Value, ValuePiece } from '@/pages/TimeVote/Create/TimeCreate';
 import React, { useEffect, useState } from 'react';
 import { formatTime, Time } from './vote-calendar';
 import { checkVoted } from '@/apis/time-vote.api';
@@ -15,7 +15,12 @@ interface DateOptionProps {
   setVoteExistence: (exists: boolean) => void;
 }
 
-export const DateOption = ({ date, onTimeChange, roomId, setVoteExistence }: DateOptionProps) => {
+export const DateOption = ({
+  date,
+  onTimeChange,
+  roomId,
+  setVoteExistence,
+}: DateOptionProps) => {
   const navigate = useNavigate();
 
   const [isChecked, setIsChecked] = useState(false);
@@ -38,11 +43,23 @@ export const DateOption = ({ date, onTimeChange, roomId, setVoteExistence }: Dat
           };
 
           const formattedMyVotes = isVoted.myVotes.map(
-            (vote: { memberAvailableStartTime: string; memberAvailableEndTime: string }) => {
-              if (vote.memberAvailableStartTime && vote.memberAvailableEndTime) {
+            (vote: {
+              memberAvailableStartTime: string;
+              memberAvailableEndTime: string;
+            }) => {
+              if (
+                vote.memberAvailableStartTime &&
+                vote.memberAvailableEndTime
+              ) {
                 const [dateString] = vote.memberAvailableStartTime.split(' '); // 날짜 부분 추출
-                const [startHour, startMinute] = vote.memberAvailableStartTime.split(' ')[1].split(':').map(Number);
-                const [endHour, endMinute] = vote.memberAvailableEndTime.split(' ')[1].split(':').map(Number);
+                const [startHour, startMinute] = vote.memberAvailableStartTime
+                  .split(' ')[1]
+                  .split(':')
+                  .map(Number);
+                const [endHour, endMinute] = vote.memberAvailableEndTime
+                  .split(' ')[1]
+                  .split(':')
+                  .map(Number);
 
                 return {
                   votedDate: dateString,
@@ -61,13 +78,19 @@ export const DateOption = ({ date, onTimeChange, roomId, setVoteExistence }: Dat
           );
 
           const matchVotedDates = formattedMyVotes.filter(
-            (vote: Vote) => vote.votedDate === (date instanceof Date ? date.toISOString().split('T')[0] : date),
+            (vote: Vote) =>
+              vote.votedDate ===
+              (date instanceof Date ? date.toISOString().split('T')[0] : date),
           );
           if (matchVotedDates.length > 0) {
             setIsChecked(true);
             const todayVote = matchVotedDates[0];
-            const [startHour, startMinute] = todayVote.startTime.split(':').map(Number);
-            const [endHour, endMinute] = todayVote.endTime.split(':').map(Number);
+            const [startHour, startMinute] = todayVote.startTime
+              .split(':')
+              .map(Number);
+            const [endHour, endMinute] = todayVote.endTime
+              .split(':')
+              .map(Number);
 
             setStartTime({ hour: startHour, minute: startMinute });
             setEndTime({ hour: endHour, minute: endMinute });
@@ -107,14 +130,21 @@ export const DateOption = ({ date, onTimeChange, roomId, setVoteExistence }: Dat
     >
       <div className="flex items-center mb-2 ml-2 pointer-events-auto">
         <label className="flex items-center cursor-pointer">
-          <input type="checkbox" className="hidden" checked={isChecked} onChange={handleCheckboxChange} />
+          <input
+            type="checkbox"
+            className="hidden"
+            checked={isChecked}
+            onChange={handleCheckboxChange}
+          />
           {isChecked ? (
             <Checked className="w-5 h-5" />
           ) : (
             <span className="w-5 h-5 bg-[#F8F8FB] border-0 rounded-full" />
           )}
         </label>
-        <span className={`mx-2.5 ${isChecked ? 'text-[#15254D]' : 'text-[#B7BDCC]'}`}>
+        <span
+          className={`mx-2.5 ${isChecked ? 'text-[#15254D]' : 'text-[#B7BDCC]'}`}
+        >
           {date instanceof Date
             ? `${date.toLocaleDateString('ko-KR', { month: 'numeric' })} ${date.toLocaleDateString('ko-KR', { day: 'numeric' })}`
             : '날짜없음'}
@@ -146,7 +176,12 @@ interface TimeSelectProps {
   isChecked: boolean;
 }
 
-export const TimeSelect = ({ onChange, initialHour, initialMinute, isChecked }: TimeSelectProps) => {
+export const TimeSelect = ({
+  onChange,
+  initialHour,
+  initialMinute,
+  isChecked,
+}: TimeSelectProps) => {
   const [hour, setHour] = useState(initialHour);
   const [minute, setMinute] = useState(initialMinute);
 

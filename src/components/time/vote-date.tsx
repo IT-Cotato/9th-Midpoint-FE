@@ -1,5 +1,5 @@
-import { ValuePiece } from '@/pages/Time/time';
-import { VoteDateInfo } from '@/pages/TimeVote/time-vote';
+import { ValuePiece } from '@/pages/TimeVote/Create/TimeCreate';
+import { VoteDateInfo } from '@/pages/TimeVote/Vote/TimeVote';
 import styled from 'styled-components';
 
 const VoteDate = ({
@@ -15,7 +15,11 @@ const VoteDate = ({
     <VoteDateStyle>
       {clickedDate && (
         <DateInfo>
-          {noVotes && <p className="text-[#15254D] mx-auto text-base rounded-2xl">투표한 사람이 없습니다</p>}
+          {noVotes && (
+            <p className="text-[#15254D] mx-auto text-base rounded-2xl">
+              투표한 사람이 없습니다
+            </p>
+          )}
           {voteDateInfo.map((memberInfo, memberIndex) => (
             <div
               key={memberIndex}
@@ -26,7 +30,8 @@ const VoteDate = ({
               </div>
               <div className="w-full text-center bg-white rounded-[15px] p-3 mx-auto ml-2">
                 {memberInfo?.dateTime?.map((timeSlot, timeIndex) => {
-                  const startTime = timeSlot.memberAvailableStartTime.split(' ')[1];
+                  const startTime =
+                    timeSlot.memberAvailableStartTime.split(' ')[1];
                   const endTime = timeSlot.memberAvailableEndTime.split(' ')[1];
 
                   const [startHour, startMinute] = startTime.split(':');

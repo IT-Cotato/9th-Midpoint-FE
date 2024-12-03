@@ -6,7 +6,6 @@ import VoteCalendar, {
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { Value, ValuePiece } from './Create/time';
 import {
   checkVoteCreate,
   IDatePayload,
@@ -20,6 +19,7 @@ import { DateOption } from '@/components/time/vote-date-picker';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Value, ValuePiece } from '../Create/TimeCreate';
 
 export interface ResultResponse {
   result: {

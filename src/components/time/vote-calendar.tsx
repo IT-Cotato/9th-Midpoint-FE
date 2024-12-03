@@ -4,9 +4,9 @@ import Calendar from 'react-calendar';
 
 import 'react-calendar/dist/Calendar.css';
 import CalIcon from '@/assets/imgs/Time/time-calItem-icon1.svg?react';
-import { Value, ValuePiece } from '@/pages/Time/time';
+import { Value, ValuePiece } from '@/pages/TimeVote/Create/TimeCreate';
 import VoteDate from './vote-date';
-import { ResultResponse, VoteDateInfo } from '@/pages/TimeVote/time-vote';
+import { ResultResponse, VoteDateInfo } from '@/pages/TimeVote/Vote/TimeVote';
 
 // 타입 정의
 export interface DateTimeOption {
@@ -29,14 +29,21 @@ interface VoteCalendarProps {
 
 export const formatTime = (time: number) => (time < 10 ? `0${time}` : time);
 
-const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, clickedDate, setClickedDate }) => {
+const VoteCalendar: React.FC<VoteCalendarProps> = ({
+  selectedDates,
+  resultRes,
+  clickedDate,
+  setClickedDate,
+}) => {
   const [voteDateInfo, setVoteDateInfo] = useState<VoteDateInfo[]>([]);
   const [noVotes, setNoVotes] = useState(true);
 
   const handleDateClick = (date: Value | ValuePiece) => {
     if (date instanceof Date) {
       const isSelected = selectedDates.some(
-        (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+        (selectedDate) =>
+          selectedDate instanceof Date &&
+          selectedDate.toDateString() === date.toDateString(),
       );
 
       if (isSelected) {
@@ -88,20 +95,26 @@ const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, c
             minDetail="year" // 10년단위 년도 숨기기
             tileClassName={({ date }) =>
               selectedDates.some(
-                (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+                (selectedDate) =>
+                  selectedDate instanceof Date &&
+                  selectedDate.toDateString() === date.toDateString(),
               )
                 ? 'selected'
                 : ''
             }
             tileDisabled={({ date }) =>
               !selectedDates.some(
-                (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+                (selectedDate) =>
+                  selectedDate instanceof Date &&
+                  selectedDate.toDateString() === date.toDateString(),
               )
             }
             onClickDay={(date) => {
               if (
                 selectedDates.some(
-                  (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+                  (selectedDate) =>
+                    selectedDate instanceof Date &&
+                    selectedDate.toDateString() === date.toDateString(),
                 )
               ) {
                 handleDateClick(date);
@@ -109,7 +122,13 @@ const VoteCalendar: React.FC<VoteCalendarProps> = ({ selectedDates, resultRes, c
             }}
           />
         </ContainerItem>
-        {clickedDate && <VoteDate clickedDate={clickedDate} voteDateInfo={voteDateInfo} noVotes={noVotes} />}
+        {clickedDate && (
+          <VoteDate
+            clickedDate={clickedDate}
+            voteDateInfo={voteDateInfo}
+            noVotes={noVotes}
+          />
+        )}
       </div>
     </>
   );

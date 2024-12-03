@@ -3,8 +3,12 @@ import styled from 'styled-components';
 import CalItemIcon from '@/assets/imgs/Time/time-calItem-icon1.svg?react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { Value } from '@/pages/Time/time';
-import { checkVoteRoom, createVoteRoom, recreateVoteRoom } from '@/apis/time-vote.api';
+import { Value } from '@/pages/TimeVote/Create/TimeCreate';
+import {
+  checkVoteRoom,
+  createVoteRoom,
+  recreateVoteRoom,
+} from '@/apis/time-vote.api';
 import { useMatch, useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from '@/constants';
@@ -30,7 +34,11 @@ export const defineRoomType = (): { roomType: string; roomTypeUrl: string } => {
   return { roomType, roomTypeUrl };
 };
 
-const FristCalendar: React.FC<DatePickerProps> = ({ isValue, selectedDates, onDateChange }) => {
+const FristCalendar: React.FC<DatePickerProps> = ({
+  isValue,
+  selectedDates,
+  onDateChange,
+}) => {
   const navigate = useNavigate();
   const { roomId } = useParams<{ roomId: string }>();
   const { roomType, roomTypeUrl } = defineRoomType();
@@ -78,10 +86,14 @@ const FristCalendar: React.FC<DatePickerProps> = ({ isValue, selectedDates, onDa
       try {
         if (!isTimeVoteRoomExists) {
           await createVoteRoom({ roomId, dates, roomType, navigate });
-          queryClient.invalidateQueries({ queryKey: ['timeVoteRoomExists', roomId] });
+          queryClient.invalidateQueries({
+            queryKey: ['timeVoteRoomExists', roomId],
+          });
         } else {
           await recreateVoteRoom({ roomId, dates, roomType, navigate });
-          queryClient.invalidateQueries({ queryKey: ['timeVoteRoomExists', roomId] });
+          queryClient.invalidateQueries({
+            queryKey: ['timeVoteRoomExists', roomId],
+          });
         }
 
         navigate(`/page/${roomTypeUrl}/time-vote/${roomId}`);
@@ -109,7 +121,9 @@ const FristCalendar: React.FC<DatePickerProps> = ({ isValue, selectedDates, onDa
             minDetail="year" // 10년단위 년도 숨기기
             tileClassName={({ date }) =>
               selectedDates.some(
-                (selectedDate) => selectedDate instanceof Date && selectedDate.toDateString() === date.toDateString(),
+                (selectedDate) =>
+                  selectedDate instanceof Date &&
+                  selectedDate.toDateString() === date.toDateString(),
               )
                 ? 'selected'
                 : ''
