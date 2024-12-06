@@ -1,10 +1,14 @@
-import { fetchExistence } from '@/apis/existence';
+import { getRoomExistence } from '@/apis/existence.api';
 import Loading from '@/pages/Loading/loading';
 import NotFound from '@/pages/NotFound/not-found';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+export default function ProtectedRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { roomId } = useParams<{ roomId: string }>();
   const {
     data: exists,
@@ -12,12 +16,19 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     isError,
   } = useQuery({
     queryKey: ['existence', roomId],
-    queryFn: () => fetchExistence(roomId!),
+    queryFn: () => getRoomExistence(roomId!),
     enabled: !!roomId,
   });
 
   if (isPending) return <Loading />;
-  if (isError || !exists?.existence || !Boolean(roomId)) return <NotFound />;
+  if (isError) {
+    return <NotFound />;
+  }
 
+  const isLoggedIn = Boolean(localStorage.getItem('accessToken'));
+
+  if (!isLoggedIn || !exists?.existence) {
+    return <Navigate to="/page/login" replace />;
+  }
   return children;
 }

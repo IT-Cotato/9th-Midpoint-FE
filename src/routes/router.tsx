@@ -1,29 +1,23 @@
-import LocationAlone from '@/pages/Location/location-alone';
 import NotFound from '@/pages/NotFound/not-found';
-import Time from '@/pages/Time/time';
 import { createBrowserRouter } from 'react-router-dom';
-import LocationEach from '@/pages/Location/location-each';
-import Home from '@/pages/Home/home';
 import Login from '@/pages/Login/login';
-import MidpointAloneResult from '@/pages/MidpointResult/MidpointAloneResult';
-import MidpointEachResult from '@/pages/MidpointResult/MidpointEachResult';
 import ProtectedRoute from '@/components/Layout/ProtectedRoute';
 import Layout from '@/components/Layout/Layout';
-import TimeVote from '@/pages/TimeVote/time-vote';
-import RecommendEach from '@/pages/Recommend/RecommendEach';
-import RecommendAlone from '@/pages/Recommend/RecommendAlone';
-import TimeResult from '@/pages/TimeResult/time-result';
-import CreateAlone from '@/pages/PlaceVote/Create/CreateAlone';
-import CreateEach from '@/pages/PlaceVote/Create/CreateEach';
-import VoteAlone from '@/pages/PlaceVote/Vote/VoteAlone';
-import VoteEach from '@/pages/PlaceVote/Vote/VoteEach';
-import PlaceResultAlone from '@/pages/PlaceVote/Result/PlaceResultAlone';
-import PlaceResultEach from '@/pages/PlaceVote/Result/PlaceResultEach';
+import HomeRe from '@/pages/Home/homeRe';
+import Location from '@/pages/Location/Location';
+import LocationResult from '@/pages/Location/LocationResult';
+import Recommend from '@/pages/Location/Recommend';
+import PlaceCreate from '@/pages/PlaceVote/PlaceCreate';
+import PlaceVote from '@/pages/PlaceVote/PlaceVote';
+import PlaceResult from '@/pages/PlaceVote/PlaceResult';
+import TimeCreate from '@/pages/TimeVote/Create/TimeCreate';
+import TimeVote from '@/pages/TimeVote/Vote/TimeVote';
+import TimeResult from '@/pages/TimeVote/Result/TimeResult';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <HomeRe />,
   },
   {
     path: '/page',
@@ -34,79 +28,66 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: 'login/:roomId',
+        path: 'login',
         element: <Login />,
       },
       {
-        path: 'alone/:roomId',
-        element: <LocationAlone />,
+        path: 'signup',
+        element: <Login />,
       },
       {
-        path: 'each/:roomId',
-        element: <LocationEach />,
+        //방리스트
+        path: 'room-list',
+        element: <Login />,
       },
       {
-        path: 'a/results/:roomId',
-        element: <MidpointAloneResult />,
+        //방 상세 정보
+        path: 'room-list/:roomId',
+        element: <Login />,
       },
       {
-        path: 'e/results/:roomId',
-        element: <MidpointEachResult />,
+        //중간지점 입력
+        path: 'syncspot/:roomId',
+        element: <Location />,
       },
       {
-        path: 'a/results/:roomId/recommendations',
-        element: <RecommendAlone />,
+        //중간지점 결과
+        path: 'syncspot/results/:roomId',
+        element: <LocationResult />,
       },
       {
-        path: 'e/results/:roomId/recommendations',
-        element: <RecommendEach />,
+        //주변 장소 추천
+        path: 'syncspot/results/:roomId/recommendations',
+        element: <Recommend />,
       },
       {
-        path: 'a/create/place-vote-room/:roomId',
-        element: <CreateAlone />,
+        //장소투표 생성
+        path: 'place/create/:roomId',
+        element: <PlaceCreate />,
       },
       {
-        path: 'e/create/place-vote-room/:roomId',
-        element: <CreateEach />,
+        //장소투표
+        path: 'place/vote/:roomId',
+        element: <PlaceVote />,
       },
       {
-        path: 'a/place-vote/:roomId',
-        element: <VoteAlone />,
+        //장소투표 결과
+        path: 'place/results/:roomId',
+        element: <PlaceResult />,
       },
       {
-        path: 'e/place-vote/:roomId',
-        element: <VoteEach />,
+        //시간투표 생성
+        path: 'time/create/:roomId',
+        element: <TimeCreate />,
       },
       {
-        path: 'a/place-vote/results/:roomId',
-        element: <PlaceResultAlone />,
-      },
-      {
-        path: 'e/place-vote/results/:roomId',
-        element: <PlaceResultEach />,
-      },
-      {
-        path: 'a/create/time-vote-room/:roomId',
-        element: <Time />,
-      },
-      {
-        path: 'e/create/time-vote-room/:roomId',
-        element: <Time />,
-      },
-      {
-        path: 'a/time-vote/:roomId',
+        //시간투표
+        path: 'time/vote/:roomId',
         element: <TimeVote />,
       },
       {
-        path: 'e/time-vote/:roomId',
-        element: <TimeVote />,
-      },
-      {
-        path: 'a/time-vote/results/:roomId',
-        element: <TimeResult />,
-      },
-      {
-        path: 'e/time-vote/results/:roomId',
+        //시간투표 결과
+        path: 'time/results/:roomId',
         element: <TimeResult />,
       },
     ],
