@@ -15,9 +15,9 @@ import Button from '@/components/common/Button/button';
 
 export default function Login() {
   const location = useLocation();
-  
+
   const { roomId } = useParams();
-  
+
   const [formLoading, setFormLoading] = useState(false);
   const {
     register,
@@ -27,11 +27,11 @@ export default function Login() {
     mode: 'onChange',
     resolver: yupResolver(schema),
   });
-  
+
   const from = location.state?.from;
   const navigate = useNavigate();
   const setLoginState = useSetAtom(loginAtom);
-  
+
   const { mutate: userLogin } = useMutation({
     mutationFn: postLogin,
     onSuccess: (data: any) => {
@@ -133,7 +133,7 @@ export default function Login() {
             {errors.pw.message}
           </span>
         )}
-        <Button text="로그인" />
+        <Button text="로그인" isLoading={formLoading} />
       </form>
       <ToastContainer />
     </div>

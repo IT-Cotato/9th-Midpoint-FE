@@ -4,9 +4,8 @@ import { MdArrowLeft } from 'react-icons/md';
 import { MdArrowRight } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { defineRoomType } from '@/components/TimeVote/calendar';
-import { resultVote } from '@/apis/time-vote.api';
 import { useQueryClient } from '@tanstack/react-query';
+import { getTimeVotes } from '@/apis/time-vote.api';
 
 interface GridItem {
   id: number;
@@ -43,7 +42,6 @@ export const items: GridItem[] = [
 const TimeResult = () => {
   const navigate = useNavigate();
   const { roomId } = useParams<{ roomId: string }>();
-  const { roomType, roomTypeUrl } = defineRoomType();
   const queryClient = useQueryClient();
 
   const [maxId, setMaxId] = useState<number>(13);
@@ -75,7 +73,7 @@ const TimeResult = () => {
     const verifyRoomExistence = async () => {
       try {
         //투표가능날짜 받아오기
-        const result = await resultVote({ roomId, roomType, navigate });
+        const result = await getTimeVotes({ roomId });
         setResDates(result.result);
         setMaxId(result.totalMemberNum);
         queryClient.invalidateQueries({
@@ -302,16 +300,14 @@ const TimeResult = () => {
         <button
           type="submit"
           className="h-14 primary-btn rounded-2xl bg-[#5786FF]"
-          onClick={() => navigate(`/page/${roomTypeUrl}/time-vote/${roomId}`)}
+          onClick={() => navigate(`/page/time/vote/${roomId}`)}
         >
           투표 다시하기
         </button>
         <button
           type="submit"
           className="h-14 primary-btn rounded-2xl bg-[#B7BDCC] hover:bg-gray-400"
-          onClick={() =>
-            navigate(`/page/${roomTypeUrl}/create/time-vote-room/${roomId}`)
-          }
+          onClick={() => navigate(`/page/time/create/${roomId}`)}
         >
           투표 재생성하기
         </button>
