@@ -1,7 +1,6 @@
 import NotFound from '@/pages/NotFound/not-found';
 import { createBrowserRouter } from 'react-router-dom';
 import Login from '@/pages/Login/login';
-import ProtectedRoute from '@/components/Layout/ProtectedRoute';
 import Layout from '@/components/Layout/Layout';
 import HomeRe from '@/pages/Home/homeRe';
 import Location from '@/pages/Location/Location';
@@ -22,9 +21,7 @@ export const router = createBrowserRouter([
   {
     path: '/page',
     element: (
-      <ProtectedRoute>
-        <Layout />
-      </ProtectedRoute>
+      <Layout />
     ),
     children: [
       {

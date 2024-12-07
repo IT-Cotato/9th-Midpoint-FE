@@ -2,10 +2,10 @@ import { QUERY_KEYS } from '@/constants';
 import { axiosInstance } from './index.api';
 import { useNavigate } from 'react-router-dom';
 
-const navigate = useNavigate();
-
 //에러코드 예외처리 함수
 export const handleApiErrorCase = (error: any, roomId: string, state: any) => {
+  const navigate = useNavigate();
+
   if (error.response) {
     switch (error.response.status) {
       case 400:
@@ -56,7 +56,9 @@ export const getPlaceRoomExists = async (roomId: string) => {
     );
     return data.data;
   } catch (error) {
-    handleApiErrorCase(error, roomId, { from: QUERY_KEYS.FROM_CREATE_PLACE_VOTE });
+    handleApiErrorCase(error, roomId, {
+      from: QUERY_KEYS.FROM_CREATE_PLACE_VOTE,
+    });
     throw error;
   }
 };
@@ -69,7 +71,9 @@ export const getTimeRoomExists = async (roomId: string) => {
     );
     return data.data; // 응답 데이터 반환
   } catch (error) {
-    handleApiErrorCase(error, roomId, { from: QUERY_KEYS.FROM_CREATE_TIME_VOTE });
+    handleApiErrorCase(error, roomId, {
+      from: QUERY_KEYS.FROM_CREATE_TIME_VOTE,
+    });
     throw error;
   }
 };
