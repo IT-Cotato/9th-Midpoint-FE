@@ -1,16 +1,28 @@
-interface IButton {
+export interface IButton {
   text: string;
-  isLoading: boolean;
+  theme?: 'login' | 'add';
+  isLoading?: boolean;
   isMoreMessage?: string;
   isMore?: boolean;
   onClick?: () => void;
 }
 
-export default function Button({ text, isLoading, isMoreMessage, isMore, onClick }: IButton) {
+export default function Button({
+  text,
+  theme,
+  isLoading,
+  isMoreMessage,
+  isMore,
+  onClick,
+}: IButton) {
   return (
     <button
       type="submit"
-      className="min-h-14 primary-btn disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed rounded-2xl"
+      className={`min-h-14 w-[450px] primary-btn rounded-2xl text-menu text-center cursor-pointer
+        ${theme === 'login' ? 'primary-btn' : ''}
+        ${theme === 'add' ? 'add-btn' : ''}
+        disabled:grayNormal disabled:cursor-not-allowed 
+        `}
       disabled={isLoading || isMore}
       onClick={onClick}
     >
