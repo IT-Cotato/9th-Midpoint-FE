@@ -3,36 +3,15 @@ import styled from 'styled-components';
 import CalItemIcon from '@/assets/imgs/Time/time-calItem-icon1.svg?react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { Value } from '@/pages/TimeVote/Create/TimeCreate';
-import {
-  checkVoteRoom,
-  createVoteRoom,
-  recreateVoteRoom,
-} from '@/apis/time-vote.api';
-import { useMatch, useParams } from 'react-router-dom';
+import { postTimeVoteRoom, putTimeVoteRoom } from '@/apis/time-vote.api';
+import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from '@/constants';
-import { useQueryClient } from '@tanstack/react-query';
-
-export type DatePickerProps = {
-  selectedDates: Value[];
-  isValue: boolean;
-  onDateChange: (value: Value) => void;
-};
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getTimeRoomExists } from '@/apis/existence.api';
+import { DatePickerProps, Value } from '@/types/time-vote';
+import { QUERY_KEYS } from '@/constants';
 
 let dates: string[] = [];
-
-export const defineRoomType = (): { roomType: string; roomTypeUrl: string } => {
-  const isAloneRoomType =
-    useMatch('/page/a/create/time-vote-room/:roomId') ||
-    useMatch('/page/a/time-vote/:roomId') ||
-    useMatch('/page/a/time-vote/results/:roomId');
-  const roomType = isAloneRoomType ? ROOM_TYPE_ALONE : ROOM_TYPE_EACH;
-  let roomTypeUrl: string;
-  roomType === ROOM_TYPE_ALONE ? (roomTypeUrl = 'a') : (roomTypeUrl = 'e');
-
-  return { roomType, roomTypeUrl };
-};
 
 const FristCalendar: React.FC<DatePickerProps> = ({
   isValue,
@@ -41,34 +20,57 @@ const FristCalendar: React.FC<DatePickerProps> = ({
 }) => {
   const navigate = useNavigate();
   const { roomId } = useParams<{ roomId: string }>();
-  const { roomType, roomTypeUrl } = defineRoomType();
   const [isTimeVoteRoomExists, setTimeVoteRoomExists] = useState(false);
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const verifyRoomExistence = async () => {
-      if (!roomId) {
-        console.error('방 ID가 정의되지 않았습니다.');
-        return;
-      }
-      try {
-        const res = await checkVoteRoom({ roomId, roomType, navigate });
+  if (!roomId) {
+    console.error('방 ID가 정의되지 않았습니다.');
+    return;
+  }
 
-        if (res.existence && res.dates && res.dates.length > 0) {
-          setTimeVoteRoomExists(true);
-        }
-      } catch (error) {
-        console.error('방 존재 여부 확인 중 오류 발생:', error);
+  //시간투표방 존재 여부
+  const { data, error } = useQuery({
+    queryKey: [QUERY_KEYS.IS_EXISTS_TIMEVOTE_ROOM],
+    queryFn: () => getTimeRoomExists(roomId!),
+    enabled: !!roomId, // roomId가 있을 때만 쿼리 실행
+  });
+
+  useEffect(() => {
+    if (data) {
+      if (data.existence && data.dates && data.dates.length > 0) {
+        setTimeVoteRoomExists(true);
       }
-    };
-    verifyRoomExistence();
-  }, [roomId]);
+    } else if (error) {
+      console.error('방 존재 여부 확인 중 오류 발생:', error);
+    }
+  }, [data, error]);
 
   const handleDateChange = (date: Value) => {
     onDateChange(date);
   };
 
-  const gotoVote = async (isTimeVoteRoomExists: boolean) => {
+  //투표방 생성 or 재생성
+  const { mutate: createTimeVoteRoom } = useMutation({
+    mutationKey: [QUERY_KEYS.FROM_CREATE_TIME_VOTE],
+    mutationFn: (dates: string[]) => {
+      if (!isTimeVoteRoomExists) {
+        return postTimeVoteRoom({ roomId, dates });
+      } else {
+        return putTimeVoteRoom({ roomId, dates });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.IS_EXISTS_TIMEVOTE_ROOM, roomId],
+      });
+      navigate(`place/vote/${roomId}`);
+    },
+    onError: (error) => {
+      console.error('시간투표방 생성 실패:', error);
+    },
+  });
+
+  const gotoVote = async () => {
     dates = selectedDates
       .filter((date): date is Date => date instanceof Date)
       .sort((a, b) => a.getTime() - b.getTime())
@@ -76,30 +78,14 @@ const FristCalendar: React.FC<DatePickerProps> = ({
 
     if (!roomId) {
       alert('방 ID가 없습니다. 다른 페이지로 이동합니다.');
-      navigate('/');
+      navigate('/page/room-list');
       return;
     }
 
     if (dates.length === 0) {
       alert('날짜를 선택해 주세요');
     } else {
-      try {
-        if (!isTimeVoteRoomExists) {
-          await createVoteRoom({ roomId, dates, roomType, navigate });
-          queryClient.invalidateQueries({
-            queryKey: ['timeVoteRoomExists', roomId],
-          });
-        } else {
-          await recreateVoteRoom({ roomId, dates, roomType, navigate });
-          queryClient.invalidateQueries({
-            queryKey: ['timeVoteRoomExists', roomId],
-          });
-        }
-
-        navigate(`/page/${roomTypeUrl}/time-vote/${roomId}`);
-      } catch (error) {
-        console.error('시간투표방 생성 실패:', error);
-      }
+      createTimeVoteRoom(dates);
     }
   };
 
@@ -133,7 +119,7 @@ const FristCalendar: React.FC<DatePickerProps> = ({
       </ContainerBox>
       <div className="w-[50%] mx-auto mt-2">
         <button
-          onClick={() => gotoVote(isTimeVoteRoomExists)}
+          onClick={() => gotoVote()}
           disabled={isValue}
           className="h-14 primary-btn rounded-2xl disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
         >

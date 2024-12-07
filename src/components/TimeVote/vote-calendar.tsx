@@ -4,9 +4,13 @@ import Calendar from 'react-calendar';
 
 import 'react-calendar/dist/Calendar.css';
 import CalIcon from '@/assets/imgs/Time/time-calItem-icon1.svg?react';
-import { Value, ValuePiece } from '@/pages/TimeVote/Create/TimeCreate';
 import VoteDate from './vote-date';
-import { ResultResponse, VoteDateInfo } from '@/pages/TimeVote/Vote/TimeVote';
+import {
+  ResultResponse,
+  Value,
+  ValuePiece,
+  VoteDateInfo,
+} from '@/types/time-vote';
 
 // 타입 정의
 export interface DateTimeOption {

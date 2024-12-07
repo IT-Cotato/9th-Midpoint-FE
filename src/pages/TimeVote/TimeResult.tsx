@@ -4,7 +4,7 @@ import { MdArrowLeft } from 'react-icons/md';
 import { MdArrowRight } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { defineRoomType } from '@/components/time/calendar';
+import { defineRoomType } from '@/components/TimeVote/calendar';
 import { resultVote } from '@/apis/time-vote.api';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -50,11 +50,21 @@ const TimeResult = () => {
   const [resDates, setResDates] = useState<{ [key: string]: any[] }>({});
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [morGridColors, setMorGridColors] = useState(Array(72).fill(items[0].color)); // 초기 색상 설정
-  const [afterGridColors, setAfterGridColors] = useState(Array(72).fill(items[0].color)); // 초기 색상 설정
+  const [morGridColors, setMorGridColors] = useState(
+    Array(72).fill(items[0].color),
+  ); // 초기 색상 설정
+  const [afterGridColors, setAfterGridColors] = useState(
+    Array(72).fill(items[0].color),
+  ); // 초기 색상 설정
 
-  const hoursTo12 = Array.from({ length: 13 }, (_, i) => `${String(i).padStart(2, '0')}`);
-  const hoursTo24 = Array.from({ length: 13 }, (_, i) => `${String(i + 12).padStart(2, '0')}`);
+  const hoursTo12 = Array.from(
+    { length: 13 },
+    (_, i) => `${String(i).padStart(2, '0')}`,
+  );
+  const hoursTo24 = Array.from(
+    { length: 13 },
+    (_, i) => `${String(i + 12).padStart(2, '0')}`,
+  );
 
   if (!roomId) {
     console.error('방 ID가 정의되지 않았습니다.');
@@ -68,7 +78,9 @@ const TimeResult = () => {
         const result = await resultVote({ roomId, roomType, navigate });
         setResDates(result.result);
         setMaxId(result.totalMemberNum);
-        queryClient.invalidateQueries({ queryKey: ['timeVoteRoomExists', roomId] });
+        queryClient.invalidateQueries({
+          queryKey: ['timeVoteRoomExists', roomId],
+        });
       } catch (error) {
         console.error('방 존재 여부 확인 중 오류 발생:', error);
       }
@@ -140,7 +152,11 @@ const TimeResult = () => {
           }
           // 12~24시 범위
           if (endIndex > 72) {
-            for (let i = Math.max(startIndex - 72, 0); i < Math.min(endIndex - 72, 72); i++) {
+            for (
+              let i = Math.max(startIndex - 72, 0);
+              i < Math.min(endIndex - 72, 72);
+              i++
+            ) {
               afterCount[i]++;
             }
           }
@@ -175,8 +191,12 @@ const TimeResult = () => {
     <TimeResultStyle className="w-[80%] h-full flex flex-col bg-[#F8F8FB] p-4 rounded-[20px] mx-auto">
       <div className="flex flex-col items-center justify-center mx-auto mt-5">
         <FolderImg className="w-16 h-16" />
-        <p className="font-bold text-[#1A3C95] text-xl mt-3">이번 모임 일시는...</p>
-        <p className="text-[#5E6D93] text-center mt-3">이번 모임 만남이 가능한 시간을 확인해보세요!</p>
+        <p className="font-bold text-[#1A3C95] text-xl mt-3">
+          이번 모임 일시는...
+        </p>
+        <p className="text-[#5E6D93] text-center mt-3">
+          이번 모임 만남이 가능한 시간을 확인해보세요!
+        </p>
       </div>
       <div className="flex flex-col items-center justify-center w-full">
         <div className="flex items-center w-[25%] mx-auto mb-3 justify-evenly mt-4">
@@ -187,7 +207,9 @@ const TimeResult = () => {
           >
             <MdArrowLeft className="text-4xl" />
           </button>
-          <p className="text-xl font-bold text-[#1A3C95] text-center">{formattedDates[currentIndex]}</p>
+          <p className="text-xl font-bold text-[#1A3C95] text-center">
+            {formattedDates[currentIndex]}
+          </p>
           <button
             onClick={handleNext}
             className={`${currentIndex === formattedDates.length - 1 ? 'text-[#F8F8FB]' : 'text-[#BCD7FF]'}`}
@@ -287,7 +309,9 @@ const TimeResult = () => {
         <button
           type="submit"
           className="h-14 primary-btn rounded-2xl bg-[#B7BDCC] hover:bg-gray-400"
-          onClick={() => navigate(`/page/${roomTypeUrl}/create/time-vote-room/${roomId}`)}
+          onClick={() =>
+            navigate(`/page/${roomTypeUrl}/create/time-vote-room/${roomId}`)
+          }
         >
           투표 재생성하기
         </button>

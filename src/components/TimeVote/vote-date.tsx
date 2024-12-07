@@ -1,5 +1,5 @@
-import { ValuePiece } from '@/pages/TimeVote/Create/TimeCreate';
-import { VoteDateInfo } from '@/pages/TimeVote/Vote/TimeVote';
+
+import { ValuePiece, VoteDateInfo } from '@/types/time-vote';
 import styled from 'styled-components';
 
 const VoteDate = ({

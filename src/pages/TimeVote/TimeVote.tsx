@@ -2,42 +2,27 @@ import VoteCalendar, {
   DateTimeOption,
   formatTime,
   Time,
-} from '@/components/time/vote-calendar';
+} from '@/components/TimeVote/vote-calendar';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  checkVoteCreate,
-  IDatePayload,
-  postVoteTime,
-  rePostVoteTime,
-  resultVoteRoom,
-} from '@/apis/time-vote.api';
-import { defineRoomType } from '@/components/time/calendar';
+
 import ClockIcon from '@/assets/imgs/Time/time-clock-icon.svg?react';
-import { DateOption } from '@/components/time/vote-date-picker';
-import { useQueryClient } from '@tanstack/react-query';
+import { DateOption } from '@/components/TimeVote/vote-date-picker';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Value, ValuePiece } from '../Create/TimeCreate';
+import {
+  IDatePayload,
+  ResultResponse,
+  Value,
+  ValuePiece,
+} from '@/types/time-vote';
+import { getTimeRoomExists } from '@/apis/existence.api';
+import { QUERY_KEYS } from '@/constants';
+import { getTimeVotes, postTimeVote, putTimeVote } from '@/apis/time-vote.api';
 
-export interface ResultResponse {
-  result: {
-    [date: string]: {
-      memberName: string;
-      dateTime: {
-        memberAvailableStartTime: string;
-        memberAvailableEndTime: string;
-      }[];
-    }[];
-  };
-  totalMemberNum: number;
-}
 
-export type VoteDateInfo = Pick<
-  ResultResponse['result'][string][0],
-  'memberName' | 'dateTime'
->;
 
 const TimeVote = () => {
   const navigate = useNavigate();
@@ -50,40 +35,65 @@ const TimeVote = () => {
 
   const [voteExistence, setVoteExistence] = useState<boolean>(false);
   const { roomId } = useParams<{ roomId: string }>();
-  const { roomType, roomTypeUrl } = defineRoomType();
   const queryClient = useQueryClient();
 
   if (!roomId) {
     console.error('방 ID가 정의되지 않았습니다.');
     return;
   }
+
+  //시간투표방 존재 여부
+  const { data, error } = useQuery({
+    queryKey: [QUERY_KEYS.IS_EXISTS_TIMEVOTE_ROOM, roomId],
+    queryFn: () => getTimeRoomExists(roomId),
+    enabled: !!roomId, // roomId가 있을 때만 쿼리 실행
+  });
+
+  //투표 결과 받기
+  const { mutate: resultVoteRoom } = useMutation({
+    mutationFn: () => getTimeVotes({ roomId }),
+    onSuccess: (result) => {
+      setResultRes(result);
+    },
+  });
+
+  //투표하기
+  const { mutate: handleVoteMutation } = useMutation({
+    mutationFn: async (payload: IDatePayload) => {
+      if (!voteExistence) {
+        await postTimeVote(payload);
+      } else {
+        //투표수정
+        await putTimeVote(payload);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.IS_VOTED, roomId],
+      });
+      navigate(`/page/time/results/${roomId}`);
+    },
+    onError: (err) => {
+      console.error('투표 처리 중 오류 발생:', err);
+    },
+  });
+
   //존재 여부 검증
   useEffect(() => {
-    const verifyRoomExistence = async () => {
-      try {
-        //시간투표방 존재하는지
-        const res = await checkVoteCreate({ roomId, roomType, navigate });
-        if (res.existence && res.dates && res.dates.length > 0) {
-          //투표가능날짜 받아오기
-          queryClient.invalidateQueries({
-            queryKey: ['timeVoteRoomExists', roomId],
-          });
-          setSelectedDates(res.dates.map((date: string) => new Date(date)));
-          const result: ResultResponse = await resultVoteRoom({
-            roomId,
-            roomType,
-            navigate,
-          });
-          setResultRes(result);
-        } else {
-          navigate(`/page/${roomTypeUrl}/create/time-vote-room/${roomId}`);
-        }
-      } catch (error) {
-        console.error('방 존재 여부 확인 중 오류 발생:', error);
+    if (data) {
+      if (data.existence && data.dates && data.dates.length > 0) {
+        setVoteExistence(true);
+        setSelectedDates(data.dates.map((date: string) => new Date(date)));
+
+        // 추가적인 API 호출
+        resultVoteRoom();
+      } else {
+        navigate(`/page/room-list`);
       }
-    };
-    verifyRoomExistence();
-  }, [roomId]);
+    } else if (error) {
+      console.error('방 존재 여부 확인 중 오류 발생', error);
+    }
+  }, [data, roomId, navigate]);
 
   const handleTimeChange = (date: Value, startTime: Time, endTime: Time) => {
     setDateTimeOptions((prev) => {
@@ -98,6 +108,7 @@ const TimeVote = () => {
     });
   };
 
+  //투표버튼 클릭 시
   const handleVote = async () => {
     const dateTimePayload = dateTimeOptions
       .map(({ date, startTime, endTime }) => {
@@ -136,27 +147,9 @@ const TimeVote = () => {
 
     const payload: IDatePayload = {
       roomId,
-      roomType,
-      navigate,
       dateTime: dateTimePayload,
     };
-
-    if (!voteExistence) {
-      try {
-        await postVoteTime(payload);
-        queryClient.invalidateQueries({ queryKey: ['isTimeVoted', roomId] });
-        navigate(`/page/${roomTypeUrl}/time-vote/results/${roomId}`);
-      } catch (err) {
-        console.error('투표 처리 중 오류 발생:', err);
-      }
-    } else {
-      try {
-        await rePostVoteTime(payload);
-        navigate(`/page/${roomTypeUrl}/time-vote/results/${roomId}`);
-      } catch (err) {
-        console.error('재투표 처리 중 오류 발생:', err);
-      }
-    }
+    handleVoteMutation(payload);
   };
 
   const formatDateTime = (date: Value, time: Time): string => {

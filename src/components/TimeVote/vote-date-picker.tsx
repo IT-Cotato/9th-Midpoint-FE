@@ -1,12 +1,11 @@
-import { Value, ValuePiece } from '@/pages/TimeVote/Create/TimeCreate';
+
 import React, { useEffect, useState } from 'react';
 import { formatTime, Time } from './vote-calendar';
-import { checkVoted } from '@/apis/time-vote.api';
-import { useNavigate } from 'react-router-dom';
-import { defineRoomType } from './calendar';
 import styled from 'styled-components';
 import { MdArrowDropDown } from 'react-icons/md';
 import Checked from '@/assets/imgs/Time/checked.svg?react';
+import { getTimeVoted } from '@/apis/time-vote.api';
+import { Value, ValuePiece } from '@/types/time-vote';
 
 interface DateOptionProps {
   date: ValuePiece | Value;
@@ -21,19 +20,15 @@ export const DateOption = ({
   roomId,
   setVoteExistence,
 }: DateOptionProps) => {
-  const navigate = useNavigate();
-
   const [isChecked, setIsChecked] = useState(false);
 
   const [startTime, setStartTime] = useState<Time>({ hour: 0, minute: 0 });
   const [endTime, setEndTime] = useState<Time>({ hour: 0, minute: 0 });
 
-  const { roomType } = defineRoomType();
-
   useEffect(() => {
     const fetchVoteStatus = async () => {
       try {
-        const isVoted = await checkVoted({ roomId, roomType, navigate });
+        const isVoted = await getTimeVoted({ roomId });
         setVoteExistence(isVoted.myVotesExistence);
         if (isVoted.myVotesExistence) {
           type Vote = {
