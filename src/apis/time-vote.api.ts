@@ -1,15 +1,7 @@
-import { FROM_CREATE_TIME_VOTE, FROM_TIME_VOTE } from '@/constants';
+import { QUERY_KEYS } from '@/constants';
 import { axiosInstance } from './index.api';
 import { handleApiErrorCase } from './existence.api';
-
-export interface IDatePayload {
-  roomId: string;
-  dates?: string[]; // 날짜 리스트
-  dateTime?: {
-    memberAvailableStartTime: string; // 시작
-    memberAvailableEndTime: string; // 마지막
-  }[];
-}
+import { IDatePayload } from '@/types/time-vote';
 
 //room 방 생성
 export const postTimeVoteRoom = async ({ roomId, dates }: IDatePayload) => {
@@ -20,7 +12,9 @@ export const postTimeVoteRoom = async ({ roomId, dates }: IDatePayload) => {
     );
     return data.data;
   } catch (error) {
-    handleApiErrorCase(error, roomId, { from: FROM_CREATE_TIME_VOTE });
+    handleApiErrorCase(error, roomId, {
+      from: QUERY_KEYS.FROM_CREATE_TIME_VOTE,
+    });
     throw error;
   }
 };
@@ -34,7 +28,9 @@ export const putTimeVoteRoom = async ({ roomId, dates }: IDatePayload) => {
     );
     return data.data;
   } catch (error) {
-    handleApiErrorCase(error, roomId, { from: FROM_CREATE_TIME_VOTE });
+    handleApiErrorCase(error, roomId, {
+      from: QUERY_KEYS.FROM_CREATE_TIME_VOTE,
+    });
     throw error;
   }
 };
@@ -48,7 +44,7 @@ export const postTimeVote = async ({ roomId, dateTime }: IDatePayload) => {
     );
     return data.data;
   } catch (error) {
-    handleApiErrorCase(error, roomId, { from: FROM_TIME_VOTE });
+    handleApiErrorCase(error, roomId, { from: QUERY_KEYS.FROM_TIME_VOTE });
     throw error;
   }
 };
@@ -62,7 +58,7 @@ export const putTimeVote = async ({ roomId, dateTime }: IDatePayload) => {
     );
     return data.data;
   } catch (error) {
-    handleApiErrorCase(error, roomId, { from: FROM_TIME_VOTE });
+    handleApiErrorCase(error, roomId, { from: QUERY_KEYS.FROM_TIME_VOTE });
     throw error;
   }
 };
@@ -75,7 +71,7 @@ export const getTimeVotes = async ({ roomId }: IDatePayload) => {
     );
     return data.data;
   } catch (error) {
-    handleApiErrorCase(error, roomId, { from: FROM_TIME_VOTE });
+    handleApiErrorCase(error, roomId, { from: QUERY_KEYS.FROM_TIME_VOTE });
     throw error;
   }
 };
@@ -88,7 +84,7 @@ export const getTimeVoted = async ({ roomId }: IDatePayload) => {
     );
     return data.data;
   } catch (error) {
-    handleApiErrorCase(error, roomId, { from: FROM_TIME_VOTE });
+    handleApiErrorCase(error, roomId, { from: QUERY_KEYS.FROM_TIME_VOTE });
     throw error;
   }
 };

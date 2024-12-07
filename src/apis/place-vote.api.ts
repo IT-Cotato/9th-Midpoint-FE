@@ -1,17 +1,26 @@
+import { CreateSubmissionData } from '@/types/location';
 import { axiosInstance } from './index.api';
 
 //room 방 생성
-export const postPlaceVoteRoom = async (roomId: string) => {
+export const postPlaceVoteRoom = async (
+  payload: CreateSubmissionData[],
+  roomId: string,
+) => {
   const { data } = await axiosInstance.post(
     `/api/place-vote-rooms/rooms/${roomId}`,
+    { placeCandidates: payload },
   );
   return data.data;
 };
 
 //room 방 재생성 업데이트
-export const putPlaceVoteRoom = async (roomId: string) => {
+export const putPlaceVoteRoom = async (
+  payload: CreateSubmissionData[],
+  roomId: string,
+) => {
   const { data } = await axiosInstance.put(
     `/api/place-vote-rooms/rooms/${roomId}`,
+    { placeCandidates: payload },
   );
   return data.data;
 };

@@ -59,3 +59,58 @@ export interface CreateSubmissionData {
   addressLat: number;
   addressLong: number;
 }
+
+//each.ts
+// 입력란의 형식
+export interface IForm_each {
+  siDo: string;
+  siGunGu: string;
+  roadNameAddress: string;
+  addressLat: number;
+  addressLong: number;
+}
+
+// 기본 입력란 형태
+export const default_format_each: IForm_each = {
+  siDo: '',
+  siGunGu: '',
+  roadNameAddress: '',
+  addressLat: 0,
+  addressLong: 0,
+};
+
+//
+export interface Midpoints {
+  name: string;
+  siDo: string;
+  siGunGu: string;
+  roadNameAddress: string;
+  addressLat: number;
+  addressLong: number;
+}
+
+export interface Coordinate {
+  lat: number;
+  lng: number;
+  name: string;
+}
+
+export interface IContents {
+  name: string;
+  siDo: string;
+  siGunGu: string;
+  roadNameAddress: string;
+  addressLat: number;
+  addressLong: number;
+  phoneNumber: string;
+  placeUrl: string;
+  placeStandard: 'ALL' | 'STUDY' | 'CAFE' | 'RESTAURANT';
+  distance: string;
+}
+
+export interface IRecommendPlaces {
+  addressLat: number;
+  addressLong: number;
+  placeStandard: 'ALL' | 'STUDY' | 'CAFE' | 'RESTAURANT';
+  page: number;
+}

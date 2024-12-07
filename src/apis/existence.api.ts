@@ -1,6 +1,5 @@
+import { QUERY_KEYS } from '@/constants';
 import { axiosInstance } from './index.api';
-import { IDatePayload } from './time-vote.api';
-import { FROM_CREATE_PLACE_VOTE, FROM_CREATE_TIME_VOTE } from '@/constants';
 import { useNavigate } from 'react-router-dom';
 
 const navigate = useNavigate();
@@ -25,9 +24,9 @@ export const handleApiErrorCase = (error: any, roomId: string, state: any) => {
         break;
       case 409:
         console.log(error.response.reason, '이미 투표방이 존재합니다.');
-        if (state.from === FROM_CREATE_PLACE_VOTE)
+        if (state.from === QUERY_KEYS.FROM_CREATE_PLACE_VOTE)
           navigate(`place/vote/:${roomId}`);
-        else if (state.from === FROM_CREATE_TIME_VOTE)
+        else if (state.from === QUERY_KEYS.FROM_CREATE_PLACE_VOTE)
           navigate(`time/vote/:${roomId}`);
         break;
       case 422:
@@ -57,20 +56,20 @@ export const getPlaceRoomExists = async (roomId: string) => {
     );
     return data.data;
   } catch (error) {
-    handleApiErrorCase(error, roomId, { from: FROM_CREATE_PLACE_VOTE });
+    handleApiErrorCase(error, roomId, { from: QUERY_KEYS.FROM_CREATE_PLACE_VOTE });
     throw error;
   }
 };
 
 //시간투표 방 조회
-export const getTimeRoomExists = async ({ roomId }: IDatePayload) => {
+export const getTimeRoomExists = async (roomId: string) => {
   try {
     const { data } = await axiosInstance.get(
       `/api/time-vote-rooms/rooms/${roomId}`,
     );
     return data.data; // 응답 데이터 반환
   } catch (error) {
-    handleApiErrorCase(error, roomId, { from: FROM_CREATE_TIME_VOTE });
+    handleApiErrorCase(error, roomId, { from: QUERY_KEYS.FROM_CREATE_TIME_VOTE });
     throw error;
   }
 };

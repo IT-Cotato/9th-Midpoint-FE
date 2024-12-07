@@ -1,4 +1,5 @@
 import { axiosInstance } from './index.api';
+import { IRecommendPlaces } from '@/types/location';
 
 //장소 저장
 export const postPlace = async (usersPlace: any, roomId: string) => {
@@ -32,7 +33,11 @@ export const getMidPoints = async (roomId: string) => {
 };
 
 //추천장소 조회
-export const getRecommendPlaces = async () => {
-  const { data } = await axiosInstance.get('/api/recommend-places');
+export const getRecommendPlaces = async (payload: IRecommendPlaces) => {
+  const { data } = await axiosInstance.get('/api/recommend-places', {
+    params: {
+      payload,
+    },
+  });
   return data;
 };
