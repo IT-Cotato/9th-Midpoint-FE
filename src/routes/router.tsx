@@ -10,9 +10,9 @@ import Recommend from '@/pages/Location/Recommend';
 import PlaceCreate from '@/pages/PlaceVote/PlaceCreate';
 import PlaceVote from '@/pages/PlaceVote/PlaceVote';
 import PlaceResult from '@/pages/PlaceVote/PlaceResult';
-import TimeCreate from '@/pages/TimeVote/Create/TimeCreate';
-import TimeVote from '@/pages/TimeVote/Vote/TimeVote';
-import TimeResult from '@/pages/TimeVote/Result/TimeResult';
+import TimeCreate from '@/pages/TimeVote/TimeCreate';
+import TimeVote from '@/pages/TimeVote/TimeVote';
+import TimeResult from '@/pages/TimeVote/TimeResult';
 
 export const router = createBrowserRouter([
   {
