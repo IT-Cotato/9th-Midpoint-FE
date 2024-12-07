@@ -8,9 +8,9 @@
 
 <p>모두가 편안하게 즐길 수 있는 만남을 위해 친구들과 내 위치의 중간 지점을 찾아주고 만날 장소를 추천하는 서비스</p>
 
-
-##  [👉🏻 Syncspot 바로가기](https://cotato-midpoint.site)
-### [👉🏻 위 링크가 접근 불가능할 시](http://cotato-midpoint.s3-website.ap-northeast-2.amazonaws.com/)
+# 링크 이전했습니다 👉🏻 [Syncspot-FE 레포 보러가기](https://github.com/Cotato-Syncspot/Syncspot-FE)
+<del> [👉🏻 Syncspot 바로가기](https://cotato-midpoint.site)</del> <br/>
+<del>[👉🏻 위 링크가 접근 불가능할 시](http://cotato-midpoint.s3-website.ap-northeast-2.amazonaws.com/)</del>
 <br/>
 
 <h2>1️⃣ 중간 지점 찾기</h2>
