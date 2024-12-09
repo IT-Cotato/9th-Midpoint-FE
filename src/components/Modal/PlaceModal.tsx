@@ -8,7 +8,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ROOM_TYPE_ALONE, ROOM_TYPE_EACH } from '@/constants';
-import { BACKEND_URL } from '@/apis';
+import { BACKEND_URL } from '@/apis/index.api';
 
 interface ModalProps {
   isOpen: boolean;

@@ -1,14 +1,12 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import Navbar from '@/components/Navbar/Navbar';
-import BannerMessage from '../common/shared/BannerMessage';
 
 export default function Layout() {
   return (
     <Container>
       <Content>
         <Navbar />
-        <BannerMessage />
         <Outlet />
       </Content>
     </Container>
