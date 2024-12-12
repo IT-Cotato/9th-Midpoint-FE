@@ -1,5 +1,5 @@
 import { axiosInstance } from './index.api';
-import { IRecommendPlaces } from '@/types/location';
+import { IRecommendPlaces } from '@/types/Location';
 
 //장소 저장
 export const postPlace = async (usersPlace: any, roomId: string) => {
