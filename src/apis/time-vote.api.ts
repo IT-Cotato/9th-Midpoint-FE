@@ -1,7 +1,7 @@
 import { QUERY_KEYS } from '@/constants';
 import { axiosInstance } from './index.api';
 import { handleApiErrorCase } from './existence.api';
-import { IDatePayload } from '@/types/time-vote';
+import { IDatePayload } from '@/types/TimeVote';
 
 //room 방 생성
 export const postTimeVoteRoom = async ({ roomId, dates }: IDatePayload) => {

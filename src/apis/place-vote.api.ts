@@ -1,4 +1,4 @@
-import { CreateSubmissionData } from '@/types/location';
+import { CreateSubmissionData } from '@/types/Location';
 import { axiosInstance } from './index.api';
 
 //room 방 생성

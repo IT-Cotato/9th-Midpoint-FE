@@ -1,17 +1,23 @@
-import NotFound from '@/pages/NotFound/not-found';
+import NotFound from '@/pages/notFound/NotFound';
 import { createBrowserRouter } from 'react-router-dom';
-import Login from '@/pages/Login/login';
-import Layout from '@/components/Layout/Layout';
-import HomeRe from '@/pages/Home/homeRe';
-import Location from '@/pages/Location/Location';
-import LocationResult from '@/pages/Location/LocationResult';
-import Recommend from '@/pages/Location/Recommend';
-import PlaceCreate from '@/pages/PlaceVote/PlaceCreate';
-import PlaceVote from '@/pages/PlaceVote/PlaceVote';
-import PlaceResult from '@/pages/PlaceVote/PlaceResult';
-import TimeCreate from '@/pages/TimeVote/TimeCreate';
-import TimeVote from '@/pages/TimeVote/TimeVote';
-import TimeResult from '@/pages/TimeVote/TimeResult';
+import Layout from '@/components/layout/Layout';
+import HomeRe from '@/pages/home/Home';
+import Location from '@/pages/location/Location';
+import LocationResult from '@/pages/location/LocationResult';
+import Recommend from '@/pages/location/Recommend';
+import PlaceCreate from '@/pages/placeVote/PlaceCreate';
+import PlaceVote from '@/pages/placeVote/PlaceVote';
+import PlaceResult from '@/pages/placeVote/PlaceResult';
+import TimeCreate from '@/pages/timeVote/TimeCreate';
+import TimeVote from '@/pages/timeVote/TimeVote';
+import TimeResult from '@/pages/timeVote/TimeResult';
+import AboutUs from '@/pages/home/AboutUs';
+import Signup from '@/pages/my/Signup';
+import RoomList from '@/pages/my/RoomList';
+import RoomDetail from '@/pages/my/RoomDetail';
+import RoomCreate from '@/pages/my/RoomCreate';
+import Login from '@/pages/my/Login';
+import FindUser from '@/pages/my/FindUser';
 
 export const router = createBrowserRouter([
   {
@@ -20,9 +26,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/page',
-    element: (
-      <Layout />
-    ),
+    element: <Layout />,
     children: [
       {
         path: 'login',
@@ -30,17 +34,26 @@ export const router = createBrowserRouter([
       },
       {
         path: 'signup',
-        element: <Login />,
+        element: <Signup />,
+      },
+      {
+        path: 'find-user',
+        element: <FindUser />,
       },
       {
         //방리스트
         path: 'room-list',
-        element: <Login />,
+        element: <RoomList />,
+      },
+      {
+        //방 생성
+        path: 'room/create',
+        element: <RoomCreate />,
       },
       {
         //방 상세 정보
         path: 'room-list/:roomId',
-        element: <Login />,
+        element: <RoomDetail />,
       },
       {
         //중간지점 입력
@@ -86,6 +99,11 @@ export const router = createBrowserRouter([
         //시간투표 결과
         path: 'time/results/:roomId',
         element: <TimeResult />,
+      },
+      {
+        //서비스 소개
+        path: '/page/aboutus',
+        element: <AboutUs />,
       },
     ],
   },
