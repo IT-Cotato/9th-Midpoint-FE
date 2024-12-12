@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { BACKEND_URL } from './index.api';
-import { ILoginPayload, ISignupPayload } from '@/types/login';
+import { ILoginPayload, ISignupPayload } from '@/types/Login';
 
 export const postSignup = async (signupPayload: ISignupPayload) => {
   return axios.post(`${BACKEND_URL}/api/members`, signupPayload, {
